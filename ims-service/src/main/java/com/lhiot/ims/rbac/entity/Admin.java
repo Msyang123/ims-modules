@@ -1,11 +1,10 @@
-package com.lhiot.ims.rbac.po;
+package com.lhiot.ims.rbac.entity;
 
 import lombok.Data;
 import lombok.ToString;
 
 import java.io.Serializable;
 import java.time.Instant;
-import java.util.Date;
 
 /**
  * @author Leon (234239150@qq.com) created in 12:22 18.8.26

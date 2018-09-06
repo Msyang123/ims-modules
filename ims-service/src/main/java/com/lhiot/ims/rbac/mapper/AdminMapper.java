@@ -1,6 +1,6 @@
 package com.lhiot.ims.rbac.mapper;
 
-import com.lhiot.ims.rbac.po.Admin;
+import com.lhiot.ims.rbac.entity.Admin;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 

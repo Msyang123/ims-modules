@@ -1,4 +1,4 @@
-package com.lhiot.ims.rbac.po;
+package com.lhiot.ims.rbac.entity;
 
 import lombok.Getter;
 
