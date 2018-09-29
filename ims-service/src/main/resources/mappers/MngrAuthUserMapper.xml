@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lhiot.ims.rbac.mapper.MngrAuthUserMapper">
+
+    <!-- 数据库字段对象关系映射 -->
+    <resultMap id="BaseResultMap"
+        type="com.lhiot.ims.rbac.domain.MngrAuthUser" >
+        <id column="id" property="id"/>
+        <result column="name" property="name" />
+        <result column="account" property="account" />
+        <result column="password" property="password" />
+        <result column="tel" property="tel" />
+        <result column="avatar_url" property="avatarUrl" />
+        <result column="status" property="status" />
+        <result column="create_at" property="createAt" />
+        <result column="last_login_at" property="lastLoginAt" />
+        <result column="remark" property="remark" />
+    </resultMap>
+
+    <!-- base查询字段  -->
+    <sql id="Base_Column_List" >
+        <trim suffixOverrides="," >
+            id,
+            name,
+            account,
+            password,
+            tel,
+            avatar_url,
+            status,
+            create_at,
+            last_login_at,
+            remark,
+        </trim>
+    </sql>
+
+    <!--新增用户-->
+    <insert id="create" parameterType="com.lhiot.ims.rbac.domain.MngrAuthUser" useGeneratedKeys="true" keyProperty="id">
+        insert into mngr_auth_user
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="id != null ">
+                id,
+            </if>
+            <if test="name != null ">
+                name,
+            </if>
+            <if test="account != null ">
+                account,
+            </if>
+            <if test="password != null ">
+                password,
+            </if>
+            <if test="tel != null ">
+                tel,
+            </if>
+            <if test="avatarUrl != null ">
+                avatar_url,
+            </if>
+            <if test="status != null ">
+                status,
+            </if>
+            <if test="createAt != null ">
+                create_at,
+            </if>
+            <if test="lastLoginAt != null ">
+                last_login_at,
+            </if>
+            <if test="remark != null ">
+                remark,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="id != null ">
+                #{id},
+            </if>
+            <if test="name != null ">
+                #{name},
+            </if>
+            <if test="account != null ">
+                #{account},
+            </if>
+            <if test="password != null ">
+                #{password},
+            </if>
+            <if test="tel != null ">
+                #{tel},
+            </if>
+            <if test="avatarUrl != null ">
+                #{avatarUrl},
+            </if>
+            <if test="status != null ">
+                #{status},
+            </if>
+            <if test="createAt != null ">
+                #{createAt},
+            </if>
+            <if test="lastLoginAt != null ">
+                #{lastLoginAt},
+            </if>
+            <if test="remark != null ">
+                #{remark},
+            </if>
+        </trim>
+    </insert>
+
+    <!--根据id修改用户-->
+    <update id="updateById" parameterType="com.lhiot.ims.rbac.domain.MngrAuthUser">
+        update mngr_auth_user
+        <set>
+            <if test="id != null ">
+                id = #{id},
+            </if>
+            <if test="name != null ">
+                name = #{name},
+            </if>
+            <if test="account != null ">
+                account = #{account},
+            </if>
+            <if test="password != null ">
+                password = #{password},
+            </if>
+            <if test="tel != null ">
+                tel = #{tel},
+            </if>
+            <if test="avatarUrl != null ">
+                avatar_url = #{avatarUrl},
+            </if>
+            <if test="status != null ">
+                status = #{status},
+            </if>
+            <if test="createAt != null ">
+                create_at = #{createAt},
+            </if>
+            <if test="lastLoginAt != null ">
+                last_login_at = #{lastLoginAt},
+            </if>
+            <if test="remark != null ">
+                remark = #{remark},
+            </if>
+        </set>
+        where id=#{id}
+    </update>
+
+    <!--根据ids删除用户-->
+    <delete id="deleteByIds" parameterType="java.util.List">
+        delete from mngr_auth_user where id in
+        <foreach collection="list" item="item" open="("
+            separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+
+    <!-- 根据id查找用户 -->
+	<select id="selectById" resultMap="BaseResultMap"
+		parameterType="long"> select <include refid="Base_Column_List" />
+		from mngr_auth_user where id = #{id}
+	</select>
+
+
+    <!-- base where条件  -->
+    <sql id="Base_Where_Condition" >
+        <where>
+            <if test="id != null ">
+                and id = #{id}
+            </if>
+            <if test="name != null ">
+                and name = #{name}
+            </if>
+            <if test="account != null ">
+                and account = #{account}
+            </if>
+            <if test="password != null ">
+                and password = #{password}
+            </if>
+            <if test="tel != null ">
+                and tel = #{tel}
+            </if>
+            <if test="avatarUrl != null ">
+                and avatar_url = #{avatarUrl}
+            </if>
+            <if test="status != null ">
+                and status = #{status}
+            </if>
+            <if test="createAt != null ">
+                and create_at = #{createAt}
+            </if>
+            <if test="lastLoginAt != null ">
+                and last_login_at = #{lastLoginAt}
+            </if>
+            <if test="remark != null ">
+                and remark = #{remark}
+            </if>
+        </where>
+    </sql>
+
+
+    <!--查询用户列表-->
+     <select id="pageMngrAuthUsers" resultMap="BaseResultMap"
+        parameterType="com.lhiot.ims.rbac.domain.MngrAuthUser">
+	        select <include refid="Base_Column_List" />
+	        from mngr_auth_user
+	        <include refid="Base_Where_Condition" />
+	        <include refid="common.pager" />
+    </select>
+
+    <!--查询用户总记录-->
+    <select id="pageMngrAuthUserCounts" resultType="long"
+        parameterType="com.lhiot.ims.rbac.domain.MngrAuthUser">
+            select count(1)
+            from mngr_auth_user
+            <include refid="Base_Where_Condition" />
+    </select>
+
+</mapper>
