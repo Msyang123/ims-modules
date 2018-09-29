@@ -1,5 +1,6 @@
 package com.lhiot.ims.rbac.api;
 
+import com.leon.microx.support.http.RemoteInvoker;
 import com.leon.microx.support.session.Authority;
 import com.leon.microx.support.session.Sessions;
 import com.leon.microx.support.swagger.ApiParamType;
@@ -7,13 +8,14 @@ import com.leon.microx.util.Maps;
 import com.leon.microx.util.StringUtils;
 import com.leon.microx.util.auditing.MD5;
 import com.lhiot.ims.rbac.mapper.AdminMapper;
-import com.lhiot.ims.rbac.po.Admin;
-import com.lhiot.ims.rbac.po.Status;
-import com.lhiot.ims.rbac.vo.AdminLogin;
+import com.lhiot.ims.rbac.entity.Admin;
+import com.lhiot.ims.rbac.entity.Status;
+import com.lhiot.ims.rbac.model.AdminLogin;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
@@ -21,6 +23,7 @@ import springfox.documentation.annotations.ApiIgnore;
 import javax.servlet.http.HttpServletRequest;
 import java.net.URI;
 import java.time.Instant;
+import java.util.Collections;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
@@ -33,10 +36,12 @@ import java.util.concurrent.TimeUnit;
 @RequestMapping("/admin")
 public class AdminApi {
 
+    private RemoteInvoker invoker;
     private Sessions session;
     private AdminMapper adminMapper;
 
-    public AdminApi(Sessions session, AdminMapper adminMapper) {
+    public AdminApi(RemoteInvoker invoker, Sessions session, AdminMapper adminMapper) {
+        this.invoker = invoker;
         this.session = session;
         this.adminMapper = adminMapper;
     }
@@ -60,6 +65,10 @@ public class AdminApi {
     @ApiOperation("管理员登录, 返回session用户")
     @ApiImplicitParam(paramType = ApiParamType.BODY, name = "param", value = "登录参数", required = true, dataType = "AdminLogin")
     public ResponseEntity login(@RequestBody AdminLogin login, @ApiIgnore HttpServletRequest request) {
+
+        //接口请求例子
+        // ResponseEntity<String> response = invoker.fromConfig("user-center").uri("/user/session/{id}").uriVariables(ImmutableMap.of("id", "111")).method(HttpMethod.POST).body(Collections.emptyMap()).exchange(String.class);
+
         Admin admin = adminMapper.selectByAccount(login.getAccount());
         if (Objects.isNull(admin)) {
             return ResponseEntity.badRequest().body("帐号不存在");
@@ -76,6 +85,7 @@ public class AdminApi {
 
         Sessions.User sessionUser = Sessions.create(request).user(Maps.of("1", "leon")).timeToLive(30, TimeUnit.MINUTES);
 
+        // TODO 填充访问权限......sessionUser.antPaths("/**");
         // TODO 填充访问权限......sessionUser.authorities(Authority.of("/**/users/?, RequestMethod.GET))
 
         String sessionId = session.cache(sessionUser);

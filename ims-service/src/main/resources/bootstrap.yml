@@ -5,9 +5,9 @@ spring:
     name: ims-service-v1-0
   cloud:
     config:
-      name: ims-service, redisson, application, rabbit-mq
+      name: ims-service-v1-0, redisson, application, rabbit-mq
       profile: ${RUN_LEVEL:dev}
-      label: 1.0
+      label: ${RUN_LEVEL:dev}
       failFast: true
       discovery:
         enabled: true
