@@ -7,15 +7,14 @@ import com.leon.microx.support.swagger.ApiParamType;
 import com.leon.microx.util.Maps;
 import com.leon.microx.util.StringUtils;
 import com.leon.microx.util.auditing.MD5;
-import com.lhiot.ims.rbac.mapper.AdminMapper;
 import com.lhiot.ims.rbac.entity.Admin;
 import com.lhiot.ims.rbac.entity.Status;
+import com.lhiot.ims.rbac.mapper.AdminMapper;
 import com.lhiot.ims.rbac.model.AdminLogin;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
@@ -23,7 +22,6 @@ import springfox.documentation.annotations.ApiIgnore;
 import javax.servlet.http.HttpServletRequest;
 import java.net.URI;
 import java.time.Instant;
-import java.util.Collections;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
@@ -67,7 +65,11 @@ public class AdminApi {
     public ResponseEntity login(@RequestBody AdminLogin login, @ApiIgnore HttpServletRequest request) {
 
         //接口请求例子
-        // ResponseEntity<String> response = invoker.fromConfig("user-center").uri("/user/session/{id}").uriVariables(ImmutableMap.of("id", "111")).method(HttpMethod.POST).body(Collections.emptyMap()).exchange(String.class);
+//         ResponseEntity<String> response = invoker.server("user-center")
+//                 .uriVariables(Maps.of("id", "111"))
+//                 .addHeaders(Pair.of("version", "v1-1-1"))
+//                 .body(Collections.emptyMap())
+//                 .request("/user/session/{id}", HttpMethod.PUT, String.class);
 
         Admin admin = adminMapper.selectByAccount(login.getAccount());
         if (Objects.isNull(admin)) {
@@ -85,8 +87,7 @@ public class AdminApi {
 
         Sessions.User sessionUser = Sessions.create(request).user(Maps.of("1", "leon")).timeToLive(30, TimeUnit.MINUTES);
 
-        // TODO 填充访问权限......sessionUser.antPaths("/**");
-        // TODO 填充访问权限......sessionUser.authorities(Authority.of("/**/users/?, RequestMethod.GET))
+        // TODO 填充访问权限：sessionUser.authorities(Authority.of("/**/users/?, RequestMethod.GET))
 
         String sessionId = session.cache(sessionUser);
         try {
