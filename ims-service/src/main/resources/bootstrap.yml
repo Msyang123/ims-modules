@@ -27,5 +27,6 @@ microx-common:
     repeat-limit-seconds: 1
   microx-support:
     session:
-      timeout: 1
-      filter-packages: com.lhiot.ims.**
+      enable: true
+      local-cache-ttl: 1
+      local-cache-ttl-unit: seconds
