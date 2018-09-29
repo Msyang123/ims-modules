@@ -16,15 +16,17 @@ eureka:
   instance:
     prefer-ip-address: true
     status-page-url-path: /swagger-ui.html
+    lease-renewal-interval-in-seconds: 5
+    lease-expiration-duration-in-seconds: 10
   client:
+    registry-fetch-interval-seconds: 5
     serviceUrl:
-      defaultZone: ${EUREKA_REPLICAS_LIST:http://172.16.10.203:1111/eureka}
-
-
+      defaultZone: ${EUREKA_REPLICAS_LIST:http://127.0.0.1:1111/eureka}
 microx-common:
   microx-probe:
     repeat-limit-seconds: 1
   microx-support:
     session:
       enable: true
-      filter-packages: com.lhiot.ims.**
+      local-cache-ttl: 1
+      local-cache-ttl-unit: seconds
