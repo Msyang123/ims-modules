@@ -70,7 +70,7 @@ public class MngrAuthUser extends PagerRequestObject{
     */
     @JsonProperty("status")
     @ApiModelProperty(value = "用户状态", dataType = "String")
-    private String status;
+    private StatusEnum status;
 
     /**
     *创建时间

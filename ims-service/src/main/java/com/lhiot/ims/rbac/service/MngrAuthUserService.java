@@ -1,7 +1,6 @@
 package com.lhiot.ims.rbac.service;
 
 import java.util.Arrays;
-import java.util.List;
 import com.lhiot.ims.rbac.domain.MngrAuthUser;
 import com.lhiot.ims.rbac.mapper.MngrAuthUserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -87,7 +86,7 @@ public class MngrAuthUserService {
     
     /** 
     * Description: 查询用户分页列表
-    *  
+    *
     * @param mngrAuthUser
     * @return
     * @author yijun
@@ -101,5 +100,11 @@ public class MngrAuthUserService {
        return PagerResultObject.of(mngrAuthUser, total,
               this.mngrAuthUserMapper.pageMngrAuthUsers(mngrAuthUser));
     }
+
+
+    public MngrAuthUser selectByAccount(String account) {
+        return this.mngrAuthUserMapper.selectByAccount(account);
+    }
+
 }
 

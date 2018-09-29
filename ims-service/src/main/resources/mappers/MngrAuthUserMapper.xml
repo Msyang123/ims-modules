@@ -211,4 +211,10 @@
             <include refid="Base_Where_Condition" />
     </select>
 
+    <!-- 根据账号查询用户 -->
+    <select id="selectByAccount" resultMap="BaseResultMap"
+            parameterType="String"> select <include refid="Base_Column_List" />
+        from mngr_auth_user where account = #{account}
+    </select>
+
 </mapper>

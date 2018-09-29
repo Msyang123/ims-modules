@@ -1,6 +1,14 @@
 package com.lhiot.ims.rbac.api;
 
+import com.leon.microx.support.session.Sessions;
+import com.leon.microx.support.swagger.ApiParamType;
+import com.leon.microx.util.Maps;
+import com.leon.microx.util.auditing.MD5;
 import com.lhiot.ims.rbac.domain.MngrAuthUser;
+import com.lhiot.ims.rbac.entity.Admin;
+import com.lhiot.ims.rbac.entity.Status;
+import com.lhiot.ims.rbac.model.AdminLogin;
+import com.lhiot.ims.rbac.model.MngrAuthUserLogin;
 import com.lhiot.ims.rbac.service.MngrAuthUserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -10,6 +18,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.lhiot.ims.rbac.common.PagerResultObject;
+import springfox.documentation.annotations.ApiIgnore;
+
+import javax.servlet.http.HttpServletRequest;
+import java.net.URI;
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 /**
 * Description:用户接口类
@@ -23,6 +39,8 @@ import com.lhiot.ims.rbac.common.PagerResultObject;
 public class MngrAuthUserApi {
 
     private final MngrAuthUserService mngrAuthUserService;
+
+    private Sessions session;
 
     @Autowired
     public MngrAuthUserApi(MngrAuthUserService mngrAuthUserService) {
@@ -71,6 +89,42 @@ public class MngrAuthUserApi {
         log.debug("查询用户分页列表\t param:{}",mngrAuthUser);
         
         return ResponseEntity.ok(mngrAuthUserService.pageList(mngrAuthUser));
+    }
+
+    @Sessions.Uncheck
+    @PostMapping("/login")
+    @ApiOperation("管理员登录, 返回session用户")
+//    @ApiImplicitParam(paramType = ApiParamType.BODY, name = "param", value = "登录参数", required = true, dataType = "AdminLogin")
+    public ResponseEntity login(@RequestBody MngrAuthUserLogin login, @ApiIgnore HttpServletRequest request) {
+        MngrAuthUser user = mngrAuthUserService.selectByAccount(login.getAccount());
+        if (Objects.isNull(user)) {
+            return ResponseEntity.badRequest().body("帐号不存在");
+        }
+
+        if (!Objects.equals(Status.AVAILABLE, user.getStatus())) {
+            return ResponseEntity.badRequest().body("帐号状态异常：" + user.getStatus().getMessage());
+        }
+
+        String md5 = MD5.str(user.getId() + login.getPassword());
+        if (!md5.equalsIgnoreCase(user.getPassword())) {
+            return ResponseEntity.badRequest().body("密码错误");
+        }
+
+        Sessions.User sessionUser = Sessions.create(request).user(Maps.of("1", "leon")).timeToLive(30, TimeUnit.MINUTES);
+
+        // TODO 填充访问权限：sessionUser.authorities(Authority.of("/**/users/?, RequestMethod.GET))
+
+        String sessionId = session.cache(sessionUser);
+        try {
+            return ResponseEntity
+                    .created(URI.create("/mngrAuthUser/login/" + sessionId))
+                    .header(Sessions.HTTP_HEADER_NAME, sessionId)
+                    .build();
+        } finally {
+            // 更新用户最后登录时间
+            user.setLastLoginAt(new Timestamp(System.currentTimeMillis()));
+            mngrAuthUserService.updateById(user);
+        }
     }
     
 }

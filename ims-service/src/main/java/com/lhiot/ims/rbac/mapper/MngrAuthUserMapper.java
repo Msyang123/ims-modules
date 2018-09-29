@@ -73,4 +73,15 @@ public interface MngrAuthUserMapper {
     * @date 2018/09/29 11:42:57
     */
     long pageMngrAuthUserCounts(MngrAuthUser mngrAuthUser);
+
+
+
+    /**
+     * Description: 根据账号查询用户
+     *
+     * @param account
+     * @return
+     */
+    MngrAuthUser selectByAccount(String account);
+
 }
