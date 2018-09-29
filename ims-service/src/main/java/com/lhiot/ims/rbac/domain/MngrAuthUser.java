@@ -4,6 +4,7 @@ import com.lhiot.ims.rbac.common.PagerRequestObject;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.lhiot.ims.rbac.entity.Status;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -69,8 +70,8 @@ public class MngrAuthUser extends PagerRequestObject{
     *用户状态
     */
     @JsonProperty("status")
-    @ApiModelProperty(value = "用户状态", dataType = "String")
-    private String status;
+    @ApiModelProperty(value = "用户状态", dataType = "Status")
+    private Status status;
 
     /**
     *创建时间

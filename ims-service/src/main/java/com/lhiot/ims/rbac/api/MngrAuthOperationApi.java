@@ -19,7 +19,7 @@ import com.lhiot.ims.rbac.common.PagerResultObject;
 @Api(description = "功能操作接口")
 @Slf4j
 @RestController
-@RequestMapping("/mngrAuthOperation")
+@RequestMapping("/mngr-auth-operation")
 public class MngrAuthOperationApi {
 
     private final MngrAuthOperationService mngrAuthOperationService;

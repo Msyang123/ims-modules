@@ -19,7 +19,7 @@ import com.lhiot.ims.rbac.common.PagerResultObject;
 @Api(description = "角色接口")
 @Slf4j
 @RestController
-@RequestMapping("/mngrAuthRole")
+@RequestMapping("/mngr-auth-role")
 public class MngrAuthRoleApi {
 
     private final MngrAuthRoleService mngrAuthRoleService;

@@ -37,9 +37,6 @@
     <insert id="create" parameterType="com.lhiot.ims.rbac.domain.MngrAuthUser" useGeneratedKeys="true" keyProperty="id">
         insert into mngr_auth_user
         <trim prefix="(" suffix=")" suffixOverrides="," >
-            <if test="id != null ">
-                id,
-            </if>
             <if test="name != null ">
                 name,
             </if>
@@ -69,9 +66,6 @@
             </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
-            <if test="id != null ">
-                #{id},
-            </if>
             <if test="name != null ">
                 #{name},
             </if>
@@ -106,9 +100,6 @@
     <update id="updateById" parameterType="com.lhiot.ims.rbac.domain.MngrAuthUser">
         update mngr_auth_user
         <set>
-            <if test="id != null ">
-                id = #{id},
-            </if>
             <if test="name != null ">
                 name = #{name},
             </if>
@@ -155,6 +146,12 @@
 		parameterType="long"> select <include refid="Base_Column_List" />
 		from mngr_auth_user where id = #{id}
 	</select>
+
+    <select id="selectByAccount" resultMap="BaseResultMap"
+            parameterType="long"> select <include refid="Base_Column_List" />
+        from mngr_auth_user where account = #{account}
+    </select>
+
 
 
     <!-- base where条件  -->

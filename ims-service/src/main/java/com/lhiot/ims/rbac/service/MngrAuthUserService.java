@@ -30,9 +30,7 @@ public class MngrAuthUserService {
     *  
     * @param mngrAuthUser
     * @return
-    * @author yijun
-    * @date 2018/09/29 11:42:57
-    */  
+    */
     public int create(MngrAuthUser mngrAuthUser){
         return this.mngrAuthUserMapper.create(mngrAuthUser);
     }
@@ -42,9 +40,7 @@ public class MngrAuthUserService {
     *  
     * @param mngrAuthUser
     * @return
-    * @author yijun
-    * @date 2018/09/29 11:42:57
-    */ 
+    */
     public int updateById(MngrAuthUser mngrAuthUser){
         return this.mngrAuthUserMapper.updateById(mngrAuthUser);
     }
@@ -54,9 +50,7 @@ public class MngrAuthUserService {
     *  
     * @param ids
     * @return
-    * @author yijun
-    * @date 2018/09/29 11:42:57
-    */ 
+    */
     public int deleteByIds(String ids){
         return this.mngrAuthUserMapper.deleteByIds(Arrays.asList(ids.split(",")));
     }
@@ -66,21 +60,27 @@ public class MngrAuthUserService {
     *  
     * @param id
     * @return
-    * @author yijun
-    * @date 2018/09/29 11:42:57
-    */ 
+    */
     public MngrAuthUser selectById(Long id){
         return this.mngrAuthUserMapper.selectById(id);
     }
+
+    /**
+     * 依据用户账户查询用户信息
+     * @param account
+     * @return
+     */
+    public MngrAuthUser selectByAccount(String account){
+        return this.mngrAuthUserMapper.selectByAccount(account);
+    }
+
 
     /** 
     * Description: 查询用户总记录数
     *  
     * @param mngrAuthUser
     * @return
-    * @author yijun
-    * @date 2018/09/29 11:42:57
-    */  
+    */
     public long count(MngrAuthUser mngrAuthUser){
         return this.mngrAuthUserMapper.pageMngrAuthUserCounts(mngrAuthUser);
     }
@@ -90,9 +90,7 @@ public class MngrAuthUserService {
     *  
     * @param mngrAuthUser
     * @return
-    * @author yijun
-    * @date 2018/09/29 11:42:57
-    */  
+    */
     public PagerResultObject<MngrAuthUser> pageList(MngrAuthUser mngrAuthUser) {
        long total = 0;
        if (mngrAuthUser.getRows() != null && mngrAuthUser.getRows() > 0) {
