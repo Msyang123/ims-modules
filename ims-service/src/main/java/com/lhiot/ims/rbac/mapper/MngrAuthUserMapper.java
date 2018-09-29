@@ -53,6 +53,14 @@ public interface MngrAuthUserMapper {
     */
     MngrAuthUser selectById(Long id);
 
+
+    /**
+     * 依据账户查找个人信息
+     * @param account
+     * @return
+     */
+    MngrAuthUser selectByAccount(String account);
+
     /**
     * Description:查询用户列表
     *

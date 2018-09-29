@@ -1,9 +1,12 @@
 package com.lhiot.ims.rbac.api;
 
+import com.leon.microx.support.session.Sessions;
+import com.leon.microx.support.swagger.ApiParamType;
 import com.lhiot.ims.rbac.domain.MngrAuthMenu;
 import com.lhiot.ims.rbac.service.MngrAuthMenuService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +22,7 @@ import com.lhiot.ims.rbac.common.PagerResultObject;
 @Api(description = "菜单接口")
 @Slf4j
 @RestController
-@RequestMapping("/mngrAuthMenu")
+@RequestMapping("/mngr-auth-menu")
 public class MngrAuthMenuApi {
 
     private final MngrAuthMenuService mngrAuthMenuService;
@@ -58,7 +61,10 @@ public class MngrAuthMenuApi {
     }
     
     @ApiOperation(value = "根据id查询菜单", notes = "根据id查询菜单")
-    @ApiImplicitParam(paramType = "path", name = "id", value = "主键id", required = true, dataType = "Long")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = ApiParamType.HEADER, name = Sessions.HTTP_HEADER_NAME, value = "session-id", required = true, dataType = "String"),
+            @ApiImplicitParam(paramType = "path", name = "id", value = "主键id", required = true, dataType = "Long")
+    })
     @GetMapping("/{id}")
     public ResponseEntity<MngrAuthMenu> findMngrAuthMenu(@PathVariable("id") Long id) {
 
