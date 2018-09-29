@@ -1,8 +1,9 @@
 package com.lhiot.ims.rbac.api;
 
+import com.leon.microx.support.session.Authority;
 import com.leon.microx.support.session.Sessions;
-import com.leon.microx.swagger.ApiParamType;
-import com.leon.microx.util.ImmutableMap;
+import com.leon.microx.support.swagger.ApiParamType;
+import com.leon.microx.util.Maps;
 import com.leon.microx.util.StringUtils;
 import com.leon.microx.util.auditing.MD5;
 import com.lhiot.ims.rbac.mapper.AdminMapper;
@@ -44,7 +45,9 @@ public class AdminApi {
     @PostMapping("/backdoor")
     @ApiOperation("管理后门。（绕开所有权限）")
     public ResponseEntity backdoor(HttpServletRequest request) {
-        Sessions.User sessionUser = Sessions.create(request).user(ImmutableMap.of("1", "leon")).timeToLive(30, TimeUnit.MINUTES).antPaths("**");
+        Sessions.User sessionUser = Sessions.create(request).user(Maps.of("1", "leon"))
+                .timeToLive(30, TimeUnit.MINUTES)
+                .authorities(Authority.of("/**", RequestMethod.values())); // 具有所有API访问权限
         String sessionId = session.cache(sessionUser);
         return ResponseEntity
                 .created(URI.create("/admin/session/" + sessionId))
@@ -71,9 +74,9 @@ public class AdminApi {
             return ResponseEntity.badRequest().body("密码错误");
         }
 
-        Sessions.User sessionUser = Sessions.create(request).user(ImmutableMap.of("1", "leon")).timeToLive(30, TimeUnit.MINUTES);
+        Sessions.User sessionUser = Sessions.create(request).user(Maps.of("1", "leon")).timeToLive(30, TimeUnit.MINUTES);
 
-        // TODO 填充访问权限......sessionUser.antPaths("/**")
+        // TODO 填充访问权限......sessionUser.authorities(Authority.of("/**/users/?, RequestMethod.GET))
 
         String sessionId = session.cache(sessionUser);
         try {
@@ -82,7 +85,7 @@ public class AdminApi {
                     .header(Sessions.HTTP_HEADER_NAME, sessionId)
                     .build();
         } finally {
-            adminMapper.updateLastLogin(ImmutableMap.of("id", admin.getId(), "last_login_at", Instant.now()));
+            adminMapper.updateLastLogin(Maps.of("id", admin.getId(), "last_login_at", Instant.now()));
         }
     }
 

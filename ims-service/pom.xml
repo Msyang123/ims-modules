@@ -33,6 +33,10 @@
             <groupId>com.leon.microx</groupId>
             <artifactId>microx-starter-restful</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
+        </dependency>
         <!-- microx-probe (amqp / probe) -->
         <dependency>
             <groupId>com.leon.microx</groupId>
