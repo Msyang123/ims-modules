@@ -2,6 +2,7 @@ package com.lhiot.ims.rbac.service;
 
 import java.util.Arrays;
 
+import com.leon.microx.util.auditing.MD5;
 import com.lhiot.ims.rbac.domain.ImsUser;
 import com.lhiot.ims.rbac.mapper.ImsRelationUserRoleMapper;
 import com.lhiot.ims.rbac.mapper.ImsUserMapper;
@@ -35,6 +36,7 @@ public class ImsUserService {
     * @return
     */
     public int create(ImsUser imsUser){
+        imsUser.setPassword(MD5.str(imsUser.getPassword()));
         return this.imsUserMapper.create(imsUser);
     }
 

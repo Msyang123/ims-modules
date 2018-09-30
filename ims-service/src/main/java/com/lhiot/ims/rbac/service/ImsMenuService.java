@@ -1,9 +1,7 @@
 package com.lhiot.ims.rbac.service;
 
-import com.leon.microx.util.StringUtils;
 import com.lhiot.ims.rbac.common.PagerResultObject;
 import com.lhiot.ims.rbac.domain.ImsMenu;
-import com.lhiot.ims.rbac.domain.ImsOperation;
 import com.lhiot.ims.rbac.domain.ImsRelationRoleMenu;
 import com.lhiot.ims.rbac.mapper.ImsMenuMapper;
 import com.lhiot.ims.rbac.mapper.ImsOperationMapper;
@@ -44,17 +42,7 @@ public class ImsMenuService {
     * @date 2018/09/29 11:42:57
     */  
     public int create(ImsMenu imsMenu){
-        int result = this.imsMenuMapper.create(imsMenu);
-        //由于存在一级菜单和系统级不存在拦截url配置信息，故只有设置了拦截url参数的才写操作设置
-        if(result>0&& StringUtils.isNotBlank(imsMenu.getAntUrl())){
-            ImsOperation imsOperation=new ImsOperation();
-            imsOperation.setAntUrl(imsMenu.getAntUrl());
-            imsOperation.setMenuId(imsMenu.getId());
-            imsOperation.setName(imsMenu.getName()+"操作限制配置");
-            imsOperation.setType("*");//所有请求都不拦截
-            imsOperationMapper.create(imsOperation);
-        }
-        return result;
+        return this.imsMenuMapper.create(imsMenu);
     }
 
     /** 
