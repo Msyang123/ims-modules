@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
 * Description:用户接口类
@@ -107,8 +108,12 @@ public class ImsUserApi {
         // TODO 填充访问权限：sessionUser.authorities(Authority.of("/**/users/?, RequestMethod.GET))
         //查找用户的操作权限
         List<ImsOperation> imsOperationList = imsOperationService.listByUserId(admin.getId());
-        List<Authority> authorityList = new ArrayList<>(imsOperationList.size());
-        imsOperationList.forEach(item->authorityList.add(Authority.of(item.getAntUrl(), ConverStrToRequestMethod.getListFromStr(item.getType()))));
+        List<Authority> authorityList = Objects.requireNonNull(imsOperationList).stream()
+                .map(op -> Authority.of(op.getAntUrl(), StringUtils.tokenizeToStringArray(op.getType(), ",")))
+                .collect(Collectors.toList());
+
+//                new ArrayList<>(imsOperationList.size());
+//        imsOperationList.forEach(item->authorityList.add(Authority.of(item.getAntUrl(), ConverStrToRequestMethod.getListFromStr(item.getType()))));
         //sessionUser.authorities(Authority.of("/**/ims-menu/**", RequestMethod.GET,RequestMethod.POST,RequestMethod.DELETE,RequestMethod.PUT));
         sessionUser.authorities(authorityList);
         String sessionId = session.cache(sessionUser);

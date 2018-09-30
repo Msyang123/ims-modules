@@ -72,7 +72,7 @@ public class ImsMenuApi {
         return ResponseEntity.ok(imsMenuService.selectById(id));
     }
 
-    @PostMapping("/page/query")
+    @PostMapping("/pages/query")
     @ApiOperation(value = "查询菜单分页列表")
     @ApiImplicitParam(paramType = "body", name = "imsMenu", value = "菜单分页查询参数", required = true, dataType = "ImsMenu")
     public ResponseEntity<PagerResultObject<ImsMenu>> pageQuery(@RequestBody ImsMenu imsMenu) {
