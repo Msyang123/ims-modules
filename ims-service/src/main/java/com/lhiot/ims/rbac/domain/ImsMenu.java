@@ -71,12 +71,4 @@ public class ImsMenu extends PagerRequestObject{
     @ApiModelProperty(value = "菜单图标", dataType = "String")
     private String icon;
 
-
-    /**
-     *拦截url设置配置(用于功能操作)
-     */
-    @JsonProperty("antUrl")
-    @ApiModelProperty(value = "拦截url设置配置(用于功能操作)", dataType = "String")
-    private String antUrl;
-
 }
