@@ -11,9 +11,11 @@ import com.lhiot.ims.rbac.mapper.ImsRelationRoleMenuMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
 * Description:菜单服务类
@@ -51,7 +53,7 @@ public class ImsMenuService {
             imsOperation.setAntUrl(imsMenu.getAntUrl());
             imsOperation.setMenuId(imsMenu.getId());
             imsOperation.setName(imsMenu.getName()+"操作限制配置");
-            imsOperation.setType("*");//所有请求都不拦截
+            imsOperation.setType(Arrays.stream(RequestMethod.values()).map(RequestMethod::name).collect(Collectors.joining(",")));//所有请求都不拦截
             imsOperationMapper.create(imsOperation);
         }
         return result;
