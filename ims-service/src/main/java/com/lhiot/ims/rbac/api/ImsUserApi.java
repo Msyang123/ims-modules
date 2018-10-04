@@ -7,7 +7,6 @@ import com.leon.microx.support.swagger.ApiParamType;
 import com.leon.microx.util.Maps;
 import com.leon.microx.util.StringUtils;
 import com.leon.microx.util.auditing.MD5;
-import com.lhiot.ims.rbac.common.ConverStrToRequestMethod;
 import com.lhiot.ims.rbac.common.PagerResultObject;
 import com.lhiot.ims.rbac.domain.AdminLogin;
 import com.lhiot.ims.rbac.domain.ImsOperation;
