@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lhiot.ims.rbac.mapper.ImsRelationRoleMenuMapper">
+
+    <!-- 数据库字段对象关系映射 -->
+    <resultMap id="BaseResultMap"
+        type="com.lhiot.ims.rbac.domain.ImsRelationRoleMenu" >
+        <id column="id" property="id"/>
+        <result column="role_id" property="roleId" />
+        <result column="menu_id" property="menuId" />
+    </resultMap>
+
+    <!-- base查询字段  -->
+    <sql id="Base_Column_List" >
+        <trim suffixOverrides="," >
+            id,
+            role_id,
+            menu_id,
+        </trim>
+    </sql>
+
+    <!--新增角色与菜单关联-->
+    <insert id="batchInsert" parameterType="java.util.List" useGeneratedKeys="true" keyColumn="id">
+        INSERT INTO ims_relation_role_menu(role_id,menu_id)
+        VALUE
+        <foreach collection="list" item="item" separator=",">
+            (
+            #{item.roleId},#{item.menuId}
+            )
+        </foreach>
+    </insert>
+
+    <!--根据id修改角色与菜单关联-->
+    <update id="updateById" parameterType="com.lhiot.ims.rbac.domain.ImsRelationRoleMenu">
+        update ims_relation_role_menu
+        <set>
+            <if test="id != null ">
+                id = #{id},
+            </if>
+            <if test="roleId != null ">
+                role_id = #{roleId},
+            </if>
+            <if test="menuId != null ">
+                menu_id = #{menuId},
+            </if>
+        </set>
+        where id=#{id}
+    </update>
+
+    <!--根据ids删除角色与菜单关联-->
+    <delete id="deleteByIds" parameterType="java.util.List">
+        delete from ims_relation_role_menu where id in
+        <foreach collection="list" item="item" open="("
+            separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+
+    <!--根据角色ids删除角色与菜单关联-->
+    <delete id="deleteByRoleIds" parameterType="java.util.List">
+        delete from ims_relation_role_menu where role_id in
+        <foreach collection="list" item="item" open="("
+                 separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <!-- 根据id查找角色与菜单关联 -->
+	<select id="selectById" resultMap="BaseResultMap"
+		parameterType="long"> select <include refid="Base_Column_List" />
+		from ims_relation_role_menu where id = #{id}
+	</select>
+
+
+    <!-- base where条件  -->
+    <sql id="Base_Where_Condition" >
+        <where>
+            <if test="id != null ">
+                and id = #{id}
+            </if>
+            <if test="roleId != null ">
+                and role_id = #{roleId}
+            </if>
+            <if test="menuId != null ">
+                and menu_id = #{menuId}
+            </if>
+        </where>
+    </sql>
+
+
+    <!--查询角色与菜单关联列表-->
+     <select id="pageImsRelationRoleMenus" resultMap="BaseResultMap"
+        parameterType="com.lhiot.ims.rbac.domain.ImsRelationRoleMenu">
+	        select <include refid="Base_Column_List" />
+	        from ims_relation_role_menu
+	        <include refid="Base_Where_Condition" />
+	        <include refid="common.pager" />
+    </select>
+
+    <!--查询角色与菜单关联总记录-->
+    <select id="pageImsRelationRoleMenuCounts" resultType="long"
+        parameterType="com.lhiot.ims.rbac.domain.ImsRelationRoleMenu">
+            select count(1)
+            from ims_relation_role_menu
+            <include refid="Base_Where_Condition" />
+    </select>
+
+</mapper>
