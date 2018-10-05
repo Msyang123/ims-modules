@@ -4,6 +4,7 @@ import com.lhiot.ims.rbac.domain.ImsMenu;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Description:菜单Mapper类
@@ -82,6 +83,13 @@ public interface ImsMenuMapper {
      * @return
      */
     List<ImsMenu> listImsMenus(long id);
+
+    /**
+     * Description:查询菜单列表(非系统)
+     *
+     * @return
+     */
+    List<ImsMenu> listImsMenusByPid(Map param);
 
 
     /**

@@ -1,5 +1,6 @@
 package com.lhiot.ims.rbac.service;
 
+import com.leon.microx.util.Maps;
 import com.leon.microx.util.StringUtils;
 import com.lhiot.ims.rbac.common.PagerResultObject;
 import com.lhiot.ims.rbac.domain.ImsMenu;
@@ -135,6 +136,16 @@ public class ImsMenuService {
 
         return this.imsMenuMapper.listImsMenus(id);
     }
+    /**
+     * 列表查询菜单信息
+     * @param pid 菜单pid
+     * @param id 用户id
+     * @return
+     */
+    public List<ImsMenu> listImsMenus(long pid,long id){
+        return this.imsMenuMapper.listImsMenusByPid(Maps.of("pid",pid,"id",id));
+    }
+
 
     /**
      * 列表查询系统信息
