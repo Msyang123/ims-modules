@@ -91,6 +91,15 @@ public class ImsMenuApi {
         return ResponseEntity.ok(Multiple.of(imsMenuService.listImsMenus(id)));
     }
 
+    @GetMapping("/menus/{pid}")
+    @ApiOperation(value = "依据父id查询菜单列表(非系统)")
+    public ResponseEntity<Multiple<ImsMenu>> listImsMenus(@PathVariable("pid") long pid, Sessions.User user) {
+        log.debug("查询菜单列表\t param:");
+        //通过session获取用户id
+        Long id = (Long) user.getUser().get("id");
+        return ResponseEntity.ok(Multiple.of(imsMenuService.listImsMenus(pid,id)));
+    }
+
     @GetMapping("/systems")
     @ApiOperation(value = "查询菜单列表(系统)")
     public ResponseEntity<Multiple<ImsMenu>> listImsSystems(Sessions.User user) {

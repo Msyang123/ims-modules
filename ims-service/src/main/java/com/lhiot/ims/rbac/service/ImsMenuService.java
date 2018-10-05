@@ -1,5 +1,7 @@
 package com.lhiot.ims.rbac.service;
 
+import com.leon.microx.util.Maps;
+import com.leon.microx.util.StringUtils;
 import com.lhiot.ims.rbac.common.PagerResultObject;
 import com.lhiot.ims.rbac.domain.ImsMenu;
 import com.lhiot.ims.rbac.domain.ImsRelationRoleMenu;
@@ -9,11 +11,9 @@ import com.lhiot.ims.rbac.mapper.ImsRelationRoleMenuMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
 * Description:菜单服务类
@@ -69,7 +69,7 @@ public class ImsMenuService {
     */ 
     public int deleteByIds(String ids){
         //检查是否有关联数据的菜单
-        for(String id:ids.split(",")){
+        for(String id: StringUtils.tokenizeToStringArray(ids, ",")){
             ImsRelationRoleMenu relationRoleMenu=new ImsRelationRoleMenu();
             relationRoleMenu.setMenuId(Long.valueOf(id));
             long count = relationRoleMenuMapper.pageImsRelationRoleMenuCounts(relationRoleMenu);
@@ -78,10 +78,10 @@ public class ImsMenuService {
                 return 0;
             }
         }
-        int result =this.imsMenuMapper.deleteByIds(Arrays.asList(ids.split(",")));
+        int result =this.imsMenuMapper.deleteByIds(Arrays.asList(StringUtils.tokenizeToStringArray(ids, ",")));
         if(result>0){
             //删除菜单对应的操作
-            this.imsOperationMapper.deleteByMenuIds(Arrays.asList(ids.split(",")));
+            this.imsOperationMapper.deleteByMenuIds(Arrays.asList(StringUtils.tokenizeToStringArray(ids, ",")));
         }
         return result;
     }
@@ -136,6 +136,16 @@ public class ImsMenuService {
 
         return this.imsMenuMapper.listImsMenus(id);
     }
+    /**
+     * 列表查询菜单信息
+     * @param pid 菜单pid
+     * @param id 用户id
+     * @return
+     */
+    public List<ImsMenu> listImsMenus(long pid,long id){
+        return this.imsMenuMapper.listImsMenusByPid(Maps.of("pid",pid,"id",id));
+    }
+
 
     /**
      * 列表查询系统信息
