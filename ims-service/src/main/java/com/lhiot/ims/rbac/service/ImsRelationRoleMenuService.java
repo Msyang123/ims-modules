@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import com.leon.microx.util.StringUtils;
 import com.lhiot.ims.rbac.domain.ImsOperation;
 import com.lhiot.ims.rbac.domain.ImsRelationRoleMenu;
 import com.lhiot.ims.rbac.domain.ImsRelationRoleOperation;
@@ -59,7 +60,7 @@ public class ImsRelationRoleMenuService {
             imsRelationRoleMenuList.add(relationRoleMenu);
         }
         //查询所有菜单对应的关联操作
-        List<ImsOperation> operationList = operationMapper.listByMenuIds(Arrays.asList(menuIds));
+        List<ImsOperation> operationList = operationMapper.listByMenuIds(Arrays.asList(StringUtils.tokenizeToStringArray(menuIds, ",")));
         if(!CollectionUtils.isEmpty(operationList)) {
             //构造角色与操作关联关系列表
             List<ImsRelationRoleOperation> relationRoleOperationList = new ArrayList<>(operationList.size());
@@ -98,7 +99,7 @@ public class ImsRelationRoleMenuService {
      * @date 2018/09/29 11:42:57
      */
     public int deleteByIds(String ids) {
-        return this.relationRoleMenuMapper.deleteByIds(Arrays.asList(ids.split(",")));
+        return this.relationRoleMenuMapper.deleteByIds(Arrays.asList(StringUtils.tokenizeToStringArray(ids, ",")));
     }
 
     /**

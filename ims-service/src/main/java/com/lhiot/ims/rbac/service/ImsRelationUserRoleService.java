@@ -1,5 +1,6 @@
 package com.lhiot.ims.rbac.service;
 
+import com.leon.microx.util.StringUtils;
 import com.lhiot.ims.rbac.domain.ImsRelationUserRole;
 import com.lhiot.ims.rbac.mapper.ImsRelationUserRoleMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,7 +71,7 @@ public class ImsRelationUserRoleService {
      * @date 2018/09/29 11:42:57
      */
     public int deleteByIds(String ids) {
-        return this.relationUserRoleMapper.deleteByIds(Arrays.asList(ids.split(",")));
+        return this.relationUserRoleMapper.deleteByIds(Arrays.asList(StringUtils.tokenizeToStringArray(ids, ",")));
     }
 
     /**

@@ -2,6 +2,8 @@ package com.lhiot.ims.rbac.service;
 
 import java.util.Arrays;
 import java.util.List;
+
+import com.leon.microx.util.StringUtils;
 import com.lhiot.ims.rbac.domain.ImsOperation;
 import com.lhiot.ims.rbac.mapper.ImsOperationMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,7 +60,7 @@ public class ImsOperationService {
     * @date 2018/09/29 11:42:57
     */ 
     public int deleteByIds(String ids){
-        return this.imsOperationMapper.deleteByIds(Arrays.asList(ids.split(",")));
+        return this.imsOperationMapper.deleteByIds(Arrays.asList(StringUtils.tokenizeToStringArray(ids, ",")));
     }
     
     /** 

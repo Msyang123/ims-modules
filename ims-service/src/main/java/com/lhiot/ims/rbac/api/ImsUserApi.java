@@ -120,7 +120,7 @@ public class ImsUserApi {
             return ResponseEntity
                     .created(URI.create("/ims-user/session/" + sessionId))
                     .header(Sessions.HTTP_HEADER_NAME, sessionId)
-                    .build();
+                    .body("{\""+Sessions.HTTP_HEADER_NAME+"\":\""+sessionId+"\"}");
         } finally {
             //adminMapper.updateLastLogin(Maps.of("id", admin.getId(), "last_login_at", Instant.now()));
         }

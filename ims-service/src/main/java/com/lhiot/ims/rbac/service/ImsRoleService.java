@@ -3,6 +3,7 @@ package com.lhiot.ims.rbac.service;
 import java.util.Arrays;
 import java.util.List;
 
+import com.leon.microx.util.StringUtils;
 import com.lhiot.ims.rbac.domain.ImsRelationUserRole;
 import com.lhiot.ims.rbac.domain.ImsRole;
 import com.lhiot.ims.rbac.mapper.ImsRelationRoleMenuMapper;
@@ -71,7 +72,7 @@ public class ImsRoleService {
     public int deleteByIds(String ids){
 
         //检查是否有关联数据的角色
-        for(String id:ids.split(",")){
+        for(String id: StringUtils.tokenizeToStringArray(ids, ",")){
             ImsRelationUserRole relationUserRole=new ImsRelationUserRole();
             relationUserRole.setRoleId(Long.valueOf(id));
             long count = imsRelationUserRoleMapper.pageImsRelationUserRoleCounts(relationUserRole);
@@ -80,7 +81,7 @@ public class ImsRoleService {
                 return 0;
             }
         }
-        List<String> idArr = Arrays.asList(ids.split(","));
+        List<String> idArr = Arrays.asList(StringUtils.tokenizeToStringArray(ids, ","));
         int result =this.imsRoleMapper.deleteByIds(idArr);
         if(result>0){
             //删除时同时删除角色与菜单对应关系以及与操作对应关系

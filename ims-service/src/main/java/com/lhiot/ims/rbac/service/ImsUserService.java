@@ -2,6 +2,7 @@ package com.lhiot.ims.rbac.service;
 
 import java.util.Arrays;
 
+import com.leon.microx.util.StringUtils;
 import com.leon.microx.util.auditing.MD5;
 import com.lhiot.ims.rbac.domain.ImsUser;
 import com.lhiot.ims.rbac.mapper.ImsRelationUserRoleMapper;
@@ -58,8 +59,8 @@ public class ImsUserService {
     */
     public int deleteByIds(String ids){
         //有关联角色关系直接删除
-        this.imsRelationUserRoleMapper.deleteByUserIds(Arrays.asList(ids.split(",")));
-        return this.imsUserMapper.deleteByIds(Arrays.asList(ids.split(",")));
+        this.imsRelationUserRoleMapper.deleteByUserIds(Arrays.asList(StringUtils.tokenizeToStringArray(ids, ",")));
+        return this.imsUserMapper.deleteByIds(Arrays.asList(StringUtils.tokenizeToStringArray(ids, ",")));
     }
     
     /** 
