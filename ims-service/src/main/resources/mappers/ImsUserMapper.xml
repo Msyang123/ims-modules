@@ -147,11 +147,6 @@
 		from ims_user where id = #{id}
 	</select>
 
-    <select id="selectByAccount" resultMap="BaseResultMap"
-            parameterType="long"> select <include refid="Base_Column_List" />
-        from ims_user where account = #{account}
-    </select>
-
 
 
     <!-- base where条件  -->
