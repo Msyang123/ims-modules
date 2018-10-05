@@ -147,8 +147,6 @@
 		from ims_user where id = #{id}
 	</select>
 
-
-
     <!-- base where条件  -->
     <sql id="Base_Where_Condition" >
         <where>
@@ -206,7 +204,7 @@
     <!-- 根据账号查询用户 -->
     <select id="selectByAccount" resultMap="BaseResultMap"
             parameterType="String"> select <include refid="Base_Column_List" />
-        from mngr_auth_user where account = #{account}
+        from ims_user where account = #{account}
     </select>
 
 </mapper>
