@@ -2,8 +2,10 @@ package com.lhiot.ims.rbac.api;
 
 import com.leon.microx.support.result.Multiple;
 import com.leon.microx.support.session.Sessions;
+import com.leon.microx.util.StringUtils;
 import com.lhiot.ims.rbac.common.PagerResultObject;
 import com.lhiot.ims.rbac.domain.ImsMenu;
+import com.lhiot.ims.rbac.domain.MenuDisplay;
 import com.lhiot.ims.rbac.service.ImsMenuService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -13,6 +15,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * Description:菜单接口类
@@ -84,20 +90,27 @@ public class ImsMenuApi {
 
     @GetMapping("/menus")
     @ApiOperation(value = "查询菜单列表(非系统)")
-    public ResponseEntity<Multiple<ImsMenu>> listImsMenus(Sessions.User user) {
+    public ResponseEntity<Multiple<MenuDisplay>> listImsMenus(Sessions.User user) {
         log.debug("查询菜单列表\t param:");
         //通过session获取用户id
         Long id = (Long) user.getUser().get("id");
-        return ResponseEntity.ok(Multiple.of(imsMenuService.listImsMenus(id)));
+
+        List<MenuDisplay> menuDisplayList = Objects.requireNonNull(imsMenuService.listImsMenus(id)).stream()
+                .map(imsMenu -> new MenuDisplay(imsMenu.getId(),imsMenu.getPId(),imsMenu.getCode(),imsMenu.getName(),imsMenu.getIcon()))
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(Multiple.of(menuDisplayList));
     }
 
     @GetMapping("/menus/{pid}")
     @ApiOperation(value = "依据父id查询菜单列表(非系统)")
-    public ResponseEntity<Multiple<ImsMenu>> listImsMenus(@PathVariable("pid") long pid, Sessions.User user) {
+    public ResponseEntity<Multiple<MenuDisplay>> listImsMenus(@PathVariable("pid") long pid, Sessions.User user) {
         log.debug("查询菜单列表\t param:");
         //通过session获取用户id
         Long id = (Long) user.getUser().get("id");
-        return ResponseEntity.ok(Multiple.of(imsMenuService.listImsMenus(pid,id)));
+        List<MenuDisplay> menuDisplayList = Objects.requireNonNull(imsMenuService.listImsMenus(pid,id)).stream()
+                .map(imsMenu -> new MenuDisplay(imsMenu.getId(),imsMenu.getPId(),imsMenu.getCode(),imsMenu.getName(),imsMenu.getIcon()))
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(Multiple.of(menuDisplayList));
     }
 
     @GetMapping("/systems")

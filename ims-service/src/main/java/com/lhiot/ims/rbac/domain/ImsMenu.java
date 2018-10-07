@@ -32,7 +32,7 @@ public class ImsMenu extends PagerRequestObject{
     /**
     *父菜单id
     */
-    @JsonProperty("pId")
+    @JsonProperty("pid")
     @ApiModelProperty(value = "父菜单id", dataType = "Long")
     private Long pId;
 
