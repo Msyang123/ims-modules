@@ -137,6 +137,13 @@ public class ImsUserApi {
         return ResponseEntity.noContent().build();
     }
 
+    @GetMapping("/sessions")
+    @ApiOperation("获取登录用户信息")
+    public ResponseEntity userInfo(HttpServletRequest request, Sessions.User user) {
+        String sessionId = session.id(request);
+        return ResponseEntity.ok(session.user(sessionId).getUser());
+    }
+
     @PostMapping("/create")
     @ApiOperation(value = "添加用户")
     @ApiImplicitParam(paramType = "body", name = "imsUser", value = "要添加的用户", required = true, dataType = "ImsUser")
