@@ -1,9 +1,12 @@
 package com.lhiot.ims.rbac.service;
 
 import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
 
 import com.leon.microx.util.StringUtils;
 import com.leon.microx.util.auditing.MD5;
+import com.lhiot.ims.rbac.domain.ImsRole;
 import com.lhiot.ims.rbac.domain.ImsUser;
 import com.lhiot.ims.rbac.mapper.ImsRelationUserRoleMapper;
 import com.lhiot.ims.rbac.mapper.ImsUserMapper;
@@ -107,5 +110,17 @@ public class ImsUserService {
        return PagerResultObject.of(imsUser, total,
               this.imsUserMapper.pageImsUsers(imsUser));
     }
+
+    /**
+     * Description: 查询用户id查询已关联的角色列表
+     *
+     * @param id
+     * @return
+     */
+    public List<ImsRole> getRelationRolesById(Long id) {
+
+        return  this.imsUserMapper.getRelationRolesById(id);
+    }
+
 }
 

@@ -44,4 +44,27 @@ public class ImsRole extends PagerRequestObject{
     @ApiModelProperty(value = "角色状态", dataType = "String")
     private String status;
 
+    /**
+     *角色描述
+     */
+    @JsonProperty("roleDesc")
+    @ApiModelProperty(value = "角色描述", dataType = "String")
+    private String roleDesc;
+
+    /**
+     *创建人
+     */
+    @JsonProperty("createBy")
+    @ApiModelProperty(value = "创建人", dataType = "String")
+    private String createBy;
+
+    /**
+     *创建时间
+     */
+    @JsonProperty("createAt")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
+    @ApiModelProperty(value = "创建时间", dataType = "Date")
+    private java.util.Date createAt;
+
+
 }

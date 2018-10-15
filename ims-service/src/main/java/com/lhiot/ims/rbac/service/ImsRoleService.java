@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.leon.microx.util.StringUtils;
+import com.lhiot.ims.rbac.domain.ImsMenu;
 import com.lhiot.ims.rbac.domain.ImsRelationUserRole;
 import com.lhiot.ims.rbac.domain.ImsRole;
 import com.lhiot.ims.rbac.mapper.ImsRelationRoleMenuMapper;
@@ -131,5 +132,17 @@ public class ImsRoleService {
        return PagerResultObject.of(imsRole, total,
               this.imsRoleMapper.pageImsRoles(imsRole));
     }
+
+    /**
+     * Description: 查询角色id查询已关联的菜单列表
+     *
+     * @param id
+     * @return
+     */
+    public List<ImsMenu> getRelationMenusById(Long id) {
+
+        return  this.imsRoleMapper.getRelationMenusById(id);
+    }
+
 }
 

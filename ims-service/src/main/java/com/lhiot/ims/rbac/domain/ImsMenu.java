@@ -51,11 +51,11 @@ public class ImsMenu extends PagerRequestObject{
     private String code;
 
     /**
-    *菜单状态
+    *菜单类型
     */
-    @JsonProperty("status")
-    @ApiModelProperty(value = "菜单状态", dataType = "String")
-    private String status;
+    @JsonProperty("type")
+    @ApiModelProperty(value = "菜单类型", dataType = "String")
+    private String type;
 
     /**
     *菜单排序

@@ -1,6 +1,8 @@
 package com.lhiot.ims.rbac.api;
 
+import com.leon.microx.support.session.Sessions;
 import com.lhiot.ims.rbac.common.PagerResultObject;
+import com.lhiot.ims.rbac.domain.ImsMenu;
 import com.lhiot.ims.rbac.domain.ImsRole;
 import com.lhiot.ims.rbac.service.ImsRelationRoleMenuService;
 import com.lhiot.ims.rbac.service.ImsRoleService;
@@ -12,6 +14,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
 * Description:角色接口类
@@ -91,5 +95,15 @@ public class ImsRoleApi {
         
         return ResponseEntity.ok(imsRoleService.pageList(imsRole));
     }
-    
+
+    @PostMapping("/relation/menus/{id}")
+    @ApiOperation(value = "查询角色id查询已关联的菜单列表")
+    @ApiImplicitParam(paramType = "path", name = "id", value = "要查询的角色id", required = true, dataType = "Long")
+    public ResponseEntity<List<ImsMenu>> getRelationMenusById(@PathVariable("id") Long id){
+        log.debug("查询角色id查询已关联的菜单列表\t param:{}",id);
+
+        return ResponseEntity.ok(imsRoleService.getRelationMenusById(id));
+    }
+
+
 }

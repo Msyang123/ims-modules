@@ -8,10 +8,7 @@ import com.leon.microx.util.Maps;
 import com.leon.microx.util.StringUtils;
 import com.leon.microx.util.auditing.MD5;
 import com.lhiot.ims.rbac.common.PagerResultObject;
-import com.lhiot.ims.rbac.domain.AdminLogin;
-import com.lhiot.ims.rbac.domain.ImsOperation;
-import com.lhiot.ims.rbac.domain.ImsUser;
-import com.lhiot.ims.rbac.domain.Status;
+import com.lhiot.ims.rbac.domain.*;
 import com.lhiot.ims.rbac.service.ImsOperationService;
 import com.lhiot.ims.rbac.service.ImsRelationUserRoleService;
 import com.lhiot.ims.rbac.service.ImsUserService;
@@ -204,6 +201,15 @@ public class ImsUserApi {
         log.debug("查询用户分页列表\t param:{}",imsUser);
 
         return ResponseEntity.ok(imsUserService.pageList(imsUser));
+    }
+
+    @PostMapping("/relation/roles/{id}")
+    @ApiOperation(value = "查询用户id查询已关联的角色列表")
+    @ApiImplicitParam(paramType = "path", name = "id", value = "要查询的用户id", required = true, dataType = "Long")
+    public ResponseEntity<List<ImsRole>> getRelationRolesById(@PathVariable("id") Long id){
+        log.debug("查询用户id查询已关联的角色列表\t param:{}",id);
+
+        return ResponseEntity.ok(imsUserService.getRelationRolesById(id));
     }
 
 }
