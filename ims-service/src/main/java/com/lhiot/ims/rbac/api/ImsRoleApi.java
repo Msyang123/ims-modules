@@ -86,7 +86,7 @@ public class ImsRoleApi {
     @PostMapping("/pages")
     @ApiOperation(value = "查询角色分页列表")
     @ApiImplicitParam(paramType = "body", name = "imsRole", value = "角色查询参数", required = true, dataType = "ImsRole")
-    public ResponseEntity<Pages<ImsRole>> pageQuery(ImsRole imsRole){
+    public ResponseEntity<Pages<ImsRole>> pageQuery(@RequestBody ImsRole imsRole){
         log.debug("查询角色分页列表\t param:{}",imsRole);
         
         return ResponseEntity.ok(imsRoleService.pageList(imsRole));
