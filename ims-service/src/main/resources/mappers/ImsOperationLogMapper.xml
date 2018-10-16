@@ -148,7 +148,7 @@
     </select>
 
     <!--查询操作表日志总记录-->
-    <select id="pageImsOperationLogCounts" resultType="long"
+    <select id="pageImsOperationLogCounts" resultType="int"
         parameterType="com.lhiot.ims.rbac.domain.ImsOperationLog">
             select count(1)
             from ims_operation_log

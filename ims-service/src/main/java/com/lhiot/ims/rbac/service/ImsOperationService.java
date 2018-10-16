@@ -1,15 +1,15 @@
 package com.lhiot.ims.rbac.service;
 
-import java.util.Arrays;
-import java.util.List;
-
+import com.leon.microx.support.result.Pages;
 import com.leon.microx.util.StringUtils;
 import com.lhiot.ims.rbac.domain.ImsOperation;
 import com.lhiot.ims.rbac.mapper.ImsOperationMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.lhiot.ims.rbac.common.PagerResultObject;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
 * Description:功能操作服务类
@@ -35,8 +35,9 @@ public class ImsOperationService {
     * @author yijun
     * @date 2018/09/29 11:42:57
     */  
-    public int create(ImsOperation imsOperation){
-        return this.imsOperationMapper.create(imsOperation);
+    public ImsOperation create(ImsOperation imsOperation){
+        this.imsOperationMapper.create(imsOperation);
+        return imsOperation;
     }
 
     /** 
@@ -47,8 +48,9 @@ public class ImsOperationService {
     * @author yijun
     * @date 2018/09/29 11:42:57
     */ 
-    public int updateById(ImsOperation imsOperation){
-        return this.imsOperationMapper.updateById(imsOperation);
+    public ImsOperation updateById(ImsOperation imsOperation){
+        this.imsOperationMapper.updateById(imsOperation);
+        return imsOperation;
     }
 
     /** 
@@ -76,18 +78,6 @@ public class ImsOperationService {
     }
 
     /** 
-    * Description: 查询功能操作总记录数
-    *  
-    * @param imsOperation
-    * @return
-    * @author yijun
-    * @date 2018/09/29 11:42:57
-    */  
-    public long count(ImsOperation imsOperation){
-        return this.imsOperationMapper.pageImsOperationCounts(imsOperation);
-    }
-    
-    /** 
     * Description: 查询功能操作分页列表
     *  
     * @param imsOperation
@@ -95,12 +85,9 @@ public class ImsOperationService {
     * @author yijun
     * @date 2018/09/29 11:42:57
     */  
-    public PagerResultObject<ImsOperation> pageList(ImsOperation imsOperation) {
-       long total = 0;
-       if (imsOperation.getRows() != null && imsOperation.getRows() > 0) {
-           total = this.count(imsOperation);
-       }
-       return PagerResultObject.of(imsOperation, total,
+    public Pages<ImsOperation> pageList(ImsOperation imsOperation) {
+
+       return Pages.of(this.imsOperationMapper.pageImsOperationCounts(imsOperation),
               this.imsOperationMapper.pageImsOperations(imsOperation));
     }
 

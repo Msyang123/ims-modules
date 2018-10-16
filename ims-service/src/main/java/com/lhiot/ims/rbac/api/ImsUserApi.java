@@ -1,13 +1,13 @@
 package com.lhiot.ims.rbac.api;
 
 import com.leon.microx.support.http.RemoteInvoker;
+import com.leon.microx.support.result.Pages;
 import com.leon.microx.support.session.Authority;
 import com.leon.microx.support.session.Sessions;
 import com.leon.microx.support.swagger.ApiParamType;
 import com.leon.microx.util.Maps;
 import com.leon.microx.util.StringUtils;
 import com.leon.microx.util.auditing.MD5;
-import com.lhiot.ims.rbac.common.PagerResultObject;
 import com.lhiot.ims.rbac.domain.AdminLogin;
 import com.lhiot.ims.rbac.domain.ImsOperation;
 import com.lhiot.ims.rbac.domain.ImsUser;
@@ -28,7 +28,6 @@ import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
@@ -104,7 +103,7 @@ public class ImsUserApi {
                 "id",admin.getId(),"name",admin.getName(),"account",admin.getAccount()
         )).timeToLive(30, TimeUnit.MINUTES);
 
-        // TODO 填充访问权限：sessionUser.authorities(Authority.of("/**/users/?, RequestMethod.GET))
+        //填充访问权限：sessionUser.authorities(Authority.of("/**/users/?, RequestMethod.GET))
         //查找用户的操作权限
         List<ImsOperation> imsOperationList = imsOperationService.listByUserId(admin.getId());
         List<Authority> authorityList = Objects.requireNonNull(imsOperationList).stream()
@@ -144,22 +143,22 @@ public class ImsUserApi {
         return ResponseEntity.ok(session.user(sessionId).getUser());
     }
 
-    @PostMapping("/create")
+    @PostMapping("/")
     @ApiOperation(value = "添加用户")
     @ApiImplicitParam(paramType = "body", name = "imsUser", value = "要添加的用户", required = true, dataType = "ImsUser")
-    public ResponseEntity<Integer> create(@RequestBody ImsUser imsUser) {
+    public ResponseEntity<ImsUser> create(@RequestBody ImsUser imsUser) {
         log.debug("添加用户\t param:{}",imsUser);
         
         return ResponseEntity.ok(imsUserService.create(imsUser));
     }
 
-    @PutMapping("/update/{id}")
+    @PutMapping("/{id}")
     @ApiOperation(value = "根据id更新用户")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "path", name = "id", value = "用户id", required = true, dataType = "Long"),
             @ApiImplicitParam(paramType = "body", name = "imsUser", value = "要更新的用户", required = true, dataType = "ImsUser")
     })
-    public ResponseEntity<Integer> update(@PathVariable("id") Long id,@RequestBody ImsUser imsUser) {
+    public ResponseEntity<ImsUser> update(@PathVariable("id") Long id,@RequestBody ImsUser imsUser) {
         log.debug("根据id更新用户\t id:{} param:{}",id,imsUser);
         imsUser.setId(id);
         
@@ -197,10 +196,10 @@ public class ImsUserApi {
         return ResponseEntity.ok(imsUserService.selectById(id));
     }
     
-    @PostMapping("/page/query")
+    @PostMapping("/pages")
     @ApiOperation(value = "查询用户分页列表")
     @ApiImplicitParam(paramType = "body", name = "imsUser", value = "查询用户参数", required = true, dataType = "ImsUser")
-    public ResponseEntity<PagerResultObject<ImsUser>> pageQuery(@RequestBody ImsUser imsUser){
+    public ResponseEntity<Pages<ImsUser>> pageQuery(@RequestBody ImsUser imsUser){
         log.debug("查询用户分页列表\t param:{}",imsUser);
         
         return ResponseEntity.ok(imsUserService.pageList(imsUser));

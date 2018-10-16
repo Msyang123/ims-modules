@@ -14,20 +14,26 @@ public class MenuDisplay {
      'parentid': 0,
      'code': 'components',
      'path': '/components',
+     'title': '组件',
+     'icon': 'logo-buffer'
      'meta': {
      'title': '组件',
      'icon': 'logo-buffer'
-     }
+     },
+     'type': 'PARENT'
      }
      */
     /**
      * id
      */
-    public MenuDisplay(Long id, Long parentid, String code, String title, String icon) {
+    public MenuDisplay(Long id, Long parentid, String code, String title, String icon,String type) {
         this.id = id;
         this.parentid = parentid;
         this.code = code;
+        this.title = title;
+        this.icon = icon;
         this.meta = new Meta(title, icon);
+        this.type = type;
     }
 
     @JsonProperty("id")
@@ -47,6 +53,27 @@ public class MenuDisplay {
     @JsonProperty("code")
     @ApiModelProperty(value = "菜单标识", dataType = "String")
     private String code;
+
+    /**
+     * 菜单标题
+     */
+    @JsonProperty("title")
+    @ApiModelProperty(value = "菜单标题", dataType = "String")
+    private String title;
+
+    /**
+     * 图标
+     */
+    @JsonProperty("icon")
+    @ApiModelProperty(value = "图标", dataType = "String")
+    private String icon;
+
+    /**
+     * 父子级菜单标识
+     */
+    @JsonProperty("type")
+    @ApiModelProperty(value = "父子级菜单标识", dataType = "String")
+    private String type;
 
 
     /**

@@ -1,8 +1,6 @@
 package com.lhiot.ims.rbac.service;
 
-import java.util.Arrays;
-import java.util.List;
-
+import com.leon.microx.support.result.Pages;
 import com.leon.microx.util.StringUtils;
 import com.lhiot.ims.rbac.domain.ImsRelationUserRole;
 import com.lhiot.ims.rbac.domain.ImsRole;
@@ -13,7 +11,9 @@ import com.lhiot.ims.rbac.mapper.ImsRoleMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.lhiot.ims.rbac.common.PagerResultObject;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
 * Description:角色服务类
@@ -45,8 +45,9 @@ public class ImsRoleService {
     * @author yijun
     * @date 2018/09/29 11:42:57
     */  
-    public int create(ImsRole imsRole){
-        return this.imsRoleMapper.create(imsRole);
+    public ImsRole create(ImsRole imsRole){
+        this.imsRoleMapper.create(imsRole);
+        return imsRole;
     }
 
     /** 
@@ -57,8 +58,9 @@ public class ImsRoleService {
     * @author yijun
     * @date 2018/09/29 11:42:57
     */ 
-    public int updateById(ImsRole imsRole){
-        return this.imsRoleMapper.updateById(imsRole);
+    public ImsRole updateById(ImsRole imsRole){
+        this.imsRoleMapper.updateById(imsRole);
+        return imsRole;
     }
 
     /** 
@@ -123,12 +125,8 @@ public class ImsRoleService {
     * @author yijun
     * @date 2018/09/29 11:42:57
     */  
-    public PagerResultObject<ImsRole> pageList(ImsRole imsRole) {
-       long total = 0;
-       if (imsRole.getRows() != null && imsRole.getRows() > 0) {
-           total = this.count(imsRole);
-       }
-       return PagerResultObject.of(imsRole, total,
+    public Pages<ImsRole> pageList(ImsRole imsRole) {
+       return Pages.of(this.imsRoleMapper.pageImsRoleCounts(imsRole),
               this.imsRoleMapper.pageImsRoles(imsRole));
     }
 }

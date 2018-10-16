@@ -74,7 +74,7 @@ public interface ImsMenuMapper {
      * @author yijun
      * @date 2018/09/29 11:42:57
      */
-    long pageImsMenuCounts(ImsMenu imsMenu);
+    int pageImsMenuCounts(ImsMenu imsMenu);
 
     /**
      * Description:查询菜单列表(非系统)
@@ -83,6 +83,13 @@ public interface ImsMenuMapper {
      * @return
      */
     List<ImsMenu> listImsMenus(long id);
+
+    /**
+     * Description:查询菜单列表(包括系统)
+     * @return
+     */
+    List<ImsMenu> listIncludeSystemImsMenus();
+
 
     /**
      * Description:查询菜单列表(非系统)

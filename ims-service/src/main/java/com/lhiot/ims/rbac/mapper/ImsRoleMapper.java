@@ -72,5 +72,5 @@ public interface ImsRoleMapper {
     * @author yijun
     * @date 2018/09/29 11:42:57
     */
-    long pageImsRoleCounts(ImsRole imsRole);
+    int pageImsRoleCounts(ImsRole imsRole);
 }

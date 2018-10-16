@@ -1,9 +1,8 @@
 package com.lhiot.ims.rbac.api;
 
 import com.leon.microx.support.result.Multiple;
+import com.leon.microx.support.result.Pages;
 import com.leon.microx.support.session.Sessions;
-import com.leon.microx.util.StringUtils;
-import com.lhiot.ims.rbac.common.PagerResultObject;
 import com.lhiot.ims.rbac.domain.ImsMenu;
 import com.lhiot.ims.rbac.domain.MenuDisplay;
 import com.lhiot.ims.rbac.service.ImsMenuService;
@@ -39,22 +38,22 @@ public class ImsMenuApi {
         this.imsMenuService = imsMenuService;
     }
 
-    @PostMapping("/create")
+    @PostMapping("/")
     @ApiOperation(value = "添加菜单")
     @ApiImplicitParam(paramType = "body", name = "imsMenu", value = "要添加的菜单", required = true, dataType = "ImsMenu")
-    public ResponseEntity<Integer> create(@RequestBody ImsMenu imsMenu) {
+    public ResponseEntity<ImsMenu> create(@RequestBody ImsMenu imsMenu) {
         log.debug("添加菜单\t param:{}", imsMenu);
 
         return ResponseEntity.ok(imsMenuService.create(imsMenu));
     }
 
-    @PutMapping("/update/{id}")
+    @PutMapping("/{id}")
     @ApiOperation(value = "根据id更新菜单")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "path", name = "id",value = "菜单id",required = true, dataType = "Long"),
             @ApiImplicitParam(paramType = "body", name = "imsMenu", value = "要更新的菜单", required = true, dataType = "ImsMenu")
     })
-    public ResponseEntity<Integer> update(@PathVariable("id") Long id, @RequestBody ImsMenu imsMenu) {
+    public ResponseEntity<ImsMenu> update(@PathVariable("id") Long id, @RequestBody ImsMenu imsMenu) {
         log.debug("根据id更新菜单\t id:{} param:{}", id, imsMenu);
         imsMenu.setId(id);
 
@@ -78,10 +77,10 @@ public class ImsMenuApi {
         return ResponseEntity.ok(imsMenuService.selectById(id));
     }
 
-    @PostMapping("/pages/query")
+    @PostMapping("/pages")
     @ApiOperation(value = "查询菜单分页列表")
     @ApiImplicitParam(paramType = "body", name = "imsMenu", value = "菜单分页查询参数", required = true, dataType = "ImsMenu")
-    public ResponseEntity<PagerResultObject<ImsMenu>> pageQuery(@RequestBody ImsMenu imsMenu) {
+    public ResponseEntity<Pages<ImsMenu>> pageQuery(@RequestBody ImsMenu imsMenu) {
         log.debug("查询菜单分页列表\t param:{}", imsMenu);
 
         return ResponseEntity.ok(imsMenuService.pageList(imsMenu));
@@ -96,7 +95,18 @@ public class ImsMenuApi {
         Long id = (Long) user.getUser().get("id");
 
         List<MenuDisplay> menuDisplayList = Objects.requireNonNull(imsMenuService.listImsMenus(id)).stream()
-                .map(imsMenu -> new MenuDisplay(imsMenu.getId(),imsMenu.getPId(),imsMenu.getCode(),imsMenu.getName(),imsMenu.getIcon()))
+                .map(imsMenu -> new MenuDisplay(imsMenu.getId(),imsMenu.getPId(),imsMenu.getCode(),imsMenu.getName(),imsMenu.getIcon(),imsMenu.getType()))
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(Multiple.of(menuDisplayList));
+    }
+
+    @GetMapping("/menus/list")
+    @ApiOperation(value = "查询菜单列表(包括系统)")
+    public ResponseEntity<Multiple<MenuDisplay>> listIncludeSystemImsMenus() {
+        log.debug("查询菜单列表\t param:");
+
+        List<MenuDisplay> menuDisplayList = Objects.requireNonNull(imsMenuService.listIncludeSystemImsMenus()).stream()
+                .map(imsMenu -> new MenuDisplay(imsMenu.getId(),imsMenu.getPId(),imsMenu.getCode(),imsMenu.getName(),imsMenu.getIcon(),imsMenu.getType()))
                 .collect(Collectors.toList());
         return ResponseEntity.ok(Multiple.of(menuDisplayList));
     }
@@ -108,7 +118,7 @@ public class ImsMenuApi {
         //通过session获取用户id
         Long id = (Long) user.getUser().get("id");
         List<MenuDisplay> menuDisplayList = Objects.requireNonNull(imsMenuService.listImsMenus(pid,id)).stream()
-                .map(imsMenu -> new MenuDisplay(imsMenu.getId(),imsMenu.getPId(),imsMenu.getCode(),imsMenu.getName(),imsMenu.getIcon()))
+                .map(imsMenu -> new MenuDisplay(imsMenu.getId(),imsMenu.getPId(),imsMenu.getCode(),imsMenu.getName(),imsMenu.getIcon(),imsMenu.getType()))
                 .collect(Collectors.toList());
         return ResponseEntity.ok(Multiple.of(menuDisplayList));
     }

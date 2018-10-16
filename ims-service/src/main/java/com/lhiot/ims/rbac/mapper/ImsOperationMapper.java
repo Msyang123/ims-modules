@@ -82,7 +82,7 @@ public interface ImsOperationMapper {
     * @author yijun
     * @date 2018/09/29 11:42:57
     */
-    long pageImsOperationCounts(ImsOperation imsOperation);
+    int pageImsOperationCounts(ImsOperation imsOperation);
 
     /**
      * Description:依据用户id查询功能操作列表

@@ -100,7 +100,7 @@
     </select>
 
     <!--查询角色与操作关联总记录-->
-    <select id="pageImsRelationRoleOperationCounts" resultType="long"
+    <select id="pageImsRelationRoleOperationCounts" resultType="int"
         parameterType="com.lhiot.ims.rbac.domain.ImsRelationRoleOperation">
             select count(1)
             from ims_relation_role_operation

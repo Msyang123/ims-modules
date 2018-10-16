@@ -1,12 +1,10 @@
 package com.lhiot.ims.rbac.domain;
 
-import com.lhiot.ims.rbac.common.PagerRequestObject;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
@@ -19,8 +17,7 @@ import lombok.ToString;
 @ToString(callSuper = true)
 @ApiModel
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = true)
-public class ImsMenu extends PagerRequestObject{
+public class ImsMenu{
 
     /**
     *id
@@ -51,11 +48,11 @@ public class ImsMenu extends PagerRequestObject{
     private String code;
 
     /**
-    *菜单状态
+    *菜单类型  PARENT-父级菜单  SON-叶子菜单
     */
-    @JsonProperty("status")
-    @ApiModelProperty(value = "菜单状态", dataType = "String")
-    private String status;
+    @JsonProperty("type")
+    @ApiModelProperty(value = "菜单类型  PARENT-父级菜单  SON-叶子菜单", dataType = "String")
+    private String type;
 
     /**
     *菜单排序
@@ -70,5 +67,17 @@ public class ImsMenu extends PagerRequestObject{
     @JsonProperty("icon")
     @ApiModelProperty(value = "菜单图标", dataType = "String")
     private String icon;
+
+
+    @JsonIgnore
+    @ApiModelProperty(value = "当前页,默认值1")
+    private Long page = 1L;
+
+    /**
+     * 传入-1可不分页
+     */
+    @JsonIgnore
+    @ApiModelProperty(value = "每页显示条数,默认值10")
+    private Long rows = 10L;
 
 }

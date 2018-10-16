@@ -83,5 +83,5 @@ public interface ImsRelationUserRoleMapper {
     * @author yijun
     * @date 2018/09/29 11:42:57
     */
-    long pageImsRelationUserRoleCounts(ImsRelationUserRole relationUserRole);
+    int pageImsRelationUserRoleCounts(ImsRelationUserRole relationUserRole);
 }
