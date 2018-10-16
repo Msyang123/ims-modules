@@ -115,5 +115,18 @@ public class ImsOperationService {
     public List<ImsOperation> listByUserId(long id) {
         return this.imsOperationMapper.listByUserId(id);
     }
+
+    /**
+     * Description: 根据菜单id查询操作权限列表
+     *
+     * @param menuIds 菜单ids
+     * @return
+     * @author hufan
+     * @date 2018/10/16 10:13:57
+     */
+    public List<ImsOperation> listByMenuIds(String menuIds) {
+
+        return this.imsOperationMapper.listByMenuIds(Arrays.asList(StringUtils.tokenizeToStringArray(menuIds, ",")));
+    }
 }
 

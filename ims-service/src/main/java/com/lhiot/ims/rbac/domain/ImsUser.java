@@ -69,7 +69,7 @@ public class ImsUser extends PagerRequestObject{
     *用户状态
     */
     @JsonProperty("status")
-    @ApiModelProperty(value = "用户状态", dataType = "String")
+    @ApiModelProperty(value = "用户状态", dataType = "Status")
     private Status status;
 
     /**

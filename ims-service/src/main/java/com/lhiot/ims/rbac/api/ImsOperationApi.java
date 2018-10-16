@@ -1,5 +1,6 @@
 package com.lhiot.ims.rbac.api;
 
+import com.leon.microx.support.session.Sessions;
 import com.lhiot.ims.rbac.common.PagerResultObject;
 import com.lhiot.ims.rbac.domain.ImsOperation;
 import com.lhiot.ims.rbac.service.ImsOperationService;
@@ -11,6 +12,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
 * Description:功能操作接口类
@@ -30,22 +33,38 @@ public class ImsOperationApi {
         this.imsOperationService = imsOperationService;
     }
 
-    
+    @Sessions.Uncheck
+    @PostMapping("/create")
+    @ApiOperation(value = "添加功能操作表")
+    @ApiImplicitParam(paramType = "body", name = "imsOperation", value = "要添加的功能操作表", required = true, dataType = "ImsOperation")
+    public ResponseEntity<Integer> create(@RequestBody ImsOperation imsOperation) {
+        log.debug("添加功能操作表\t param:{}",imsOperation);
+
+        return ResponseEntity.ok(imsOperationService.create(imsOperation));
+    }
+
+    @DeleteMapping("/{ids}")
+    @ApiOperation(value = "根据ids删除功能操作表")
+    @ApiImplicitParam(paramType = "path", name = "ids", value = "要删除功能操作表的ids,逗号分割", required = true, dataType = "String")
+    public ResponseEntity<Integer> deleteByIds(@PathVariable("ids") String ids) {
+        log.debug("根据ids删除功能操作表\t param:{}",ids);
+
+        return ResponseEntity.ok(imsOperationService.deleteByIds(ids));
+    }
+
+    @GetMapping("/{id}")
     @ApiOperation(value = "根据id查询功能操作", notes = "根据id查询功能操作")
     @ApiImplicitParam(paramType = "path", name = "id", value = "主键id", required = true, dataType = "Long")
-    @GetMapping("/{id}")
     public ResponseEntity<ImsOperation> findImsOperation(@PathVariable("id") Long id) {
 
         return ResponseEntity.ok(imsOperationService.selectById(id));
     }
-    
-    @PostMapping("/page/query")
-    @ApiOperation(value = "查询功能操作分页列表")
-    @ApiImplicitParam(paramType = "body", name = "imsOperation", value = "功能操作分页参数", required = true, dataType = "ImsOperation")
-    public ResponseEntity<PagerResultObject<ImsOperation>> pageQuery(@RequestBody ImsOperation imsOperation){
-        log.debug("查询功能操作分页列表\t param:{}",imsOperation);
-        
-        return ResponseEntity.ok(imsOperationService.pageList(imsOperation));
+
+    @GetMapping("/list/{menuIds}")
+    @ApiOperation(value = "根据菜单ids查询操作权限列表", notes = "根据菜单ids查询操作权限列表")
+    public ResponseEntity<List<ImsOperation>> listByMenuIds(@PathVariable("menuIds") String menuIds) {
+
+        return ResponseEntity.ok(imsOperationService.listByMenuIds(menuIds));
     }
-    
+
 }
