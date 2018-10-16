@@ -9,7 +9,7 @@
         <result column="p_id" property="pId" />
         <result column="name" property="name" />
         <result column="code" property="code" />
-        <result column="status" property="status" />
+        <result column="type" property="type" />
         <result column="sort" property="sort" />
         <result column="icon" property="icon" />
     </resultMap>
@@ -21,7 +21,7 @@
             p_id,
             name,
             code,
-            status,
+            type,
             sort,
             icon,
         </trim>
@@ -43,8 +43,8 @@
             <if test="code != null ">
                 code,
             </if>
-            <if test="status != null ">
-                status,
+            <if test="type != null ">
+                type,
             </if>
             <if test="sort != null ">
                 sort,
@@ -66,8 +66,8 @@
             <if test="code != null ">
                 #{code},
             </if>
-            <if test="status != null ">
-                #{status},
+            <if test="type != null ">
+                #{type},
             </if>
             <if test="sort != null ">
                 #{sort},
@@ -94,8 +94,8 @@
             <if test="code != null ">
                 code = #{code},
             </if>
-            <if test="status != null ">
-                status = #{status},
+            <if test="type != null ">
+                type = #{type},
             </if>
             <if test="sort != null ">
                 sort = #{sort},
@@ -139,8 +139,8 @@
             <if test="code != null ">
                 and code = #{code}
             </if>
-            <if test="status != null ">
-                and status = #{status}
+            <if test="type != null ">
+                and type = #{type}
             </if>
             <if test="sort != null ">
                 and sort = #{sort}
@@ -161,14 +161,26 @@
 	        <include refid="common.pager" />
     </select>
 
+
     <!--查询菜单总记录-->
-    <select id="pageImsMenuCounts" resultType="long"
+    <select id="pageImsMenuCounts" resultType="int"
         parameterType="com.lhiot.ims.rbac.domain.ImsMenu">
             select count(1)
             from ims_menu
             <include refid="Base_Where_Condition" />
     </select>
 
+
+    <!--查询菜单列表(包括系统)-->
+    <select id="listIncludeSystemImsMenus" resultMap="BaseResultMap">
+        select distinct m.* from ims_relation_user_role u_r
+        left join ims_role r
+        on u_r.role_id=r.id
+        left join ims_relation_role_menu rm
+        on r.id= rm.role_id
+        left join ims_menu m
+        on rm.menu_id=m.id
+    </select>
 
     <!--查询菜单列表(非系统)-->
     <select id="listImsMenus" resultMap="BaseResultMap"

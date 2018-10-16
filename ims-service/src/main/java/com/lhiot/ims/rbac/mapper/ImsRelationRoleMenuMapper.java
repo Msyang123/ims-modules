@@ -83,5 +83,5 @@ public interface ImsRelationRoleMenuMapper {
     * @author yijun
     * @date 2018/09/29 11:42:57
     */
-    long pageImsRelationRoleMenuCounts(ImsRelationRoleMenu relationRoleMenu);
+    int pageImsRelationRoleMenuCounts(ImsRelationRoleMenu relationRoleMenu);
 }

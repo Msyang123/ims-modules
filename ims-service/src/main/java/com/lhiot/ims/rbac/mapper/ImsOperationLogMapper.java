@@ -72,5 +72,5 @@ public interface ImsOperationLogMapper {
     * @author yijun
     * @date 2018/09/29 11:42:57
     */
-    long pageImsOperationLogCounts(ImsOperationLog imsOperationLog);
+    int pageImsOperationLogCounts(ImsOperationLog imsOperationLog);
 }

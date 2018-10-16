@@ -8,6 +8,9 @@
         <id column="id" property="id"/>
         <result column="name" property="name" />
         <result column="status" property="status" />
+        <result column="role_desc" property="roleDesc" />
+        <result column="create_by" property="createBy" />
+        <result column="create_at" property="createAt" />
     </resultMap>
 
     <!-- 数据库字段对象关系映射 -->
@@ -44,6 +47,15 @@
             <if test="status != null ">
                 status,
             </if>
+            <if test="roleDesc != null ">
+                role_desc,
+            </if>
+            <if test="createBy != null ">
+                create_by,
+            </if>
+            <if test="createAt != null ">
+                create_at,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="id != null ">
@@ -54,6 +66,15 @@
             </if>
             <if test="status != null ">
                 #{status},
+            </if>
+            <if test="roleDesc != null ">
+                #{roleDesc},
+            </if>
+            <if test="createBy != null ">
+                #{createBy},
+            </if>
+            <if test="createAt != null ">
+                #{createAt},
             </if>
         </trim>
     </insert>
@@ -70,6 +91,9 @@
             </if>
             <if test="status != null ">
                 status = #{status},
+            </if>
+            <if test="roleDesc != null ">
+                role_desc = #{roleDesc},
             </if>
         </set>
         where id=#{id}
@@ -104,6 +128,15 @@
             <if test="status != null ">
                 and status = #{status}
             </if>
+            <if test="roleDesc != null ">
+                and role_desc like concat('%',#{roleDesc},'%')
+            </if>
+            <if test="createBy != null ">
+                and create_by  like concat('%',#{createBy},'%')
+            </if>
+            <if test="createAt != null ">
+                and create_at = #{createAt},
+            </if>
         </where>
     </sql>
 
@@ -118,7 +151,7 @@
     </select>
 
     <!--查询角色总记录-->
-    <select id="pageImsRoleCounts" resultType="long"
+    <select id="pageImsRoleCounts" resultType="int"
         parameterType="com.lhiot.ims.rbac.domain.ImsRole">
             select count(1)
             from ims_role

@@ -27,9 +27,6 @@
     <insert id="create" parameterType="com.lhiot.ims.rbac.domain.ImsOperation" useGeneratedKeys="true" keyProperty="id">
         insert into ims_operation
         <trim prefix="(" suffix=")" suffixOverrides="," >
-            <if test="id != null ">
-                id,
-            </if>
             <if test="menuId != null ">
                 menu_id,
             </if>
@@ -44,9 +41,6 @@
             </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
-            <if test="id != null ">
-                #{id},
-            </if>
             <if test="menuId != null ">
                 #{menuId},
             </if>
@@ -143,7 +137,7 @@
     </select>
 
     <!--查询功能操作总记录-->
-    <select id="pageImsOperationCounts" resultType="long"
+    <select id="pageImsOperationCounts" resultType="int"
         parameterType="com.lhiot.ims.rbac.domain.ImsOperation">
             select count(1)
             from ims_operation

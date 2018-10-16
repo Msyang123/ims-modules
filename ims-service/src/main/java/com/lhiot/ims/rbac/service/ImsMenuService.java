@@ -1,8 +1,8 @@
 package com.lhiot.ims.rbac.service;
 
+import com.leon.microx.support.result.Pages;
 import com.leon.microx.util.Maps;
 import com.leon.microx.util.StringUtils;
-import com.lhiot.ims.rbac.common.PagerResultObject;
 import com.lhiot.ims.rbac.domain.ImsMenu;
 import com.lhiot.ims.rbac.domain.ImsRelationRoleMenu;
 import com.lhiot.ims.rbac.mapper.ImsMenuMapper;
@@ -43,8 +43,9 @@ public class ImsMenuService {
     * @author yijun
     * @date 2018/09/29 11:42:57
     */  
-    public int create(ImsMenu imsMenu){
-        return this.imsMenuMapper.create(imsMenu);
+    public ImsMenu create(ImsMenu imsMenu){
+        this.imsMenuMapper.create(imsMenu);
+        return imsMenu;
     }
 
     /** 
@@ -55,8 +56,9 @@ public class ImsMenuService {
     * @author yijun
     * @date 2018/09/29 11:42:57
     */ 
-    public int updateById(ImsMenu imsMenu){
-        return this.imsMenuMapper.updateById(imsMenu);
+    public ImsMenu updateById(ImsMenu imsMenu){
+        this.imsMenuMapper.updateById(imsMenu);
+        return imsMenu;
     }
 
     /** 
@@ -98,18 +100,7 @@ public class ImsMenuService {
         return this.imsMenuMapper.selectById(id);
     }
 
-    /** 
-    * Description: 查询菜单总记录数
-    *  
-    * @param imsMenu
-    * @return
-    * @author yijun
-    * @date 2018/09/29 11:42:57
-    */  
-    public long count(ImsMenu imsMenu){
-        return this.imsMenuMapper.pageImsMenuCounts(imsMenu);
-    }
-    
+
     /** 
     * Description: 查询菜单分页列表
     *  
@@ -118,12 +109,8 @@ public class ImsMenuService {
     * @author yijun
     * @date 2018/09/29 11:42:57
     */  
-    public PagerResultObject<ImsMenu> pageList(ImsMenu imsMenu) {
-       long total = 0;
-       if (imsMenu.getRows() != null && imsMenu.getRows() > 0) {
-           total = this.count(imsMenu);
-       }
-       return PagerResultObject.of(imsMenu, total,
+    public Pages<ImsMenu> pageList(ImsMenu imsMenu) {
+       return Pages.of(this.imsMenuMapper.pageImsMenuCounts(imsMenu),
               this.imsMenuMapper.pageImsMenus(imsMenu));
     }
 
@@ -135,6 +122,15 @@ public class ImsMenuService {
     public List<ImsMenu> listImsMenus(long id){
 
         return this.imsMenuMapper.listImsMenus(id);
+    }
+
+    /**
+     * 列表查询菜单信息(包括系统)
+     * @return
+     */
+    public List<ImsMenu> listIncludeSystemImsMenus(){
+
+        return this.imsMenuMapper.listIncludeSystemImsMenus();
     }
     /**
      * 列表查询菜单信息

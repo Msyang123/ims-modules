@@ -1,6 +1,6 @@
 package com.lhiot.ims.rbac.api;
 
-import com.lhiot.ims.rbac.common.PagerResultObject;
+import com.leon.microx.support.result.Pages;
 import com.lhiot.ims.rbac.domain.ImsOperationLog;
 import com.lhiot.ims.rbac.service.ImsOperationLogService;
 import io.swagger.annotations.Api;
@@ -38,10 +38,10 @@ public class ImsOperationLogApi {
         return ResponseEntity.ok(imsOperationLogService.selectById(id));
     }
 
-    @PostMapping("/page/query")
+    @PostMapping("/pages")
     @ApiImplicitParam(paramType = "body", name = "imsOperationLog", value = "查询操作日志参数", required = true, dataType = "ImsOperationLog")
     @ApiOperation(value = "查询操作表日志分页列表")
-    public ResponseEntity<PagerResultObject<ImsOperationLog>> pageQuery(@RequestBody ImsOperationLog imsOperationLog) {
+    public ResponseEntity<Pages<ImsOperationLog>> pageQuery(@RequestBody ImsOperationLog imsOperationLog) {
         log.debug("查询操作表日志分页列表\t param:{}", imsOperationLog);
 
         return ResponseEntity.ok(imsOperationLogService.pageList(imsOperationLog));

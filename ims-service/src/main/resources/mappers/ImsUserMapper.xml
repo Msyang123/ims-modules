@@ -205,7 +205,7 @@
     </select>
 
     <!--查询用户总记录-->
-    <select id="pageImsUserCounts" resultType="long"
+    <select id="pageImsUserCounts" resultType="int"
         parameterType="com.lhiot.ims.rbac.domain.ImsUser">
             select count(1)
             from ims_user

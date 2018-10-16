@@ -1,9 +1,6 @@
 package com.lhiot.ims.rbac.service;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-
+import com.leon.microx.support.result.Pages;
 import com.leon.microx.util.StringUtils;
 import com.leon.microx.util.auditing.MD5;
 import com.lhiot.ims.rbac.domain.ImsRole;
@@ -13,7 +10,9 @@ import com.lhiot.ims.rbac.mapper.ImsUserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.lhiot.ims.rbac.common.PagerResultObject;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
 * Description:用户服务类
@@ -39,9 +38,10 @@ public class ImsUserService {
     * @param imsUser
     * @return
     */
-    public int create(ImsUser imsUser){
+    public ImsUser create(ImsUser imsUser){
         imsUser.setPassword(MD5.str(imsUser.getPassword()));
-        return this.imsUserMapper.create(imsUser);
+        this.imsUserMapper.create(imsUser);
+        return imsUser;
     }
 
     /** 
@@ -50,8 +50,9 @@ public class ImsUserService {
     * @param imsUser
     * @return
     */
-    public int updateById(ImsUser imsUser){
-        return this.imsUserMapper.updateById(imsUser);
+    public ImsUser updateById(ImsUser imsUser){
+        this.imsUserMapper.updateById(imsUser);
+        return imsUser;
     }
 
     /** 
@@ -102,12 +103,8 @@ public class ImsUserService {
     * @param imsUser
     * @return
     */
-    public PagerResultObject<ImsUser> pageList(ImsUser imsUser) {
-       long total = 0;
-       if (imsUser.getRows() != null && imsUser.getRows() > 0) {
-           total = this.count(imsUser);
-       }
-       return PagerResultObject.of(imsUser, total,
+    public Pages<ImsUser> pageList(ImsUser imsUser) {
+       return Pages.of(this.imsUserMapper.pageImsUserCounts(imsUser),
               this.imsUserMapper.pageImsUsers(imsUser));
     }
 

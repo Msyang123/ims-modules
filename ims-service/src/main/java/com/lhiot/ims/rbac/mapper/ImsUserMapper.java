@@ -81,8 +81,7 @@ public interface ImsUserMapper {
     * @author yijun
     * @date 2018/09/29 11:42:57
     */
-    long pageImsUserCounts(ImsUser imsUser);
-
+    int pageImsUserCounts(ImsUser imsUser);
 
     /**
      * Description: 查询用户id查询已关联的角色列表
@@ -91,5 +90,4 @@ public interface ImsUserMapper {
      * @return
      */
     List<ImsRole> getRelationRolesById(Long id);
-
 }

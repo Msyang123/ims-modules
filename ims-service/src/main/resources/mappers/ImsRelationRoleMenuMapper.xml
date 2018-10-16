@@ -99,7 +99,7 @@
     </select>
 
     <!--查询角色与菜单关联总记录-->
-    <select id="pageImsRelationRoleMenuCounts" resultType="long"
+    <select id="pageImsRelationRoleMenuCounts" resultType="int"
         parameterType="com.lhiot.ims.rbac.domain.ImsRelationRoleMenu">
             select count(1)
             from ims_relation_role_menu
