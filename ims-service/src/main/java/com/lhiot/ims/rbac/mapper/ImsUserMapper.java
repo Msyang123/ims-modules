@@ -80,5 +80,5 @@ public interface ImsUserMapper {
     * @author yijun
     * @date 2018/09/29 11:42:57
     */
-    long pageImsUserCounts(ImsUser imsUser);
+    int pageImsUserCounts(ImsUser imsUser);
 }

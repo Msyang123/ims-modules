@@ -1,15 +1,14 @@
 package com.lhiot.ims.rbac.service;
 
-import java.util.Arrays;
-import java.util.List;
-
+import com.leon.microx.support.result.Pages;
 import com.leon.microx.util.StringUtils;
 import com.lhiot.ims.rbac.domain.ImsOperationLog;
 import com.lhiot.ims.rbac.mapper.ImsOperationLogMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.lhiot.ims.rbac.common.PagerResultObject;
+
+import java.util.Arrays;
 
 /**
 * Description:操作表日志服务类
@@ -75,18 +74,7 @@ public class ImsOperationLogService {
         return this.imsOperationLogMapper.selectById(id);
     }
 
-    /** 
-    * Description: 查询操作表日志总记录数
-    *  
-    * @param imsOperationLog
-    * @return
-    * @author yijun
-    * @date 2018/09/29 11:42:57
-    */  
-    public long count(ImsOperationLog imsOperationLog){
-        return this.imsOperationLogMapper.pageImsOperationLogCounts(imsOperationLog);
-    }
-    
+
     /** 
     * Description: 查询操作表日志分页列表
     *  
@@ -95,12 +83,8 @@ public class ImsOperationLogService {
     * @author yijun
     * @date 2018/09/29 11:42:57
     */  
-    public PagerResultObject<ImsOperationLog> pageList(ImsOperationLog imsOperationLog) {
-       long total = 0;
-       if (imsOperationLog.getRows() != null && imsOperationLog.getRows() > 0) {
-           total = this.count(imsOperationLog);
-       }
-       return PagerResultObject.of(imsOperationLog, total,
+    public Pages<ImsOperationLog> pageList(ImsOperationLog imsOperationLog) {
+       return Pages.of(this.imsOperationLogMapper.pageImsOperationLogCounts(imsOperationLog),
               this.imsOperationLogMapper.pageImsOperationLogs(imsOperationLog));
     }
 }

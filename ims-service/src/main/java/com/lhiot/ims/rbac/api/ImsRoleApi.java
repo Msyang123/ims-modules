@@ -1,6 +1,6 @@
 package com.lhiot.ims.rbac.api;
 
-import com.lhiot.ims.rbac.common.PagerResultObject;
+import com.leon.microx.support.result.Pages;
 import com.lhiot.ims.rbac.domain.ImsRole;
 import com.lhiot.ims.rbac.service.ImsRelationRoleMenuService;
 import com.lhiot.ims.rbac.service.ImsRoleService;
@@ -33,29 +33,29 @@ public class ImsRoleApi {
         this.imsRelationRoleMenuService = imsRelationRoleMenuService;
     }
 
-    @PostMapping("/create")
+    @PostMapping("/")
     @ApiOperation(value = "添加角色")
     @ApiImplicitParam(paramType = "body", name = "imsRole", value = "要添加的角色", required = true, dataType = "ImsRole")
-    public ResponseEntity<Integer> create(@RequestBody ImsRole imsRole) {
+    public ResponseEntity<ImsRole> create(@RequestBody ImsRole imsRole) {
         log.debug("添加角色\t param:{}",imsRole);
         
         return ResponseEntity.ok(imsRoleService.create(imsRole));
     }
 
-    @PutMapping("/update/{id}")
+    @PutMapping("/{id}")
     @ApiOperation(value = "根据id更新角色")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "path", name = "id", value = "要更新的角色id", required = true, dataType = "Long"),
             @ApiImplicitParam(paramType = "body", name = "imsRole", value = "要更新的角色", required = true, dataType = "ImsRole")
     })
-    public ResponseEntity<Integer> update(@PathVariable("id") Long id,@RequestBody ImsRole imsRole) {
+    public ResponseEntity<ImsRole> update(@PathVariable("id") Long id,@RequestBody ImsRole imsRole) {
         log.debug("根据id更新角色\t id:{} param:{}",id,imsRole);
         imsRole.setId(id);
         
         return ResponseEntity.ok(imsRoleService.updateById(imsRole));
     }
 
-    @PutMapping("/update/relation/{id}/{menuIds}")
+    @PutMapping("/relation/{id}/{menuIds}")
     @ApiOperation(value = "根据id更新角色与菜单关联（包括与操作关联）")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "path", name = "id", value = "要更新的角色id", required = true, dataType = "Long"),
@@ -83,10 +83,10 @@ public class ImsRoleApi {
         return ResponseEntity.ok(imsRoleService.selectById(id));
     }
     
-    @PostMapping("/page/query")
+    @PostMapping("/pages")
     @ApiOperation(value = "查询角色分页列表")
     @ApiImplicitParam(paramType = "body", name = "imsRole", value = "角色查询参数", required = true, dataType = "ImsRole")
-    public ResponseEntity<PagerResultObject<ImsRole>> pageQuery(ImsRole imsRole){
+    public ResponseEntity<Pages<ImsRole>> pageQuery(ImsRole imsRole){
         log.debug("查询角色分页列表\t param:{}",imsRole);
         
         return ResponseEntity.ok(imsRoleService.pageList(imsRole));

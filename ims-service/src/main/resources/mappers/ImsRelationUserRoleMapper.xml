@@ -99,7 +99,7 @@
     </select>
 
     <!--查询用户与角色关联总记录-->
-    <select id="pageImsRelationUserRoleCounts" resultType="long"
+    <select id="pageImsRelationUserRoleCounts" resultType="int"
         parameterType="com.lhiot.ims.rbac.domain.ImsRelationUserRole">
             select count(1)
             from ims_relation_user_role
