@@ -28,6 +28,7 @@ import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
 import java.net.URI;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
@@ -106,7 +107,7 @@ public class ImsUserApi {
         //填充访问权限：sessionUser.authorities(Authority.of("/**/users/?, RequestMethod.GET))
         //查找用户的操作权限
         List<ImsOperation> imsOperationList = imsOperationService.listByUserId(admin.getId());
-        List<Authority> authorityList = Objects.requireNonNull(imsOperationList).stream()
+        List<Authority> authorityList = imsOperationList.stream()
                 .map(op -> Authority.of(op.getAntUrl(), StringUtils.tokenizeToStringArray(op.getType(), ",")))
                 .collect(Collectors.toList());
 

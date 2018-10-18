@@ -60,7 +60,7 @@ public class ImsUser{
     */
     @JsonProperty("avatarUrl")
     @ApiModelProperty(value = "用户头像url", dataType = "String")
-    private String avatarUrl;
+    private String avatarUrl = "";
 
     /**
     *用户状态
