@@ -9,7 +9,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 /**
 * Description:功能操作服务类
@@ -95,12 +97,10 @@ public class ImsOperationService {
      * Description: 查询功能操作分页列表
      *
      * @param id 用户id
-     * @return
-     * @author yijun
-     * @date 2018/09/29 11:42:57
+     * @return List<ImsOperation>
      */
     public List<ImsOperation> listByUserId(long id) {
-        return this.imsOperationMapper.listByUserId(id);
+        return Optional.of(this.imsOperationMapper.listByUserId(id)).orElse(Collections.emptyList());
     }
 
     /**
