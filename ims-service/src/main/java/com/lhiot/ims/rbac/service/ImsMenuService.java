@@ -1,6 +1,6 @@
 package com.lhiot.ims.rbac.service;
 
-import com.leon.microx.support.result.Pages;
+import com.leon.microx.web.result.Pages;
 import com.leon.microx.util.Maps;
 import com.leon.microx.util.StringUtils;
 import com.lhiot.ims.rbac.domain.ImsMenu;
