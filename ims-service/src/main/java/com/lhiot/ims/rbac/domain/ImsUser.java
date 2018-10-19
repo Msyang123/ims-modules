@@ -105,4 +105,13 @@ public class ImsUser{
     @ApiModelProperty(value = "每页显示条数,默认值10")
     private Long rows = 10L;
 
+    /**
+     * 分页的起始行
+     */
+    @JsonIgnore
+    private Long startRow = 0L;
+
+    public Long getStartRow(){
+        return ((rows != null && page != null) ? (page - 1) * rows : 0);
+    }
 }

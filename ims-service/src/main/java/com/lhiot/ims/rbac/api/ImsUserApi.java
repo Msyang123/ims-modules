@@ -97,7 +97,7 @@ public class ImsUserApi {
             return ResponseEntity.badRequest().body("密码错误");
         }
         Sessions.User sessionUser = session.create(request).user(Maps.of(
-                "id",admin.getId(),"name",admin.getName(),"account",admin.getAccount()
+                "id",admin.getId(),"name",admin.getName(),"account",admin.getAccount(),"avatar",admin.getAvatarUrl()
         )).timeToLive(30, TimeUnit.MINUTES);
 
         //填充访问权限：sessionUser.authorities(Authority.of("/**/users/?, RequestMethod.GET))
@@ -116,7 +116,7 @@ public class ImsUserApi {
                 return ResponseEntity
                     .created(URI.create("/ims-user/session/" + sessionId))
                     .header(Sessions.HTTP_HEADER_NAME, sessionId)
-                    .body("{\""+Sessions.HTTP_HEADER_NAME+"\":\""+sessionId+"\"}");
+                    .body("{\"XSessionId\":\""+sessionId+"\"}");
         } finally {
             //adminMapper.updateLastLogin(Maps.of("id", admin.getId(), "last_login_at", Instant.now()));
         }
