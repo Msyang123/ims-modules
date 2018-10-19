@@ -29,7 +29,7 @@ public class ImsMenu{
     /**
     *父菜单id
     */
-    @JsonProperty("pid")
+    @JsonProperty("parentid")
     @ApiModelProperty(value = "父菜单id", dataType = "Long")
     private Long pId;
 

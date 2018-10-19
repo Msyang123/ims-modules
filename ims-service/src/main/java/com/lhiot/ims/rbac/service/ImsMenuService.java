@@ -12,8 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 /**
 * Description:菜单服务类
@@ -129,8 +128,7 @@ public class ImsMenuService {
      * @return
      */
     public List<ImsMenu> listIncludeSystemImsMenus(){
-
-        return this.imsMenuMapper.listIncludeSystemImsMenus();
+        return Optional.of(this.imsMenuMapper.listIncludeSystemImsMenus()).orElse(Collections.emptyList());
     }
     /**
      * 列表查询菜单信息

@@ -87,7 +87,7 @@ public class ImsMenuApi {
     }
 
 
-    @GetMapping("/menus")
+    @GetMapping("/user/left-tree")
     @ApiOperation(value = "查询菜单列表(非系统)")
     public ResponseEntity<Multiple<MenuDisplay>> listImsMenus(Sessions.User user) {
         log.debug("查询菜单列表\t param:");
@@ -95,35 +95,32 @@ public class ImsMenuApi {
         Long id = (Long) user.getUser().get("id");
 
         List<MenuDisplay> menuDisplayList = Objects.requireNonNull(imsMenuService.listImsMenus(id)).stream()
-                .map(imsMenu -> new MenuDisplay(imsMenu.getId(),imsMenu.getPId(),imsMenu.getCode(),imsMenu.getName(),imsMenu.getIcon(),imsMenu.getType()))
+                .map(MenuDisplay::new)
                 .collect(Collectors.toList());
         return ResponseEntity.ok(Multiple.of(menuDisplayList));
     }
 
-    @GetMapping("/menus/list")
+    @GetMapping("/list/all")
     @ApiOperation(value = "查询菜单列表(包括系统)")
     public ResponseEntity<Multiple<MenuDisplay>> listIncludeSystemImsMenus() {
         log.debug("查询菜单列表\t param:");
-
-        List<MenuDisplay> menuDisplayList = Objects.requireNonNull(imsMenuService.listIncludeSystemImsMenus()).stream()
-                .map(imsMenu -> new MenuDisplay(imsMenu.getId(),imsMenu.getPId(),imsMenu.getCode(),imsMenu.getName(),imsMenu.getIcon(),imsMenu.getType()))
-                .collect(Collectors.toList());
+        List<MenuDisplay> menuDisplayList = imsMenuService.listIncludeSystemImsMenus().stream().map(MenuDisplay::new).collect(Collectors.toList());
         return ResponseEntity.ok(Multiple.of(menuDisplayList));
     }
 
-    @GetMapping("/menus/{pid}")
+    @GetMapping("/list/pid")
     @ApiOperation(value = "依据父id查询菜单列表(非系统)")
-    public ResponseEntity<Multiple<MenuDisplay>> listImsMenus(@PathVariable("pid") long pid, Sessions.User user) {
+    public ResponseEntity<Multiple<MenuDisplay>> listImsMenus(@RequestParam("pid") long pid, Sessions.User user) {
         log.debug("查询菜单列表\t param:");
         //通过session获取用户id
         Long id = (Long) user.getUser().get("id");
         List<MenuDisplay> menuDisplayList = Objects.requireNonNull(imsMenuService.listImsMenus(pid,id)).stream()
-                .map(imsMenu -> new MenuDisplay(imsMenu.getId(),imsMenu.getPId(),imsMenu.getCode(),imsMenu.getName(),imsMenu.getIcon(),imsMenu.getType()))
+                .map(MenuDisplay::new)
                 .collect(Collectors.toList());
         return ResponseEntity.ok(Multiple.of(menuDisplayList));
     }
 
-    @GetMapping("/systems")
+    @GetMapping("/list/systems")
     @ApiOperation(value = "查询菜单列表(系统)")
     public ResponseEntity<Multiple<ImsMenu>> listImsSystems(Sessions.User user) {
         log.debug("查询菜单列表(系统)");
