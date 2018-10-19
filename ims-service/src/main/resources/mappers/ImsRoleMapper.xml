@@ -31,6 +31,9 @@
             id,
             name,
             status,
+            role_desc,
+            create_by,
+            create_at
         </trim>
     </sql>
 
