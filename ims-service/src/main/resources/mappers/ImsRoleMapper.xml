@@ -171,4 +171,10 @@
         where r_m.role_id=#{0}
     </select>
 
+
+    <!-- 查询所有角色列表 -->
+    <select id="getRoles" resultMap="MenuResultMap">
+        select r.* from ims_role r
+    </select>
+
 </mapper>

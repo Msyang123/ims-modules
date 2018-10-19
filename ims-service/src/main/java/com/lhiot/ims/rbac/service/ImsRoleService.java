@@ -14,7 +14,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 /**
 * Description:角色服务类
@@ -138,9 +140,18 @@ public class ImsRoleService {
      * @return
      */
     public List<ImsMenu> getRelationMenusById(Long id) {
+//        return  this.imsRoleMapper.getRelationMenusById(id);
+        return Optional.of(this.imsRoleMapper.getRelationMenusById(id)).orElse(Collections.emptyList());
 
-        return  this.imsRoleMapper.getRelationMenusById(id);
     }
 
+    /**
+     * Description: 查询所有角色列表
+     *
+     * @return
+     */
+    public List<ImsRole> getRoles() {
+        return  this.imsRoleMapper.getRoles();
+    }
 }
 

@@ -82,4 +82,11 @@ public interface ImsRoleMapper {
      * @return
      */
     List<ImsMenu> getRelationMenusById(Long id);
+
+    /**
+     * Description: 查询所有角色列表
+     *
+     * @return
+     */
+    List<ImsRole> getRoles();
 }
