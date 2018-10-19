@@ -2,6 +2,7 @@ package com.lhiot.ims.rbac.service;
 
 import com.leon.microx.web.result.Pages;
 import com.leon.microx.util.StringUtils;
+import com.lhiot.ims.rbac.domain.ImsMenu;
 import com.lhiot.ims.rbac.domain.ImsRelationUserRole;
 import com.lhiot.ims.rbac.domain.ImsRole;
 import com.lhiot.ims.rbac.mapper.ImsRelationRoleMenuMapper;
@@ -13,7 +14,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 /**
 * Description:角色服务类
@@ -128,6 +131,27 @@ public class ImsRoleService {
     public Pages<ImsRole> pageList(ImsRole imsRole) {
        return Pages.of(this.imsRoleMapper.pageImsRoleCounts(imsRole),
               this.imsRoleMapper.pageImsRoles(imsRole));
+    }
+
+    /**
+     * Description: 查询角色id查询已关联的菜单列表
+     *
+     * @param id
+     * @return
+     */
+    public List<ImsMenu> getRelationMenusById(Long id) {
+//        return  this.imsRoleMapper.getRelationMenusById(id);
+        return Optional.of(this.imsRoleMapper.getRelationMenusById(id)).orElse(Collections.emptyList());
+
+    }
+
+    /**
+     * Description: 查询所有角色列表
+     *
+     * @return
+     */
+    public List<ImsRole> getRoles() {
+        return  this.imsRoleMapper.getRoles();
     }
 }
 

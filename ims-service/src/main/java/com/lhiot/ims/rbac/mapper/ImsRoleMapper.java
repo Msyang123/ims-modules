@@ -1,5 +1,6 @@
 package com.lhiot.ims.rbac.mapper;
 
+import com.lhiot.ims.rbac.domain.ImsMenu;
 import com.lhiot.ims.rbac.domain.ImsRole;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -73,4 +74,19 @@ public interface ImsRoleMapper {
     * @date 2018/09/29 11:42:57
     */
     int pageImsRoleCounts(ImsRole imsRole);
+
+    /**
+     * Description: 查询角色id查询已关联的菜单列表
+     *
+     * @param id
+     * @return
+     */
+    List<ImsMenu> getRelationMenusById(Long id);
+
+    /**
+     * Description: 查询所有角色列表
+     *
+     * @return
+     */
+    List<ImsRole> getRoles();
 }

@@ -1,5 +1,6 @@
 package com.lhiot.ims.rbac.mapper;
 
+import com.lhiot.ims.rbac.domain.ImsRole;
 import com.lhiot.ims.rbac.domain.ImsUser;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -81,4 +82,12 @@ public interface ImsUserMapper {
     * @date 2018/09/29 11:42:57
     */
     int pageImsUserCounts(ImsUser imsUser);
+
+    /**
+     * Description: 查询用户id查询已关联的角色列表
+     *
+     * @param id
+     * @return
+     */
+    List<ImsRole> getRelationRolesById(Long id);
 }

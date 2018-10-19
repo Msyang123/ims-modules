@@ -11,11 +11,22 @@ public enum Status {
     UNAVAILABLE("不可用"),
     LOCK("锁定，暂不可用"),
     DELETE("删除，永不可用"),
-    UNKNOWN("未知");
+    UNKNOWN("未知")
+    ;
     @Getter
     private String message;
 
     Status(String message) {
         this.message = message;
+    }
+
+    class Enum{
+        String name;
+    }
+
+    class Test extends Enum{
+        final Enum AAA = new Test();
+        final Enum BBB = new Test();
+        final Enum CCC = new Test();
     }
 }

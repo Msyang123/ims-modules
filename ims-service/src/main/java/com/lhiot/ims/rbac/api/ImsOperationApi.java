@@ -63,5 +63,11 @@ public class ImsOperationApi {
         
         return ResponseEntity.ok(imsOperationService.pageList(imsOperation));
     }
-    
+
+    @GetMapping("/list/{menuIds}")
+    @ApiOperation(value = "根据菜单ids查询操作权限列表", notes = "根据菜单ids查询操作权限列表")
+    public ResponseEntity<List<ImsOperation>> listByMenuIds(@PathVariable("menuIds") String menuIds) {
+
+        return ResponseEntity.ok(imsOperationService.listByMenuIds(menuIds));
+    }
 }

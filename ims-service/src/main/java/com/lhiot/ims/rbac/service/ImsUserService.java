@@ -3,6 +3,7 @@ package com.lhiot.ims.rbac.service;
 import com.leon.microx.web.result.Pages;
 import com.leon.microx.util.StringUtils;
 import com.leon.microx.util.auditing.MD5;
+import com.lhiot.ims.rbac.domain.ImsRole;
 import com.lhiot.ims.rbac.domain.ImsUser;
 import com.lhiot.ims.rbac.mapper.ImsRelationUserRoleMapper;
 import com.lhiot.ims.rbac.mapper.ImsUserMapper;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
+import java.util.List;
 
 /**
 * Description:用户服务类
@@ -105,5 +107,17 @@ public class ImsUserService {
        return Pages.of(this.imsUserMapper.pageImsUserCounts(imsUser),
               this.imsUserMapper.pageImsUsers(imsUser));
     }
+
+    /**
+     * Description: 查询用户id查询已关联的角色列表
+     *
+     * @param id
+     * @return
+     */
+    public List<ImsRole> getRelationRolesById(Long id) {
+
+        return  this.imsUserMapper.getRelationRolesById(id);
+    }
+
 }
 

@@ -17,6 +17,17 @@
         <result column="remark" property="remark" />
     </resultMap>
 
+    <!-- 数据库字段对象关系映射 -->
+    <resultMap id="RoleResultMap"
+               type="com.lhiot.ims.rbac.domain.ImsRole" >
+        <id column="id" property="id"/>
+        <result column="name" property="name" />
+        <result column="status" property="status" />
+        <result column="role_desc" property="roleDesc" />
+        <result column="create_by" property="createBy" />
+        <result column="create_at" property="createAt" />
+    </resultMap>
+
     <!-- base查询字段  -->
     <sql id="Base_Column_List" >
         <trim suffixOverrides="," >
@@ -147,13 +158,6 @@
 		from ims_user where id = #{id}
 	</select>
 
-    <select id="selectByAccount" resultMap="BaseResultMap"
-            parameterType="long"> select <include refid="Base_Column_List" />
-        from ims_user where account = #{account}
-    </select>
-
-
-
     <!-- base where条件  -->
     <sql id="Base_Where_Condition" >
         <where>
@@ -206,6 +210,21 @@
             select count(1)
             from ims_user
             <include refid="Base_Where_Condition" />
+    </select>
+
+    <!-- 根据账号查询用户 -->
+    <select id="selectByAccount" resultMap="BaseResultMap"
+            parameterType="String"> select <include refid="Base_Column_List" />
+        from ims_user where account = #{account}
+    </select>
+
+    <!-- 查询用户id查询已关联的角色列表 -->
+    <select id="getRelationRolesById" resultMap="RoleResultMap"
+            parameterType="Long">
+        select r.*
+        from ims_relation_user_role u_r
+        left join ims_role r on u_r.role_id = r.id
+        where u_r.user_id=#{0}
     </select>
 
 </mapper>

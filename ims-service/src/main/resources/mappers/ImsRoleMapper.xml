@@ -13,12 +13,27 @@
         <result column="create_at" property="createAt" />
     </resultMap>
 
+    <!-- 数据库字段对象关系映射 -->
+    <resultMap id="MenuResultMap"
+               type="com.lhiot.ims.rbac.domain.ImsMenu" >
+        <id column="id" property="id"/>
+        <id column="p_id" property="pId"/>
+        <result column="name" property="name" />
+        <result column="code" property="code" />
+        <result column="type" property="type" />
+        <result column="sort" property="sort" />
+        <result column="icon" property="icon" />
+    </resultMap>
+
     <!-- base查询字段  -->
     <sql id="Base_Column_List" >
         <trim suffixOverrides="," >
             id,
             name,
             status,
+            role_desc,
+            create_by,
+            create_at
         </trim>
     </sql>
 
@@ -144,6 +159,22 @@
             select count(1)
             from ims_role
             <include refid="Base_Where_Condition" />
+    </select>
+
+
+    <!-- 查询角色id查询已关联的菜单列表 -->
+    <select id="getRelationMenusById" resultMap="MenuResultMap"
+            parameterType="Long">
+        select m.*
+        from ims_relation_role_menu r_m
+        left join ims_menu m on r_m.menu_id = m.id
+        where r_m.role_id=#{0}
+    </select>
+
+
+    <!-- 查询所有角色列表 -->
+    <select id="getRoles" resultMap="MenuResultMap">
+        select r.* from ims_role r
     </select>
 
 </mapper>
