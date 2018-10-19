@@ -1,6 +1,6 @@
 package com.lhiot.ims.rbac.api;
 
-import com.leon.microx.support.result.Pages;
+import com.leon.microx.web.result.Pages;
 import com.lhiot.ims.rbac.domain.ImsRole;
 import com.lhiot.ims.rbac.service.ImsRelationRoleMenuService;
 import com.lhiot.ims.rbac.service.ImsRoleService;

@@ -1,6 +1,6 @@
 package com.lhiot.ims.rbac.api;
 
-import com.leon.microx.support.result.Pages;
+import com.leon.microx.web.result.Pages;
 import com.lhiot.ims.rbac.domain.ImsOperationLog;
 import com.lhiot.ims.rbac.service.ImsOperationLogService;
 import io.swagger.annotations.Api;
