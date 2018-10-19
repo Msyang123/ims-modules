@@ -173,13 +173,7 @@
 
     <!--查询菜单列表(包括系统)-->
     <select id="listIncludeSystemImsMenus" resultMap="BaseResultMap">
-        select distinct m.* from ims_relation_user_role u_r
-        left join ims_role r
-        on u_r.role_id=r.id
-        left join ims_relation_role_menu rm
-        on r.id= rm.role_id
-        left join ims_menu m
-        on rm.menu_id=m.id
+        select m.* from ims_menu m
     </select>
 
     <!--查询菜单列表(非系统)-->

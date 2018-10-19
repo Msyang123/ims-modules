@@ -36,6 +36,16 @@ public class MenuDisplay {
         this.type = type;
     }
 
+    public MenuDisplay(ImsMenu menu) {
+        this.id = menu.getId();
+        this.parentid = menu.getPId();
+        this.code = menu.getCode();
+        this.title = menu.getName();
+        this.icon = menu.getIcon();
+        this.meta = new Meta(menu.getName(), menu.getIcon());
+        this.type = menu.getType();
+    }
+
     @JsonProperty("id")
     @ApiModelProperty(value = "id", dataType = "Long")
     private Long id;
@@ -84,7 +94,7 @@ public class MenuDisplay {
     private Meta meta;
 
     @Data
-    public class Meta {
+    public static class Meta {
         public Meta(String title, String icon) {
             this.title = title;
             this.icon = icon;

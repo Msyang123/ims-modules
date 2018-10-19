@@ -176,7 +176,7 @@ public class ImsUserApi {
     }
 
 
-    @DeleteMapping("/{ids}")
+    @DeleteMapping("/batch/{ids}")
     @ApiOperation(value = "根据ids删除用户")
     @ApiImplicitParam(paramType = "path", name = "ids", value = "要删除用户的ids,逗号分割", required = true, dataType = "String")
 
@@ -188,7 +188,7 @@ public class ImsUserApi {
     
     @ApiOperation(value = "根据id查询用户", notes = "根据id查询用户")
     @ApiImplicitParam(paramType = "path", name = "id", value = "主键id", required = true, dataType = "Long")
-    @GetMapping("/{id}")
+    @GetMapping("/id/{id}")
     public ResponseEntity<ImsUser> findImsUser(@PathVariable("id") Long id) {
 
         return ResponseEntity.ok(imsUserService.selectById(id));
