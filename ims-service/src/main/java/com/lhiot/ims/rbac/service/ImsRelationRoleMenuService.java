@@ -55,6 +55,11 @@ public class ImsRelationRoleMenuService {
             this.relationRoleOperationMapper.deleteByRoleIds(Arrays.asList(roleId.toString()));
             return result;
         }else {
+            //删除角色与菜单关联关系
+            this.relationRoleMenuMapper.deleteByRoleIds(Arrays.asList(roleId.toString()));
+            //删除角色与操作关联关系
+            this.relationRoleOperationMapper.deleteByRoleIds(Arrays.asList(roleId.toString()));
+
             List<ImsRelationRoleMenu> imsRelationRoleMenuList=new ArrayList<>();
             for(String item:menuIds.split(",")){
                 ImsRelationRoleMenu relationRoleMenu = new ImsRelationRoleMenu();
