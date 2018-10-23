@@ -221,7 +221,7 @@
         on r.id= rm.role_id
         left join ims_menu m
         on rm.menu_id=m.id
-        where u_r.user_id=#{0} and m.p_id is null
+        where u_r.user_id=#{0} and m.p_id is null and m.id is not null
     </select>
 
 </mapper>
