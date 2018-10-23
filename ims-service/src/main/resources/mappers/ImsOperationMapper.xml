@@ -153,7 +153,7 @@
         on r.id= ro.role_id
         left join ims_operation op
         on ro.operation_id=op.id
-        where u_r.user_id=#{0}
+        where u_r.user_id=#{0} and ro.id is not null
     </select>
 
     <!--依据菜单ids查询功能操作列表-->
