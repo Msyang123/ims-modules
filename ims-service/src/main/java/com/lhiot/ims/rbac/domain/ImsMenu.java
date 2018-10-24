@@ -68,13 +68,16 @@ public class ImsMenu{
     @ApiModelProperty(value = "菜单图标", dataType = "String")
     private String icon;
 
-
+    @JsonIgnore
+    @JsonProperty("page")
     @ApiModelProperty(value = "当前页,默认值1")
     private Long page = 1L;
 
     /**
      * 传入-1可不分页
      */
+    @JsonIgnore
+    @JsonProperty("rows")
     @ApiModelProperty(value = "每页显示条数,默认值10")
     private Long rows = 10L;
 
@@ -82,6 +85,7 @@ public class ImsMenu{
      * 分页的起始行
      */
     @JsonIgnore
+    @ApiModelProperty(value = "开始行数(执行sql时用)", hidden = true)
     private Long startRow = 0L;
 
     public Long getStartRow(){

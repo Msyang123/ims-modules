@@ -95,6 +95,7 @@ public class ImsUser{
     private String remark;
 
     @JsonIgnore
+    @JsonProperty("page")
     @ApiModelProperty(value = "当前页,默认值1")
     private Long page = 1L;
 
@@ -102,6 +103,7 @@ public class ImsUser{
      * 传入-1可不分页
      */
     @JsonIgnore
+    @JsonProperty("rows")
     @ApiModelProperty(value = "每页显示条数,默认值10")
     private Long rows = 10L;
 
@@ -109,6 +111,7 @@ public class ImsUser{
      * 分页的起始行
      */
     @JsonIgnore
+    @ApiModelProperty(value = "开始行数(执行sql时用)", hidden = true)
     private Long startRow = 0L;
 
     public Long getStartRow(){

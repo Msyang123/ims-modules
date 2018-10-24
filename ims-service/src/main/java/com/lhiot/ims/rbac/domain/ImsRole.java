@@ -18,7 +18,7 @@ import lombok.ToString;
 @ToString(callSuper = true)
 @ApiModel
 @NoArgsConstructor
-public class ImsRole{
+public class ImsRole {
 
     /**
     *id
@@ -66,6 +66,7 @@ public class ImsRole{
     private java.util.Date createAt;
 
     @JsonIgnore
+    @JsonProperty("page")
     @ApiModelProperty(value = "当前页,默认值1")
     private Long page = 1L;
 
@@ -73,6 +74,7 @@ public class ImsRole{
      * 传入-1可不分页
      */
     @JsonIgnore
+    @JsonProperty("rows")
     @ApiModelProperty(value = "每页显示条数,默认值10")
     private Long rows = 10L;
 
@@ -80,8 +82,10 @@ public class ImsRole{
      * 分页的起始行
      */
     @JsonIgnore
+    @ApiModelProperty(value = "开始行数(执行sql时用)", hidden = true)
     private Long startRow = 0L;
 
+    /** 分页sql获取起始行 */
     public Long getStartRow(){
         return ((rows != null && page != null) ? (page - 1) * rows : 0);
     }
