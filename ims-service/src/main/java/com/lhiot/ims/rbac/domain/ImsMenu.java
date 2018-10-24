@@ -1,7 +1,7 @@
 package com.lhiot.ims.rbac.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.lhiot.ims.rbac.common.PagerRequestObject;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -17,7 +17,7 @@ import lombok.ToString;
 @ToString(callSuper = true)
 @ApiModel
 @NoArgsConstructor
-public class ImsMenu{
+public class ImsMenu extends PagerRequestObject {
 
     /**
     *id
@@ -67,25 +67,5 @@ public class ImsMenu{
     @JsonProperty("icon")
     @ApiModelProperty(value = "菜单图标", dataType = "String")
     private String icon;
-
-
-    @ApiModelProperty(value = "当前页,默认值1")
-    private Long page = 1L;
-
-    /**
-     * 传入-1可不分页
-     */
-    @ApiModelProperty(value = "每页显示条数,默认值10")
-    private Long rows = 10L;
-
-    /**
-     * 分页的起始行
-     */
-    @JsonIgnore
-    private Long startRow = 0L;
-
-    public Long getStartRow(){
-        return ((rows != null && page != null) ? (page - 1) * rows : 0);
-    }
 
 }
