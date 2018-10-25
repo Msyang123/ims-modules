@@ -1,8 +1,8 @@
 package com.lhiot.ims.rbac.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.lhiot.ims.rbac.common.PagerRequestObject;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -18,7 +18,7 @@ import lombok.ToString;
 @ToString(callSuper = true)
 @ApiModel
 @NoArgsConstructor
-public class ImsRole extends PagerRequestObject {
+public class ImsRole {
 
     /**
     *id
@@ -64,5 +64,30 @@ public class ImsRole extends PagerRequestObject {
     @ApiModelProperty(value = "创建时间", dataType = "Date")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private java.util.Date createAt;
+
+    @JsonIgnore
+    @JsonProperty("page")
+    @ApiModelProperty(value = "当前页,默认值1")
+    private Long page = 1L;
+
+    /**
+     * 传入-1可不分页
+     */
+    @JsonIgnore
+    @JsonProperty("rows")
+    @ApiModelProperty(value = "每页显示条数,默认值10")
+    private Long rows = 10L;
+
+    /**
+     * 分页的起始行
+     */
+    @JsonIgnore
+    @ApiModelProperty(value = "开始行数(执行sql时用)", hidden = true)
+    private Long startRow = 0L;
+
+    public Long getStartRow(){
+        return ((rows != null && page != null) ? (page - 1) * rows : 0);
+    }
+
 
 }
