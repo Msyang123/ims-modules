@@ -114,14 +114,14 @@
             <if test="menuId != null ">
                 and menu_id = #{menuId}
             </if>
-            <if test="name != null ">
-                and name = #{name}
+            <if test="name != null and name != '' ">
+                and name like concat('%',#{name}, '%')
             </if>
-            <if test="antUrl != null ">
-                and ant_url = #{antUrl}
+            <if test="antUrl != null and antUrl != '' ">
+                and ant_url like concat('%',#{antUrl}, '%')
             </if>
-            <if test="type != null ">
-                and type = #{type}
+            <if test="type != null and type != '' ">
+                and type like concat('%',#{type}, '%')
             </if>
         </where>
     </sql>

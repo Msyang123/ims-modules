@@ -164,22 +164,22 @@
             <if test="id != null ">
                 and id = #{id}
             </if>
-            <if test="name != null ">
-                and name = #{name}
+            <if test="name != null and name != '' ">
+                and name like concat('%',#{name}, '%')
             </if>
-            <if test="account != null ">
-                and account = #{account}
+            <if test="account != null and account != '' ">
+                and account like concat('%',#{account}, '%')
             </if>
-            <if test="password != null ">
-                and password = #{password}
+            <if test="password != null and password != '' ">
+                and password like concat('%',#{password}, '%')
             </if>
-            <if test="tel != null ">
-                and tel = #{tel}
+            <if test="tel != null and tel != '' ">
+                and tel like concat('%',#{tel}, '%')
             </if>
-            <if test="avatarUrl != null ">
-                and avatar_url = #{avatarUrl}
+            <if test="avatarUrl != null and avatarUrl != '' ">
+                and avatar_url like concat('%',#{avatarUrl}, '%')
             </if>
-            <if test="status != null ">
+            <if test="status != null and status != '' ">
                 and status = #{status}
             </if>
             <if test="createAt != null ">
@@ -188,8 +188,8 @@
             <if test="lastLoginAt != null ">
                 and last_login_at = #{lastLoginAt}
             </if>
-            <if test="remark != null ">
-                and remark = #{remark}
+            <if test="remark != null and remark != '' ">
+                and remark like concat('%',#{remark}, '%')
             </if>
         </where>
     </sql>

@@ -119,8 +119,8 @@
             <if test="id != null ">
                 and id = #{id}
             </if>
-            <if test="content != null ">
-                and content = #{content}
+            <if test="content != null and content != '' ">
+                and content like concat('%',#{content}, '%')
             </if>
             <if test="createAt != null ">
                 and create_at = #{createAt}
@@ -128,11 +128,11 @@
             <if test="userId != null ">
                 and user_id = #{userId}
             </if>
-            <if test="ip != null ">
-                and ip = #{ip}
+            <if test="ip != null and ip != '' ">
+                and ip like concat('%',#{ip}, '%')
             </if>
-            <if test="description != null ">
-                and description = #{description}
+            <if test="description != null and description != '' ">
+                and description like concat('%',#{description}, '%')
             </if>
         </where>
     </sql>

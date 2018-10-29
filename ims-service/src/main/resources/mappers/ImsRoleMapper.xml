@@ -125,20 +125,20 @@
             <if test="id != null ">
                 and id = #{id}
             </if>
-            <if test="name != null ">
-                and name = #{name}
+            <if test="name != null and name != '' ">
+                and name like concat('%',#{name}, '%')
             </if>
-            <if test="status != null ">
+            <if test="status != null and status != '' ">
                 and status = #{status}
             </if>
-            <if test="roleDesc != null ">
-                and role_desc like concat('%',#{roleDesc},'%')
+            <if test="roleDesc != null and roleDesc != '' ">
+                and role_desc like concat('%',#{roleDesc}, '%')
             </if>
-            <if test="createBy != null ">
-                and create_by  like concat('%',#{createBy},'%')
+            <if test="createBy != null and createBy != '' ">
+                and create_by like concat('%',#{createBy}, '%')
             </if>
             <if test="createAt != null ">
-                and create_at = #{createAt},
+                and create_at = #{createAt}
             </if>
         </where>
     </sql>
