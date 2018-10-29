@@ -89,8 +89,8 @@ public class ImsUserApi {
             return ResponseEntity.badRequest().body("帐号不存在");
         }
 
-        if (!Objects.equals(Status.AVAILABLE, admin.getStatus())) {
-            return ResponseEntity.badRequest().body("帐号状态异常：" + admin.getStatus().getMessage());
+        if (!Objects.equals(Status.AVAILABLE, Status.valueOf(Status.class,admin.getStatus()))) {
+            return ResponseEntity.badRequest().body("帐号状态异常：" + Status.valueOf(admin.getStatus()).getMessage());
         }
 
         String md5 = MD5.str(login.getPassword());

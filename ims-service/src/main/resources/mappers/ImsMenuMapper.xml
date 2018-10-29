@@ -133,20 +133,20 @@
             <if test="pId != null ">
                 and p_id = #{pId}
             </if>
-            <if test="name != null ">
-                and name = #{name}
+            <if test="name != null and name != '' ">
+                and name like concat('%',#{name}, '%')
             </if>
-            <if test="code != null ">
-                and code = #{code}
+            <if test="code != null and code != '' ">
+                and code like concat('%',#{code}, '%')
             </if>
-            <if test="type != null ">
+            <if test="type != null and type != '' ">
                 and type = #{type}
             </if>
             <if test="sort != null ">
                 and sort = #{sort}
             </if>
-            <if test="icon != null ">
-                and icon = #{icon}
+            <if test="icon != null and icon != '' ">
+                and icon like concat('%',#{icon}, '%')
             </if>
         </where>
     </sql>

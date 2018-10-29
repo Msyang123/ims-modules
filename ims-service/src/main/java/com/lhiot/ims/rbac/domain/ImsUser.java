@@ -66,8 +66,8 @@ public class ImsUser{
      *用户状态
      */
     @JsonProperty("status")
-    @ApiModelProperty(value = "用户状态", dataType = "Status")
-    private Status status;
+    @ApiModelProperty(value = "用户状态", dataType = "String")
+    private String status;
 
     /**
      *创建时间
