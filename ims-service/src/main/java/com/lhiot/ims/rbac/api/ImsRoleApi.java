@@ -122,7 +122,7 @@ public class ImsRoleApi {
     @GetMapping("/list/all")
     @ApiOperation(value = "查询所有角色列表")
     public ResponseEntity<List<ImsRole>> list(){
-        log.debug("查询所以角色列表\t");
+        log.debug("查询所有角色列表\t");
 
         return ResponseEntity.ok(imsRoleService.getRoles());
     }
