@@ -173,7 +173,7 @@
 
 
     <!-- 查询所有角色列表 -->
-    <select id="getRoles" resultMap="MenuResultMap">
+    <select id="getRoles" resultMap="BaseResultMap">
         select r.* from ims_role r
     </select>
 
