@@ -227,4 +227,9 @@
         where u_r.user_id=#{0}
     </select>
 
+    <!--更新用户最后登录时间-->
+    <update id="updateLastLogin" parameterType="map">
+      UPDATE ims_user SET last_login_at = #{last_login_at} WHERE ims_user.id = #{id}
+    </update>
+
 </mapper>

@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 /**
 * Description:用户服务类
@@ -117,6 +118,15 @@ public class ImsUserService {
     public List<ImsRole> getRelationRolesById(Long id) {
 
         return  this.imsUserMapper.getRelationRolesById(id);
+    }
+
+    /**
+     * Description: 更新用户最后登录时间
+     *
+     * @param params
+     */
+    public void updateLastLogin(Map<String, Object> params) {
+        this.imsUserMapper.updateLastLogin(params);
     }
 
 }

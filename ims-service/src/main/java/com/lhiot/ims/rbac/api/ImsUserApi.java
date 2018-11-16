@@ -9,6 +9,7 @@ import com.leon.microx.util.Maps;
 import com.leon.microx.util.StringUtils;
 import com.leon.microx.util.auditing.MD5;
 import com.lhiot.ims.rbac.domain.*;
+import com.lhiot.ims.rbac.service.ImsOperationLogService;
 import com.lhiot.ims.rbac.service.ImsOperationService;
 import com.lhiot.ims.rbac.service.ImsRelationUserRoleService;
 import com.lhiot.ims.rbac.service.ImsUserService;
@@ -26,6 +27,7 @@ import springfox.documentation.annotations.ApiIgnore;
 import javax.servlet.http.HttpServletRequest;
 import java.net.URI;
 import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
@@ -47,14 +49,16 @@ public class ImsUserApi {
     private final ImsUserService imsUserService;
     private final ImsOperationService imsOperationService;
     private final ImsRelationUserRoleService imsRelationUserRoleService;
+    private final ImsOperationLogService imsOperationLogService;
 
     @Autowired
-    public ImsUserApi(RemoteInvoker invoker, ObjectProvider<Sessions> sessionsObjectProvider, ImsUserService imsUserService, ImsOperationService imsOperationService, ImsRelationUserRoleService imsRelationUserRoleService) {
+    public ImsUserApi(RemoteInvoker invoker, ObjectProvider<Sessions> sessionsObjectProvider, ImsUserService imsUserService, ImsOperationService imsOperationService, ImsRelationUserRoleService imsRelationUserRoleService, ImsOperationLogService imsOperationLogService) {
         this.invoker = invoker;
         this.session = sessionsObjectProvider.getIfAvailable();
         this.imsUserService = imsUserService;
         this.imsOperationService = imsOperationService;
         this.imsRelationUserRoleService = imsRelationUserRoleService;
+        this.imsOperationLogService = imsOperationLogService;
     }
 
     @Sessions.Uncheck
@@ -101,6 +105,10 @@ public class ImsUserApi {
                 "id",admin.getId(),"name",admin.getName(),"account",admin.getAccount(),"avatar",StringUtils.isBlank(admin.getAvatarUrl())?"":admin.getAvatarUrl()
         )).timeToLive(30, TimeUnit.MINUTES);
 
+        // 记录用户ip
+        if (Objects.nonNull(login.getIp())) {
+            imsOperationLogService.create(Maps.of("content","用户登录","userId",admin.getId(),"ip",login.getIp(),"description","登录用户："+admin.getName()));
+        }
         //填充访问权限：sessionUser.authorities(Authority.of("/**/users/?, RequestMethod.GET))
         //查找用户的操作权限
         List<ImsOperation> imsOperationList = imsOperationService.listByUserId(admin.getId());
@@ -120,8 +128,7 @@ public class ImsUserApi {
                     .body("{\"XSessionId\":\""+sessionId+"\"}");
         } finally {
             // 更新用户最后登录时间
-            admin.setLastLoginAt(new Timestamp(System.currentTimeMillis()));
-            imsUserService.updateById(admin);
+            imsUserService.updateLastLogin(Maps.of("id", admin.getId(), "last_login_at", Instant.now()));
         }
     }
 

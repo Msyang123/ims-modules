@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
+import java.util.Map;
 
 /**
 * Description:操作表日志服务类
@@ -29,13 +30,13 @@ public class ImsOperationLogService {
     /** 
     * Description:新增操作表日志
     *  
-    * @param imsOperationLog
+    * @param params
     * @return
     * @author yijun
     * @date 2018/09/29 11:42:57
     */  
-    public int create(ImsOperationLog imsOperationLog){
-        return this.imsOperationLogMapper.create(imsOperationLog);
+    public int create(Map<String, Object> params){
+        return this.imsOperationLogMapper.create(params);
     }
 
     /** 

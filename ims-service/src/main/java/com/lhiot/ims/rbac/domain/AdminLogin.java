@@ -25,4 +25,7 @@ public class AdminLogin {
     @ApiModelProperty(notes = "登录密码", dataType = "String", required = true)
     @Pattern(regexp = "^.*(?=.{6,16})(?=.*\\d)(?=.*[A-Z])(?=.*[a-z]).*$", message = "密码强度6到16位，包括至少1个大写字母，1个小写字母，1个数字")
     private String password;
+
+    @ApiModelProperty(notes = "用户ip", dataType = "String")
+    private String ip;
 }

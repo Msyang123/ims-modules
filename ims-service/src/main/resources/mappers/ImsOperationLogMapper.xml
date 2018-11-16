@@ -26,7 +26,7 @@
     </sql>
 
     <!--新增操作表日志-->
-    <insert id="create" parameterType="com.lhiot.ims.rbac.domain.ImsOperationLog" useGeneratedKeys="true" keyProperty="id">
+    <insert id="create" parameterType="java.util.Map" useGeneratedKeys="true" keyProperty="id">
         insert into ims_operation_log
         <trim prefix="(" suffix=")" suffixOverrides="," >
             <if test="id != null ">
