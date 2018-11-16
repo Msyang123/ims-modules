@@ -5,6 +5,7 @@ import com.lhiot.ims.rbac.domain.ImsUser;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
+import java.util.Map;
 
 /**
 * Description:用户Mapper类
@@ -90,4 +91,11 @@ public interface ImsUserMapper {
      * @return
      */
     List<ImsRole> getRelationRolesById(Long id);
+
+    /**
+     * Description: 更新用户最后登录时间
+     *
+     * @param params
+     */
+    void updateLastLogin(Map<String, Object> params);
 }

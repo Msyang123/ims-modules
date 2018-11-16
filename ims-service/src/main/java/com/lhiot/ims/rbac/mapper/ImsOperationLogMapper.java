@@ -4,6 +4,7 @@ import com.lhiot.ims.rbac.domain.ImsOperationLog;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
+import java.util.Map;
 
 /**
 * Description:操作表日志Mapper类
@@ -16,12 +17,12 @@ public interface ImsOperationLogMapper {
     /**
     * Description:新增操作表日志
     *
-    * @param imsOperationLog
+    * @param params
     * @return
-    * @author yijun
-    * @date 2018/09/29 11:42:57
+    * @author hufan
+    * @date 2018/11/16 11:42:57
     */
-    int create(ImsOperationLog imsOperationLog);
+    int create(Map<String, Object> params);
 
     /**
     * Description:根据id修改操作表日志
