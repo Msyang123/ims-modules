@@ -69,6 +69,12 @@
             <artifactId>mybatis-spring-boot-starter</artifactId>
             <version>LATEST</version>
         </dependency>
+        <!--数据字典-->
+        <dependency>
+            <groupId>com.lhiot.dc.dictionary</groupId>
+            <artifactId>dictionary-client</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
     <build>

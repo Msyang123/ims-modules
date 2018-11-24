@@ -1,5 +1,6 @@
 package com.lhiot.ims.rbac.domain;
 
+import com.leon.microx.util.auditing.MD5;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -26,6 +27,4 @@ public class AdminLogin {
     @Pattern(regexp = "^.*(?=.{6,16})(?=.*\\d)(?=.*[A-Z])(?=.*[a-z]).*$", message = "密码强度6到16位，包括至少1个大写字母，1个小写字母，1个数字")
     private String password;
 
-    @ApiModelProperty(notes = "用户ip", dataType = "String")
-    private String ip;
 }

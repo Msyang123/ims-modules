@@ -3,6 +3,7 @@ package com.lhiot.ims.rbac.api;
 import com.leon.microx.web.result.Multiple;
 import com.leon.microx.web.result.Pages;
 import com.leon.microx.web.session.Sessions;
+import com.lhiot.ims.rbac.aspect.LogCollection;
 import com.lhiot.ims.rbac.domain.ImsRole;
 import com.lhiot.ims.rbac.domain.MenuDisplay;
 import com.lhiot.ims.rbac.service.ImsRelationRoleMenuService;
@@ -40,6 +41,7 @@ public class ImsRoleApi {
         this.imsRelationRoleMenuService = imsRelationRoleMenuService;
     }
 
+    @LogCollection
     @PostMapping("/")
     @ApiOperation(value = "添加角色")
     @ApiImplicitParam(paramType = "body", name = "imsRole", value = "要添加的角色", required = true, dataType = "ImsRole")
@@ -51,6 +53,7 @@ public class ImsRoleApi {
         return ResponseEntity.ok(imsRoleService.create(imsRole));
     }
 
+    @LogCollection
     @PutMapping("/{id}")
     @ApiOperation(value = "根据id更新角色")
     @ApiImplicitParams({
@@ -64,6 +67,7 @@ public class ImsRoleApi {
         return ResponseEntity.ok(imsRoleService.updateById(imsRole));
     }
 
+    @LogCollection
     @PutMapping("/relation/{id}/{menuIds}")
     @ApiOperation(value = "根据id更新角色与菜单关联（包括与操作关联）")
     @ApiImplicitParams({
@@ -75,6 +79,7 @@ public class ImsRoleApi {
         return ResponseEntity.ok(imsRelationRoleMenuService.create(id,menuIds));
     }
 
+    @LogCollection
     @DeleteMapping("/{ids}")
     @ApiOperation(value = "根据ids删除角色")
     @ApiImplicitParam(paramType = "path", name = "ids", value = "要删除角色的ids,逗号分割", required = true, dataType = "String")
