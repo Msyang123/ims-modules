@@ -1,15 +1,15 @@
 package com.lhiot.ims.rbac.api;
 
+import com.leon.microx.util.Maps;
+import com.leon.microx.util.StringUtils;
+import com.leon.microx.util.auditing.MD5;
 import com.leon.microx.web.http.RemoteInvoker;
 import com.leon.microx.web.result.Pages;
 import com.leon.microx.web.session.Authority;
 import com.leon.microx.web.session.Sessions;
 import com.leon.microx.web.swagger.ApiParamType;
-import com.leon.microx.util.Maps;
-import com.leon.microx.util.StringUtils;
-import com.leon.microx.util.auditing.MD5;
+import com.lhiot.ims.rbac.aspect.LogCollection;
 import com.lhiot.ims.rbac.domain.*;
-import com.lhiot.ims.rbac.service.ImsOperationLogService;
 import com.lhiot.ims.rbac.service.ImsOperationService;
 import com.lhiot.ims.rbac.service.ImsRelationUserRoleService;
 import com.lhiot.ims.rbac.service.ImsUserService;
@@ -19,7 +19,6 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
@@ -34,33 +33,33 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
-* Description:用户接口类
-* @author yijun
-* @date 2018/09/29
-*/
+ * Description:用户接口类
+ *
+ * @author yijun
+ * @date 2018/09/29
+ */
 @Api(description = "用户接口")
 @Slf4j
 @RestController
 @RequestMapping("/admin")
 public class ImsUserApi {
 
-    private RemoteInvoker invoker;
+
+    private RemoteInvoker remoteInvoker;
     private Sessions session;
     private final ImsUserService imsUserService;
     private final ImsOperationService imsOperationService;
     private final ImsRelationUserRoleService imsRelationUserRoleService;
-    private final ImsOperationLogService imsOperationLogService;
 
-    @Autowired
-    public ImsUserApi(RemoteInvoker invoker, ObjectProvider<Sessions> sessionsObjectProvider, ImsUserService imsUserService, ImsOperationService imsOperationService, ImsRelationUserRoleService imsRelationUserRoleService, ImsOperationLogService imsOperationLogService) {
-        this.invoker = invoker;
+    public ImsUserApi(RemoteInvoker remoteInvoker, ObjectProvider<Sessions> sessionsObjectProvider, ImsUserService imsUserService, ImsOperationService imsOperationService, ImsRelationUserRoleService imsRelationUserRoleService) {
         this.session = sessionsObjectProvider.getIfAvailable();
         this.imsUserService = imsUserService;
         this.imsOperationService = imsOperationService;
         this.imsRelationUserRoleService = imsRelationUserRoleService;
-        this.imsOperationLogService = imsOperationLogService;
+        this.remoteInvoker = remoteInvoker;
     }
 
+    @LogCollection
     @Sessions.Uncheck
     @PostMapping("/backdoor")
     @ApiOperation("管理后门。（绕开所有权限）")
@@ -93,7 +92,7 @@ public class ImsUserApi {
             return ResponseEntity.badRequest().body("帐号不存在");
         }
 
-        if (!Objects.equals(Status.AVAILABLE, Status.valueOf(Status.class,admin.getStatus()))) {
+        if (!Objects.equals(Status.AVAILABLE, Status.valueOf(Status.class, admin.getStatus()))) {
             return ResponseEntity.badRequest().body("帐号状态异常：" + Status.valueOf(admin.getStatus()).getMessage());
         }
 
@@ -102,13 +101,9 @@ public class ImsUserApi {
             return ResponseEntity.badRequest().body("密码错误");
         }
         Sessions.User sessionUser = session.create(request).user(Maps.of(
-                "id",admin.getId(),"name",admin.getName(),"account",admin.getAccount(),"avatar",StringUtils.isBlank(admin.getAvatarUrl())?"":admin.getAvatarUrl()
+                "id", admin.getId(), "name", admin.getName(), "account", admin.getAccount(), "avatar", StringUtils.isBlank(admin.getAvatarUrl()) ? "" : admin.getAvatarUrl()
         )).timeToLive(30, TimeUnit.MINUTES);
 
-        // 记录用户ip
-        if (Objects.nonNull(login.getIp())) {
-            imsOperationLogService.create(Maps.of("content","用户登录","userId",admin.getId(),"ip",login.getIp(),"description","登录用户："+admin.getName()));
-        }
         //填充访问权限：sessionUser.authorities(Authority.of("/**/users/?, RequestMethod.GET))
         //查找用户的操作权限
         List<ImsOperation> imsOperationList = imsOperationService.listByUserId(admin.getId());
@@ -122,16 +117,17 @@ public class ImsUserApi {
         sessionUser.authorities(authorityList);
         String sessionId = session.cache(sessionUser);
         try {
-                return ResponseEntity
+            return ResponseEntity
                     .created(URI.create("/ims-user/session/" + sessionId))
                     .header(Sessions.HTTP_HEADER_NAME, sessionId)
-                    .body("{\"XSessionId\":\""+sessionId+"\"}");
+                    .body("{\"XSessionId\":\"" + sessionId + "\"}");
         } finally {
             // 更新用户最后登录时间
             imsUserService.updateLastLogin(Maps.of("id", admin.getId(), "last_login_at", Instant.now()));
         }
     }
 
+    @LogCollection
     @DeleteMapping("/sessions")
     @ApiOperation("管理员退出登录")
     public ResponseEntity logout(HttpServletRequest request, Sessions.User user) {
@@ -150,52 +146,54 @@ public class ImsUserApi {
         return ResponseEntity.ok(session.user(sessionId).getUser());
     }
 
+    @LogCollection
     @PostMapping("/")
     @ApiOperation(value = "添加用户")
     @ApiImplicitParam(paramType = "body", name = "imsUser", value = "要添加的用户", required = true, dataType = "ImsUser")
     public ResponseEntity<ImsUser> create(@RequestBody ImsUser imsUser) {
-        log.debug("添加用户\t param:{}",imsUser);
+        log.debug("添加用户\t param:{}", imsUser);
         imsUser.setCreateAt(new Timestamp(System.currentTimeMillis()));
 
         return ResponseEntity.ok(imsUserService.create(imsUser));
     }
 
+    @LogCollection
     @PutMapping("/{id}")
     @ApiOperation(value = "根据id更新用户")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "path", name = "id", value = "用户id", required = true, dataType = "Long"),
             @ApiImplicitParam(paramType = "body", name = "imsUser", value = "要更新的用户", required = true, dataType = "ImsUser")
     })
-    public ResponseEntity<ImsUser> update(@PathVariable("id") Long id,@RequestBody ImsUser imsUser) {
+    public ResponseEntity<ImsUser> update(@PathVariable("id") Long id, @RequestBody ImsUser imsUser) {
         log.debug("根据id更新用户\t id:{} param:{}", id, imsUser);
         imsUser.setId(id);
 
         return ResponseEntity.ok(imsUserService.updateById(imsUser));
     }
 
+    @LogCollection
     @PutMapping("/update/relation/{id}/{roleIds}")
     @ApiOperation(value = "根据id更新用户角色信息")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "path", name = "id", value = "用户id", required = true, dataType = "Long"),
             @ApiImplicitParam(paramType = "path", name = "roleIds", value = "要更新的用户角色ids", required = true, dataType = "String")
     })
-    public ResponseEntity<Integer> update(@PathVariable("id") Long id,@PathVariable("roleIds") String roleIds) {
-        log.debug("根据用户id更新用户关联角色信息\t id:{} param:{}",id,roleIds);
+    public ResponseEntity<Integer> update(@PathVariable("id") Long id, @PathVariable("roleIds") String roleIds) {
+        log.debug("根据用户id更新用户关联角色信息\t id:{} param:{}", id, roleIds);
 
-        return ResponseEntity.ok(imsRelationUserRoleService.create(id,roleIds));
+        return ResponseEntity.ok(imsRelationUserRoleService.create(id, roleIds));
     }
 
-
+    @LogCollection
     @DeleteMapping("/batch/{ids}")
     @ApiOperation(value = "根据ids删除用户")
     @ApiImplicitParam(paramType = "path", name = "ids", value = "要删除用户的ids,逗号分割", required = true, dataType = "String")
-
     public ResponseEntity<Integer> deleteByIds(@PathVariable("ids") String ids) {
-        log.debug("根据ids删除用户\t param:{}",ids);
-        
+        log.debug("根据ids删除用户\t param:{}", ids);
+
         return ResponseEntity.ok(imsUserService.deleteByIds(ids));
     }
-    
+
     @ApiOperation(value = "根据id查询用户", notes = "根据id查询用户")
     @ApiImplicitParam(paramType = "path", name = "id", value = "主键id", required = true, dataType = "Long")
     @GetMapping("/id/{id}")
@@ -203,21 +201,21 @@ public class ImsUserApi {
 
         return ResponseEntity.ok(imsUserService.selectById(id));
     }
-    
+
     @PostMapping("/pages")
     @ApiOperation(value = "查询用户分页列表")
     @ApiImplicitParam(paramType = "body", name = "imsUser", value = "查询用户参数", required = true, dataType = "ImsUser")
-    public ResponseEntity<Pages<ImsUser>> pageQuery(@RequestBody ImsUser imsUser){
-        log.debug("查询用户分页列表\t param:{}",imsUser);
-        
+    public ResponseEntity<Pages<ImsUser>> pageQuery(@RequestBody ImsUser imsUser) {
+        log.debug("查询用户分页列表\t param:{}", imsUser);
+
         return ResponseEntity.ok(imsUserService.pageList(imsUser));
     }
 
     @PostMapping("/relation/roles/{id}")
     @ApiOperation(value = "查询用户id查询已关联的角色列表")
     @ApiImplicitParam(paramType = "path", name = "id", value = "要查询的用户id", required = true, dataType = "Long")
-    public ResponseEntity<List<ImsRole>> getRelationRolesById(@PathVariable("id") Long id){
-        log.debug("查询用户id查询已关联的角色列表\t param:{}",id);
+    public ResponseEntity<List<ImsRole>> getRelationRolesById(@PathVariable("id") Long id) {
+        log.debug("查询用户id查询已关联的角色列表\t param:{}", id);
 
         return ResponseEntity.ok(imsUserService.getRelationRolesById(id));
     }

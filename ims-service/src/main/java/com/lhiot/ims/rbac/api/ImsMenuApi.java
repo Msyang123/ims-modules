@@ -3,6 +3,7 @@ package com.lhiot.ims.rbac.api;
 import com.leon.microx.web.result.Multiple;
 import com.leon.microx.web.result.Pages;
 import com.leon.microx.web.session.Sessions;
+import com.lhiot.ims.rbac.aspect.LogCollection;
 import com.lhiot.ims.rbac.domain.ImsMenu;
 import com.lhiot.ims.rbac.domain.MenuDisplay;
 import com.lhiot.ims.rbac.service.ImsMenuService;
@@ -38,6 +39,7 @@ public class ImsMenuApi {
         this.imsMenuService = imsMenuService;
     }
 
+    @LogCollection
     @PostMapping("/")
     @ApiOperation(value = "添加菜单")
     @ApiImplicitParam(paramType = "body", name = "imsMenu", value = "要添加的菜单", required = true, dataType = "ImsMenu")
@@ -47,6 +49,7 @@ public class ImsMenuApi {
         return ResponseEntity.ok(imsMenuService.create(imsMenu));
     }
 
+    @LogCollection
     @PutMapping("/{id}")
     @ApiOperation(value = "根据id更新菜单")
     @ApiImplicitParams({
@@ -60,6 +63,7 @@ public class ImsMenuApi {
         return ResponseEntity.ok(imsMenuService.updateById(imsMenu));
     }
 
+    @LogCollection
     @DeleteMapping("/{ids}")
     @ApiOperation(value = "根据ids删除菜单")
     @ApiImplicitParam(paramType = "path", name = "ids", value = "要删除菜单的ids,逗号分割", required = true, dataType = "String")

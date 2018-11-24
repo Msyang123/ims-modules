@@ -1,6 +1,7 @@
 package com.lhiot.ims.rbac.api;
 
 import com.leon.microx.web.result.Pages;
+import com.lhiot.ims.rbac.aspect.LogCollection;
 import com.lhiot.ims.rbac.domain.ImsOperation;
 import com.lhiot.ims.rbac.service.ImsOperationService;
 import io.swagger.annotations.Api;
@@ -31,6 +32,7 @@ public class ImsOperationApi {
         this.imsOperationService = imsOperationService;
     }
 
+    @LogCollection
     @PostMapping("/")
     @ApiOperation(value = "添加的操作")
     @ApiImplicitParam(paramType = "body", name = "imsOperation", value = "要添加的操作", required = true, dataType = "ImsOperation")
@@ -39,6 +41,8 @@ public class ImsOperationApi {
 
         return ResponseEntity.ok(imsOperationService.create(imsOperation));
     }
+
+    @LogCollection
     @DeleteMapping("/{ids}")
     @ApiOperation(value = "根据ids删除功能操作")
     @ApiImplicitParam(paramType = "path", name = "ids", value = "要删除功能操作的ids,逗号分割", required = true, dataType = "String")
@@ -47,6 +51,7 @@ public class ImsOperationApi {
 
         return ResponseEntity.ok(imsOperationService.deleteByIds(ids));
     }
+
     @ApiOperation(value = "根据id查询功能操作", notes = "根据id查询功能操作")
     @ApiImplicitParam(paramType = "path", name = "id", value = "主键id", required = true, dataType = "Long")
     @GetMapping("/{id}")
