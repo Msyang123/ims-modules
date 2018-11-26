@@ -8,6 +8,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -21,6 +22,7 @@ public class ProductShelf {
     private ProductSpecification specification;
     @ApiModelProperty(notes = "主键Id", dataType = "Long")
     private Long id;
+    @NotNull(message = "上架名称不能为空")
     @ApiModelProperty(notes = "上架名称", dataType = "String")
     private String name;
     @ApiModelProperty(notes = "规格ID", dataType = "Long")

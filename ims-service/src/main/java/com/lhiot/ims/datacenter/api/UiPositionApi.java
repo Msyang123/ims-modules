@@ -98,12 +98,6 @@ public class UiPositionApi {
     public ResponseEntity search(@RequestBody UiPositionParam param) {
         log.debug("查询UI位置信息列表\t param:{}", param);
 
-        // 设置默认页数和行数
-        int page = Objects.nonNull(param.getPage()) ? param.getPage() : 1;
-        int rows = Objects.nonNull(param.getRows()) ? param.getRows() : 10;
-        param.setPage(page);
-        param.setRows(rows);
-
         ResponseEntity entity = uiPositionFeign.pages(param);
         if (entity.getStatusCode().isError()) {
             return ResponseEntity.badRequest().body(entity.getBody());

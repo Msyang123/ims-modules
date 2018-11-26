@@ -6,6 +6,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 /**
@@ -20,6 +21,7 @@ public class Advertisement {
     private Long positionId;
     @ApiModelProperty(notes = "广告图片", dataType = "String")
     private String image;
+    @NotNull(message = "广告名不能为空")
     @ApiModelProperty(notes = "广告名", dataType = "String")
     private String advertiseName;
     @ApiModelProperty(notes = "广告关联", dataType = "String")

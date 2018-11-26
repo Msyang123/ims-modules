@@ -1,7 +1,7 @@
 package com.lhiot.ims.rbac.api;
 
-import com.leon.microx.web.result.Multiple;
 import com.leon.microx.web.result.Pages;
+import com.leon.microx.web.result.Tuple;
 import com.leon.microx.web.session.Sessions;
 import com.lhiot.ims.rbac.aspect.LogCollection;
 import com.lhiot.ims.rbac.domain.ImsMenu;
@@ -93,7 +93,7 @@ public class ImsMenuApi {
 
     @GetMapping("/user/left-tree")
     @ApiOperation(value = "查询菜单列表(非系统)")
-    public ResponseEntity<Multiple<MenuDisplay>> listImsMenus(Sessions.User user) {
+    public ResponseEntity<Tuple<MenuDisplay>> listImsMenus(Sessions.User user) {
         log.debug("查询菜单列表\t param:");
         //通过session获取用户id
         Long id = (Long) user.getUser().get("id");
@@ -101,36 +101,36 @@ public class ImsMenuApi {
         List<MenuDisplay> menuDisplayList = Objects.requireNonNull(imsMenuService.listImsMenus(id)).stream()
                 .map(MenuDisplay::new)
                 .collect(Collectors.toList());
-        return ResponseEntity.ok(Multiple.of(menuDisplayList));
+        return ResponseEntity.ok(Tuple.of(menuDisplayList));
     }
 
     @GetMapping("/list/all")
     @ApiOperation(value = "查询菜单列表(包括系统)")
-    public ResponseEntity<Multiple<MenuDisplay>> listIncludeSystemImsMenus() {
+    public ResponseEntity<Tuple<MenuDisplay>> listIncludeSystemImsMenus() {
         log.debug("查询菜单列表\t param:");
         List<MenuDisplay> menuDisplayList = imsMenuService.listIncludeSystemImsMenus().stream().map(MenuDisplay::new).collect(Collectors.toList());
-        return ResponseEntity.ok(Multiple.of(menuDisplayList));
+        return ResponseEntity.ok(Tuple.of(menuDisplayList));
     }
 
     @GetMapping("/list/pid")
     @ApiOperation(value = "依据父id查询菜单列表(非系统)")
-    public ResponseEntity<Multiple<MenuDisplay>> listImsMenus(@RequestParam("pid") long pid, Sessions.User user) {
+    public ResponseEntity<Tuple<MenuDisplay>> listImsMenus(@RequestParam("pid") long pid, Sessions.User user) {
         log.debug("查询菜单列表\t param:");
         //通过session获取用户id
         Long id = (Long) user.getUser().get("id");
         List<MenuDisplay> menuDisplayList = Objects.requireNonNull(imsMenuService.listImsMenus(pid,id)).stream()
                 .map(MenuDisplay::new)
                 .collect(Collectors.toList());
-        return ResponseEntity.ok(Multiple.of(menuDisplayList));
+        return ResponseEntity.ok(Tuple.of(menuDisplayList));
     }
 
     @GetMapping("/list/systems")
     @ApiOperation(value = "查询菜单列表(系统)")
-    public ResponseEntity<Multiple<ImsMenu>> listImsSystems(Sessions.User user) {
+    public ResponseEntity<Tuple<ImsMenu>> listImsSystems(Sessions.User user) {
         log.debug("查询菜单列表(系统)");
         //通过session获取用户id
         Long id = (Long) user.getUser().get("id");
-        return ResponseEntity.ok(Multiple.of(imsMenuService.listImsSystems(id)));
+        return ResponseEntity.ok(Tuple.of(imsMenuService.listImsSystems(id)));
     }
 
 }
