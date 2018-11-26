@@ -52,12 +52,12 @@ public class ProductSectionService {
     }
 
     public Tips updateBatch(Long sectionId, String productIds) {
-        // 1、先批量删除sectionId关联的所有记录
-        ResponseEntity deleteEntity = productSectionRelationFegin.deleteBatch(sectionId, productIds);
+        // 1、先根据板块id查询所有关联的商品ids，上架ids为空删除所有
+        ResponseEntity deleteEntity = productSectionRelationFegin.deleteBatch(sectionId, null);
         if (Objects.isNull(deleteEntity) || deleteEntity.getStatusCode().isError()) {
             return Tips.warn(deleteEntity.getBody().toString());
         }
-        // 2、再批量添加
+        // 2、批量添加
         ResponseEntity addEntity = productSectionRelationFegin.createBatch(sectionId, productIds);
         if (Objects.isNull(addEntity) || addEntity.getStatusCode().isError()) {
             return Tips.warn(addEntity.getBody().toString());

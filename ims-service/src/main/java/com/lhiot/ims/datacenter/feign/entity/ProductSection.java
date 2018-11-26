@@ -4,6 +4,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.List;
 
@@ -17,6 +18,7 @@ public class ProductSection {
     private Long id;
     @ApiModelProperty(notes = "位置ID", dataType = "Long")
     private Long positionId;
+    @NotNull(message = "板块名称不能为空")
     @ApiModelProperty(notes = "板块名称", dataType = "String")
     private String sectionName;
     @ApiModelProperty(notes = "板块图片url", dataType = "String")

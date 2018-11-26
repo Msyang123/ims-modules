@@ -91,12 +91,6 @@ public class AdvertisementApi {
     public ResponseEntity search(@RequestBody AdvertisementParam param) {
         log.debug("查询广告信息列表\t param:{}", param);
 
-        // 设置默认页数和行数
-        int page = Objects.nonNull(param.getPage()) ? param.getPage() : 1;
-        int rows = Objects.nonNull(param.getRows()) ? param.getRows() : 10;
-        param.setPage(page);
-        param.setRows(rows);
-
         ResponseEntity<Pages<Advertisement>> entity = advertisementFeign.pages(param);
         if (Objects.isNull(entity.getBody()) || entity.getStatusCode().isError()) {
             return ResponseEntity.badRequest().body(entity.getBody());

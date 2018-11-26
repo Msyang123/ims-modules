@@ -1,5 +1,6 @@
 package com.lhiot.ims.datacenter.api;
 
+import com.leon.microx.util.Maps;
 import com.leon.microx.web.result.Pages;
 import com.leon.microx.web.result.Tips;
 import com.leon.microx.web.swagger.ApiParamType;
@@ -8,6 +9,7 @@ import com.lhiot.ims.datacenter.feign.ProductSectionRelationFegin;
 import com.lhiot.ims.datacenter.feign.entity.ProductSection;
 import com.lhiot.ims.datacenter.model.ProductSectionParam;
 import com.lhiot.ims.datacenter.service.ProductSectionService;
+import com.lhiot.ims.rbac.aspect.LogCollection;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -41,12 +43,13 @@ public class ProductSectionApi {
     @ApiOperation("添加商品版块(包括添加商品关联关系)")
     @ApiImplicitParam(paramType = ApiParamType.BODY, name = "productSection", value = "商品版块信息", dataType = "ProductSection", required = true)
     @PostMapping("/")
+    @LogCollection
     public ResponseEntity create(@RequestBody ProductSection productSection) {
         log.debug("添加商品版块\t param:{}", productSection);
 
         Tips result = productSectionService.create(productSection);
         if (Objects.nonNull(result)) {
-            return ResponseEntity.ok(result.getMessage());
+            return ResponseEntity.ok(Maps.of("id", result.getMessage()));
         }
         return ResponseEntity.badRequest().body("添加失败");
     }
@@ -57,6 +60,7 @@ public class ProductSectionApi {
             @ApiImplicitParam(paramType = ApiParamType.BODY, name = "productSection", value = "productSection", dataType = "ProductSection", required = true)
     })
     @PutMapping("/{id}")
+    @LogCollection
     public ResponseEntity update(@PathVariable("id") Long id, @RequestBody ProductSection productSection) {
         log.debug("根据id修改商品版块\t id:{} param:{}", id, productSection);
 
@@ -83,6 +87,7 @@ public class ProductSectionApi {
     @ApiOperation("根据商品Ids删除商品版块")
     @ApiImplicitParam(paramType = ApiParamType.PATH, name = "ids", value = "多个商品Id以英文逗号分隔", dataType = "String", required = true)
     @DeleteMapping("/{ids}")
+    @LogCollection
     public ResponseEntity batchDelete(@PathVariable("ids") String ids) {
         log.debug("根据商品Ids删除商品版块\t param:{}", ids);
 
@@ -99,12 +104,6 @@ public class ProductSectionApi {
     public ResponseEntity search(@RequestBody ProductSectionParam param) {
         log.debug("查询商品版块信息列表\t param:{}", param);
 
-        // 设置默认页数和行数
-        int page = Objects.nonNull(param.getPage()) ? param.getPage() : 1;
-        int rows = Objects.nonNull(param.getRows()) ? param.getRows() : 10;
-        param.setPage(page);
-        param.setRows(rows);
-
         ResponseEntity<Pages<ProductSection>> entity = productSectionFegin.pages(param);
         if (Objects.isNull(entity) || entity.getStatusCode().isError()) {
             return ResponseEntity.badRequest().body(entity.getBody());
@@ -115,6 +114,7 @@ public class ProductSectionApi {
     @ApiOperation("根据关联id删除商品和板块关联")
     @ApiImplicitParam(paramType = ApiParamType.PATH, name = "relationId", value = "商品板块关联id", dataType = "Long", required = true)
     @DeleteMapping("relation/{relationId}")
+    @LogCollection
     public ResponseEntity updateRelation(@PathVariable("relationId") Long relationId) {
         log.debug("根据关联id删除商品和板块关联\t param:{}", relationId);
 
@@ -131,6 +131,7 @@ public class ProductSectionApi {
             @ApiImplicitParam(paramType = ApiParamType.QUERY, name = "productIds", value = "商品板块关联id", dataType = "String", required = true)
     })
     @PutMapping("/relation/batch")
+    @LogCollection
     public ResponseEntity deleteRelation(@RequestParam("sectionId") Long sectionId, @RequestParam("productIds") String productIds) {
         log.debug("根据板块id和商品ids修改商品和板块关联\t param:{}", sectionId, productIds);
 
