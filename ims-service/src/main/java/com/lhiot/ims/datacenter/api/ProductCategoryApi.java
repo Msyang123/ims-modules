@@ -124,12 +124,12 @@ public class ProductCategoryApi {
         if (Objects.isNull(entity) || entity.getStatusCode().isError()) {
             return ResponseEntity.badRequest().body(entity.getBody());
         }
-        return ResponseEntity.ok(entity);
+        return ResponseEntity.ok(entity.getBody());
     }
 
     @ApiOperation(value = "查询去重的商品分类集合", response = String.class, responseContainer = "List")
     @ApiImplicitParam(paramType = ApiParamType.PATH, name = "parentId", value = "父分类id", dataType = "Long", required = true)
-    @GetMapping("/childrens/{parentId}")
+    @GetMapping("/children/{parentId}")
     public ResponseEntity list(@PathVariable("parentId") Long parentId) {
         log.debug("查询去重的商品分类集合\t");
 
