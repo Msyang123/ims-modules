@@ -9,7 +9,6 @@ import com.lhiot.ims.datacenter.feign.ProductSectionRelationFegin;
 import com.lhiot.ims.datacenter.feign.entity.ProductSection;
 import com.lhiot.ims.datacenter.model.ProductSectionParam;
 import com.lhiot.ims.datacenter.service.ProductSectionService;
-import com.lhiot.ims.rbac.aspect.LogCollection;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -43,7 +42,6 @@ public class ProductSectionApi {
     @ApiOperation("添加商品版块(包括添加商品关联关系)")
     @ApiImplicitParam(paramType = ApiParamType.BODY, name = "productSection", value = "商品版块信息", dataType = "ProductSection", required = true)
     @PostMapping("/")
-    @LogCollection
     public ResponseEntity create(@RequestBody ProductSection productSection) {
         log.debug("添加商品版块\t param:{}", productSection);
 
@@ -60,15 +58,11 @@ public class ProductSectionApi {
             @ApiImplicitParam(paramType = ApiParamType.BODY, name = "productSection", value = "productSection", dataType = "ProductSection", required = true)
     })
     @PutMapping("/{id}")
-    @LogCollection
     public ResponseEntity update(@PathVariable("id") Long id, @RequestBody ProductSection productSection) {
         log.debug("根据id修改商品版块\t id:{} param:{}", id, productSection);
 
         ResponseEntity entity = productSectionFegin.update(id, productSection);
-        if (Objects.isNull(entity) || entity.getStatusCode().isError()) {
-            return ResponseEntity.badRequest().body(entity.getBody());
-        }
-        return ResponseEntity.ok(entity.getBody());
+        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok(entity.getBody());
     }
 
     @ApiOperation(value = "根据Id查找商品版块", response = ProductSection.class)
@@ -78,24 +72,17 @@ public class ProductSectionApi {
         log.debug("根据Id查找商品版块\t id:{}", id);
 
         ResponseEntity<ProductSection> entity = productSectionFegin.findById(id, true, null);
-        if (Objects.isNull(entity) || entity.getStatusCode().isError()) {
-            return ResponseEntity.badRequest().body(entity.getBody());
-        }
-        return ResponseEntity.ok(entity.getBody());
+        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok(entity.getBody());
     }
 
     @ApiOperation("根据商品Ids删除商品版块")
     @ApiImplicitParam(paramType = ApiParamType.PATH, name = "ids", value = "多个商品Id以英文逗号分隔", dataType = "String", required = true)
     @DeleteMapping("/{ids}")
-    @LogCollection
     public ResponseEntity batchDelete(@PathVariable("ids") String ids) {
         log.debug("根据商品Ids删除商品版块\t param:{}", ids);
 
         ResponseEntity entity = productSectionFegin.batchDelete(ids);
-        if (Objects.isNull(entity) || entity.getStatusCode().isError()) {
-            return ResponseEntity.badRequest().body(entity.getBody());
-        }
-        return ResponseEntity.ok(entity.getBody());
+        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.noContent().build();
     }
 
     @ApiOperation(value = "根据条件分页查询商品版块信息列表", response = ProductSection.class, responseContainer = "Set")
@@ -105,24 +92,17 @@ public class ProductSectionApi {
         log.debug("查询商品版块信息列表\t param:{}", param);
 
         ResponseEntity<Pages<ProductSection>> entity = productSectionFegin.pages(param);
-        if (Objects.isNull(entity) || entity.getStatusCode().isError()) {
-            return ResponseEntity.badRequest().body(entity.getBody());
-        }
-        return ResponseEntity.ok(entity.getBody());
+        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok(entity.getBody());
     }
 
     @ApiOperation("根据关联id删除商品和板块关联")
     @ApiImplicitParam(paramType = ApiParamType.PATH, name = "relationId", value = "商品板块关联id", dataType = "Long", required = true)
     @DeleteMapping("relation/{relationId}")
-    @LogCollection
     public ResponseEntity updateRelation(@PathVariable("relationId") Long relationId) {
         log.debug("根据关联id删除商品和板块关联\t param:{}", relationId);
 
         ResponseEntity entity = productSectionRelationFegin.delete(relationId);
-        if (Objects.isNull(entity) || entity.getStatusCode().isError()) {
-            return ResponseEntity.badRequest().body(entity.getBody());
-        }
-        return ResponseEntity.ok().body(entity.getBody());
+        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.noContent().build();
     }
 
     @ApiOperation("根据板块id和商品ids修改商品和板块关联")
@@ -131,15 +111,11 @@ public class ProductSectionApi {
             @ApiImplicitParam(paramType = ApiParamType.QUERY, name = "productIds", value = "商品板块关联id", dataType = "String", required = true)
     })
     @PutMapping("/relation/batch")
-    @LogCollection
     public ResponseEntity deleteRelation(@RequestParam("sectionId") Long sectionId, @RequestParam("productIds") String productIds) {
         log.debug("根据板块id和商品ids修改商品和板块关联\t param:{}", sectionId, productIds);
 
         Tips tips = productSectionService.updateBatch(sectionId, productIds);
-        if (tips.err()) {
-            return ResponseEntity.badRequest().body(tips.getMessage());
-        }
-        return ResponseEntity.ok().body(tips.getMessage());
+        return tips.err() ? ResponseEntity.badRequest().body(tips.getMessage()) : ResponseEntity.ok().body(tips.getMessage());
     }
 
 }

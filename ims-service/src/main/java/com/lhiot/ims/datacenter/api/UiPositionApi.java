@@ -33,37 +33,6 @@ public class UiPositionApi {
         this.uiPositionFeign = uiPositionFeign;
     }
 
-    /*@ApiOperation("添加UI位置")
-    @ApiImplicitParam(paramType = ApiParamType.BODY, name = "uiPosition", value = "位置信息", dataType = "UiPosition", required = true)
-    @PostMapping("/")
-    @Deprecated
-    public ResponseEntity create(@RequestBody UiPosition uiPosition) {
-        log.debug("添加UI位置\t param:{}", uiPosition);
-
-        ResponseEntity entity = uiPositionFeign.create(uiPosition);
-        if (Objects.nonNull(entity) && entity.getStatusCode().isError()) {
-            return ResponseEntity.badRequest().body(entity.getBody());
-        }
-        return ResponseEntity.ok(entity.getBody());
-    }
-*/
-    /*@ApiOperation("修改UI位置")
-    @ApiImplicitParams({
-            @ApiImplicitParam(paramType = ApiParamType.PATH, name = "id", value = "UI位置id", dataType = "Long", required = true),
-            @ApiImplicitParam(paramType = ApiParamType.BODY, name = "uiPosition", value = "UiPosition", dataType = "UiPosition", required = true)
-    })
-    @PutMapping("/{id}")
-    @Deprecated
-    public ResponseEntity update(@PathVariable("id") Long id, @RequestBody UiPosition uiPosition) {
-        log.debug("根据id修改UI位置\t id:{} param:{}", id, uiPosition);
-
-        ResponseEntity entity = uiPositionFeign.update(id, uiPosition);
-        if (entity.getStatusCode().isError()) {
-            return ResponseEntity.badRequest().body(entity.getBody());
-        }
-        return ResponseEntity.ok(entity.getBody());
-    }*/
-
     @ApiOperation(value = "根据Id查找UI位置", response = UiPosition.class)
     @ApiImplicitParam(paramType = ApiParamType.PATH, name = "id", value = "UI位置id", dataType = "Long", required = true)
     @GetMapping("/{id}")
@@ -77,20 +46,6 @@ public class UiPositionApi {
         UiPosition uiPosition = (UiPosition) entity.getBody();
         return ResponseEntity.ok(uiPosition);
     }
-
-    /*@ApiOperation("根据UI位置Ids删除UI位置")
-    @ApiImplicitParam(paramType = ApiParamType.PATH, name = "ids", value = "多个UI位置Id以英文逗号分隔", dataType = "String", required = true)
-    @DeleteMapping("/{ids}")
-    @Deprecated
-    public ResponseEntity batchDelete(@PathVariable("ids") String ids) {
-        log.debug("根据UI位置Ids删除UI位置\t param:{}", ids);
-
-        ResponseEntity entity = uiPositionFeign.batchDelete(ids);
-        if (entity.getStatusCode().isError()) {
-            return ResponseEntity.badRequest().body(entity.getBody());
-        }
-        return ResponseEntity.ok(entity.getBody());
-    }*/
 
     @ApiOperation(value = "根据条件分页查询UI位置信息列表", response = UiPosition.class, responseContainer = "Set")
     @ApiImplicitParam(paramType = ApiParamType.BODY, name = "param", value = "查询条件", dataType = "UiPositionParam")

@@ -9,7 +9,6 @@ import com.lhiot.ims.datacenter.feign.ProductCategoryFeign;
 import com.lhiot.ims.datacenter.feign.entity.ProductCategory;
 import com.lhiot.ims.datacenter.model.ProductCategoryParam;
 import com.lhiot.ims.datacenter.service.ProductCategoryService;
-import com.lhiot.ims.rbac.aspect.LogCollection;
 import com.lhiot.ims.rbac.domain.MenuDisplay;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -65,15 +64,11 @@ public class ProductCategoryApi {
             @ApiImplicitParam(paramType = ApiParamType.BODY, name = "productCategory", value = "商品分类信息", dataType = "ProductCategory", required = true)
     })
     @PutMapping("/{id}")
-    @LogCollection
     public ResponseEntity update(@PathVariable("id") Long id, @RequestBody ProductCategory productCategory) {
         log.debug("根据id更新商品分类\t id:{} param:{}", id, productCategory);
 
         ResponseEntity entity = productCategoryFeign.update(id, productCategory);
-        if (Objects.isNull(entity) || entity.getStatusCode().isError()) {
-            return ResponseEntity.badRequest().body(entity.getBody());
-        }
-        return ResponseEntity.ok(entity.getBody());
+        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok(entity.getBody());
     }
 
 
@@ -84,25 +79,18 @@ public class ProductCategoryApi {
         log.debug("根据Id查找商品分类\t param:{}", categoryId);
 
         ResponseEntity<ProductCategory> entity = productCategoryFeign.findById(categoryId);
-        if (Objects.isNull(entity) || entity.getStatusCode().isError()) {
-            return ResponseEntity.badRequest().body(entity.getBody());
-        }
-        return ResponseEntity.ok(entity.getBody());
+        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok(entity.getBody());
     }
 
 
     @ApiOperation("根据Ids删除商品分类")
     @ApiImplicitParam(paramType = ApiParamType.PATH, name = "ids", value = "多个商品分类Id以英文逗号分隔", dataType = "String", required = true)
     @DeleteMapping("/{ids}")
-    @LogCollection
     public ResponseEntity batchDelete(@PathVariable("ids") String ids) {
         log.debug("根据Ids删除商品分类\t param:{}", ids);
 
         ResponseEntity entity = productCategoryFeign.batchDelete(ids);
-        if (Objects.isNull(entity) || entity.getStatusCode().isError()) {
-            return ResponseEntity.badRequest().body(entity.getBody());
-        }
-        return ResponseEntity.ok(entity.getBody());
+        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.noContent().build();
     }
 
 
@@ -114,17 +102,8 @@ public class ProductCategoryApi {
     public ResponseEntity search(@RequestBody ProductCategoryParam param) {
         log.debug("查询商品分类信息列表\t param:{}", param);
 
-        // 设置默认页数和行数
-        int page = Objects.nonNull(param.getPage()) ? param.getPage() : 1;
-        int rows = Objects.nonNull(param.getRows()) ? param.getRows() : 10;
-        param.setPage(page);
-        param.setRows(rows);
-
         ResponseEntity<Pages<ProductCategory>> entity = productCategoryFeign.pages(param);
-        if (Objects.isNull(entity) || entity.getStatusCode().isError()) {
-            return ResponseEntity.badRequest().body(entity.getBody());
-        }
-        return ResponseEntity.ok(entity.getBody());
+        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok(entity.getBody());
     }
 
     @ApiOperation(value = "查询去重的商品分类集合", response = String.class, responseContainer = "List")
