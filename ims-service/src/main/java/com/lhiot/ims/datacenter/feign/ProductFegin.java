@@ -34,7 +34,7 @@ public interface ProductFegin {
      * 根据Id查找商品
      */
     @RequestMapping(value = "/products/{id}", method = RequestMethod.GET)
-    ResponseEntity<ProductInfo> findById(@PathVariable("id") Long id);
+    ResponseEntity<Product> findById(@PathVariable("id") Long id);
 
     /**
      * 根据商品Ids删除商品

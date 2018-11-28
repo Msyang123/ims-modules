@@ -28,6 +28,8 @@ public class Product {
     private String sourceCode;
     @ApiModelProperty(notes = "商品描述", dataType = "String")
     private String description;
+    @ApiModelProperty(notes = "商品益处", dataType = "String")
+    private String benefit;
     @ApiModelProperty(notes = "创建时间", dataType = "Date", readOnly = true)
     private Date createAt;
     @ApiModelProperty(notes = "商品附件信息", dataType = "ProductAttachment")

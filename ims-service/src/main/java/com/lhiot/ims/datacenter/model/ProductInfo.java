@@ -1,16 +1,10 @@
 package com.lhiot.ims.datacenter.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.leon.microx.predefine.Use;
-import com.lhiot.ims.datacenter.feign.entity.ProductAttachment;
 import com.lhiot.ims.datacenter.feign.entity.ProductSpecification;
-import com.lhiot.ims.datacenter.feign.entity.type.InventorySpecification;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import io.swagger.annotations.ApiOperation;
 import lombok.Data;
 
-import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -30,12 +24,22 @@ public class ProductInfo {
     private Long categoryId;
     @ApiModelProperty(notes = "产地ID", dataType = "String")
     private String sourceCode;
+    @ApiModelProperty(notes = "商品益处", dataType = "String")
+    private String benefit;
     @ApiModelProperty(notes = "商品描述", dataType = "String")
     private String description;
     @ApiModelProperty(notes = "创建时间", dataType = "Date", readOnly = true)
     private Date createAt;
-    @ApiModelProperty(notes = "商品附件信息", dataType = "ProductAttachment")
-    private List<ProductAttachment> attachments;
+
+    @ApiModelProperty(notes = "主图", dataType = "String")
+    private String mainImg;
+    @ApiModelProperty(notes = "附图", dataType = "String")
+    private String subImg;
+    @ApiModelProperty(notes = "详情图", dataType = "List")
+    private List<String> detailImg;
+
+    @ApiModelProperty(notes = "图标", dataType = "String")
+    private String icon;
 
     @ApiModelProperty(notes = "商品基础规格信息", dataType = "ProductSpecification")
     private ProductSpecification productSpecification;

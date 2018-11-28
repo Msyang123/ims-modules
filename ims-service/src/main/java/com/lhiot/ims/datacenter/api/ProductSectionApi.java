@@ -46,10 +46,7 @@ public class ProductSectionApi {
         log.debug("添加商品版块\t param:{}", productSection);
 
         Tips result = productSectionService.create(productSection);
-        if (Objects.nonNull(result)) {
-            return ResponseEntity.ok(Maps.of("id", result.getMessage()));
-        }
-        return ResponseEntity.badRequest().body("添加失败");
+        return Objects.nonNull(result) ? ResponseEntity.ok(Maps.of("id", result.getMessage())) : ResponseEntity.badRequest().body("添加失败");
     }
 
     @ApiOperation("修改商品版块")
