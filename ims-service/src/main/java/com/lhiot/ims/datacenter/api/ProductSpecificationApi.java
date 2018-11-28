@@ -8,7 +8,6 @@ import com.lhiot.ims.datacenter.feign.ProductSpecificationFegin;
 import com.lhiot.ims.datacenter.feign.entity.ProductSpecification;
 import com.lhiot.ims.datacenter.model.ProductSpecificationParam;
 import com.lhiot.ims.datacenter.service.ProductSpecificationService;
-import com.lhiot.ims.rbac.aspect.LogCollection;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -59,15 +58,11 @@ public class ProductSpecificationApi {
             @ApiImplicitParam(paramType = ApiParamType.BODY, name = "productSpecification", value = "ProductSpecification", dataType = "ProductSpecification", required = true)
     })
     @PutMapping("/{id}")
-    @LogCollection
     public ResponseEntity update(@PathVariable("id") Long id, @RequestBody ProductSpecification productSpecification) {
         log.debug("根据id修改商品规格\t id:{} param:{}", id, productSpecification);
 
         ResponseEntity entity = productSpecificationFegin.update(id, productSpecification);
-        if (Objects.isNull(entity) || entity.getStatusCode().isError()) {
-            return ResponseEntity.badRequest().body(entity.getBody());
-        }
-        return ResponseEntity.ok(entity.getBody());
+        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok(entity.getBody());
     }
 
     @ApiOperation(value = "根据Id查找商品规格", response = ProductSpecification.class)
@@ -77,24 +72,18 @@ public class ProductSpecificationApi {
         log.debug("根据Id查找商品规格\t id:{}", id);
 
         ResponseEntity<ProductSpecification> entity = productSpecificationFegin.findById(id);
-        if (Objects.isNull(entity) || entity.getStatusCode().isError()) {
-            return ResponseEntity.badRequest().body(entity.getBody());
-        }
-        return ResponseEntity.ok(entity.getBody());
+        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok(entity.getBody());
+
     }
 
     @ApiOperation("根据商品规格Ids删除商品规格")
     @ApiImplicitParam(paramType = ApiParamType.PATH, name = "ids", value = "多个商品规格Id以英文逗号分隔", dataType = "String", required = true)
     @DeleteMapping("/{ids}")
-    @LogCollection
     public ResponseEntity batchDelete(@PathVariable("ids") String ids) {
         log.debug("根据商品规格Ids删除商品规格\t param:{}", ids);
 
         ResponseEntity entity = productSpecificationFegin.batchDelete(ids);
-        if (Objects.isNull(entity) || entity.getStatusCode().isError()) {
-            return ResponseEntity.badRequest().body(entity.getBody());
-        }
-        return ResponseEntity.ok(entity.getBody());
+        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.noContent().build();
     }
 
     @ApiOperation(value = "根据条件分页查询商品规格信息列表(传值produtId)", response = ProductSpecification.class, responseContainer = "Set")
@@ -104,10 +93,7 @@ public class ProductSpecificationApi {
         log.debug("查询商品规格信息列表\t param:{}", param);
 
         ResponseEntity<Pages<ProductSpecification>> entity = productSpecificationFegin.pages(param);
-        if (Objects.isNull(entity) || entity.getStatusCode().isError()) {
-            return ResponseEntity.badRequest().body(entity.getBody());
-        }
-        return ResponseEntity.ok(entity.getBody());
+        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok(entity.getBody());
     }
 
     @ApiOperation(value = "查询所有基础规格单位列表", response = String.class, responseContainer = "List")
@@ -116,9 +102,6 @@ public class ProductSpecificationApi {
         log.debug("查询所有基础规格单位");
 
         Tips tips = productSpecificationService.getUnits();
-        if (tips.err()) {
-            return ResponseEntity.badRequest().body(tips.getMessage());
-        }
-        return ResponseEntity.ok(tips.getData());
+        return tips.err() ? ResponseEntity.badRequest().body(tips.getMessage()) : ResponseEntity.ok(tips.getData());
     }
 }

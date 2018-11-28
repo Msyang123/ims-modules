@@ -13,8 +13,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Objects;
-
 /**
  * @author hufan created in 2018/11/22 16:13
  **/
@@ -36,10 +34,7 @@ public class AdvertisementApi {
         log.debug("添加广告\t param:{}", advertisement);
 
         ResponseEntity entity = advertisementFeign.create(advertisement);
-        if (Objects.isNull(entity) || entity.getStatusCode().isError()) {
-            return ResponseEntity.badRequest().body(entity.getBody());
-        }
-        return ResponseEntity.ok(entity.getBody());
+        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok(entity.getBody());
     }
 
     @ApiOperation("修改广告")
@@ -52,10 +47,7 @@ public class AdvertisementApi {
         log.debug("根据id修改广告\t id:{} param:{}", id, advertisement);
 
         ResponseEntity entity = advertisementFeign.update(id, advertisement);
-        if (Objects.isNull(entity) || entity.getStatusCode().isError()) {
-            return ResponseEntity.badRequest().body(entity.getBody());
-        }
-        return ResponseEntity.ok(entity.getBody());
+        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok(entity.getBody());
     }
 
     @ApiOperation(value = "根据Id查找广告", response = Advertisement.class)
@@ -65,7 +57,7 @@ public class AdvertisementApi {
         log.debug("根据Id查找广告\t id:{}", id);
 
         ResponseEntity entity = advertisementFeign.findById(id);
-        if (Objects.isNull(entity) || entity.getStatusCode().isError()) {
+        if (entity.getStatusCode().isError()) {
             return ResponseEntity.badRequest().body(entity.getBody());
         }
         Advertisement advertisement = (Advertisement) entity.getBody();
@@ -79,10 +71,7 @@ public class AdvertisementApi {
         log.debug("根据广告Ids删除广告\t param:{}", ids);
 
         ResponseEntity entity = advertisementFeign.batchDelete(ids);
-        if (Objects.isNull(entity) || entity.getStatusCode().isError()) {
-            return ResponseEntity.badRequest().body(entity.getBody());
-        }
-        return ResponseEntity.ok(entity.getBody());
+        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.noContent().build();
     }
 
     @ApiOperation(value = "根据条件分页查询广告信息列表", response = Advertisement.class, responseContainer = "Set")
@@ -92,10 +81,7 @@ public class AdvertisementApi {
         log.debug("查询广告信息列表\t param:{}", param);
 
         ResponseEntity<Pages<Advertisement>> entity = advertisementFeign.pages(param);
-        if (Objects.isNull(entity.getBody()) || entity.getStatusCode().isError()) {
-            return ResponseEntity.badRequest().body(entity.getBody());
-        }
-        return ResponseEntity.ok(entity.getBody());
+        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok(entity.getBody());
     }
 
 }

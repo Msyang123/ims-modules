@@ -38,6 +38,8 @@ public class ProductShelfParam {
     private Date beginCreateAt;
     @ApiModelProperty(notes = "截止创建时间", dataType = "Date")
     private Date endCreateAt;
+    @ApiModelProperty(notes = "名称或条码关键字", dataType = "String")
+    private String keyword;
     @ApiModelProperty(notes = "每页查询条数(为空或0不分页查所有)", dataType = "Integer")
     private Integer rows;
     @ApiModelProperty(notes = "当前页", dataType = "Integer")
