@@ -15,13 +15,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
  * @author hufan created in 2018/11/21 20:00
  **/
-@Api(description = "UI位置接口")
+@Api("UI位置接口")
 @Slf4j
 @RestController
 @RequestMapping("/ui-positions")
@@ -68,13 +67,13 @@ public class UiPositionApi {
         log.debug("查询板块位置列表集合\t param{}", uiPositionParam);
 
         ResponseEntity entity = uiPositionFeign.pages(uiPositionParam);
-        if (Objects.nonNull(entity) && !entity.getStatusCode().isError()) {
-            Pages pages = (Pages) entity.getBody();
-            List<UiPosition> uiPositionList = pages.getArray();
-            List<PositionType> positionTypeList = uiPositionList.stream().map(UiPosition::getPositionType).collect(Collectors.toList());
-            return ResponseEntity.ok(positionTypeList);
+        if (entity.getStatusCode().isError()) {
+            return ResponseEntity.badRequest().body(entity.getBody());
         }
-        return ResponseEntity.badRequest().body(entity.getBody());
+        Pages pages = (Pages) entity.getBody();
+        List<UiPosition> uiPositionList = pages.getArray();
+        List<PositionType> positionTypeList = uiPositionList.stream().map(UiPosition::getPositionType).collect(Collectors.toList());
+        return ResponseEntity.ok(positionTypeList);
     }
 
 }

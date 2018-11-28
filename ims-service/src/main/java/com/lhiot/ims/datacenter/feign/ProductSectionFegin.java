@@ -17,32 +17,32 @@ public interface ProductSectionFegin {
     /**
      * 添加商品版块
      */
-    @RequestMapping(value = "/product-sections", method = RequestMethod.POST)
+    @PostMapping(value = "/product-sections")
     ResponseEntity create(@RequestBody ProductSection param);
 
     /**
      * 修改商品版块
      */
-    @RequestMapping(value = "/product-sections/{id}", method = RequestMethod.PUT)
+    @PutMapping(value = "/product-sections/{id}")
     ResponseEntity update(@PathVariable("id") Long id, @RequestBody ProductSection param);
 
     /**
      * 根据Id查找商品版块
      */
-    @RequestMapping(value = "/product-sections/{id}", method = RequestMethod.GET)
+    @GetMapping(value = "/product-sections/{id}")
     ResponseEntity<ProductSection> findById(@PathVariable("id") Long id, @RequestParam(value = "includeShelves", required = false) boolean includeShelves,
                                             @RequestParam(value = "includeShelvesQty", required = false) Long includeShelvesQty);
 
     /**
      * 根据Ids删除商品版块
      */
-    @RequestMapping(value = "/product-sections/{ids}", method = RequestMethod.DELETE)
+    @DeleteMapping(value = "/product-sections/{ids}")
     ResponseEntity batchDelete(@PathVariable("ids") String ids);
 
     /**
      * 根据条件分页查询商品版块信息列表
      */
-    @RequestMapping(value = "/product-sections/pages", method = RequestMethod.POST)
+    @PostMapping(value = "/product-sections/pages")
     ResponseEntity<Pages<ProductSection>> pages(@RequestBody ProductSectionParam param);
 
 }

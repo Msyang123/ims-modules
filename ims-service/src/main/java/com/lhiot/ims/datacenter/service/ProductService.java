@@ -63,11 +63,13 @@ public class ProductService {
         }
         // 附图
         if (Objects.nonNull(productInfo.getSubImg())) {
-            ProductAttachment subImg = new ProductAttachment();
-            subImg.setUrl(productInfo.getSubImg());
-            subImg.setSorting(1);
-            subImg.setAttachmentType(AttachmentType.SUB_IMG);
-            productAttachments.add(subImg);
+            for (String imgs : productInfo.getSubImg()) {
+                ProductAttachment subImg = new ProductAttachment();
+                subImg.setUrl(imgs);
+                subImg.setSorting(productInfo.getSubImg().indexOf(imgs) + 1);
+                subImg.setAttachmentType(AttachmentType.SUB_IMG);
+                productAttachments.add(subImg);
+            }
         }
         // 详情图
         if (Objects.nonNull(productInfo.getDetailImg())) {
@@ -95,7 +97,7 @@ public class ProductService {
         }
         // 返回参数 例：<201 Created,{content-type=[application/json;charset=UTF-8], date=[Sat, 24 Nov 2018 06:37:59 GMT], location=[/product-sections/13], transfer-encoding=[chunked]}>
         String location = entity.getHeaders().getLocation().toString();
-        Long id = Long.valueOf(location.substring(location.lastIndexOf("/") + 1));
+        Long id = Long.valueOf(location.substring(location.lastIndexOf('/') + 1));
         return Tips.info(id + "");
     }
 
@@ -126,11 +128,13 @@ public class ProductService {
         }
         // 附图
         if (Objects.nonNull(productInfo.getSubImg())) {
-            ProductAttachment subImg = new ProductAttachment();
-            subImg.setUrl(productInfo.getSubImg());
-            subImg.setSorting(1);
-            subImg.setAttachmentType(AttachmentType.SUB_IMG);
-            productAttachments.add(subImg);
+            for (String imgs : productInfo.getSubImg()) {
+                ProductAttachment subImg = new ProductAttachment();
+                subImg.setUrl(imgs);
+                subImg.setSorting(productInfo.getSubImg().indexOf(imgs) + 1);
+                subImg.setAttachmentType(AttachmentType.SUB_IMG);
+                productAttachments.add(subImg);
+            }
         }
         // 详情图
         if (Objects.nonNull(productInfo.getDetailImg())) {
@@ -169,7 +173,7 @@ public class ProductService {
         Tips<ProductInfo> tips = new Tips();
         ProductInfo productInfo = new ProductInfo();
         ResponseEntity productEntity = productFegin.findById(id);
-        if (Objects.isNull(productEntity) || productEntity.getStatusCode().isError()) {
+        if (productEntity.getStatusCode().isError()) {
             return Tips.warn(productEntity.getBody().toString());
         }
         Product product = (Product) productEntity.getBody();
@@ -183,9 +187,9 @@ public class ProductService {
             productInfo.setDescription(product.getDescription());
             productInfo.setBenefit(product.getBenefit());
             productInfo.setCreateAt(product.getCreateAt());
-            if (product.getAttachments().size() != 0) {
+            if (!product.getAttachments().isEmpty()) {
                 productInfo.setMainImg(product.getAttachments().stream().filter(item -> item.getAttachmentType().equals(AttachmentType.MAIN_IMG)).map(ProductAttachment::getUrl).collect(Collectors.toList()).get(0));
-                productInfo.setSubImg(product.getAttachments().stream().filter(item -> item.getAttachmentType().equals(AttachmentType.SUB_IMG)).map(ProductAttachment::getUrl).collect(Collectors.toList()).get(0));
+                productInfo.setSubImg(product.getAttachments().stream().filter(item -> item.getAttachmentType().equals(AttachmentType.SUB_IMG)).map(ProductAttachment::getUrl).collect(Collectors.toList()));
                 productInfo.setDetailImg(product.getAttachments().stream().filter(item -> item.getAttachmentType().equals(AttachmentType.DETAIL_IMG)).map(ProductAttachment::getUrl).collect(Collectors.toList()));
                 productInfo.setIcon(product.getAttachments().stream().filter(item -> item.getAttachmentType().equals(AttachmentType.ICON)).map(ProductAttachment::getUrl).collect(Collectors.toList()).get(0));
             }
@@ -200,7 +204,7 @@ public class ProductService {
 
             Pages<ProductSpecification> pages = (Pages<ProductSpecification>) productSpecificationEntity.getBody();
 
-            if (pages.getArray().size() != 0) {
+            if (!pages.getArray().isEmpty()) {
                 ProductSpecification productSpecification = pages.getArray().get(0);
                 productInfo.setProductSpecification(productSpecification);
                 tips.setData(productInfo);

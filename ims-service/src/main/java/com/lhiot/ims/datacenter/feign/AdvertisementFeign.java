@@ -6,10 +6,7 @@ import com.lhiot.ims.datacenter.model.AdvertisementParam;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author hufan created in 2018/11/21 20:10
@@ -21,32 +18,32 @@ public interface AdvertisementFeign {
     /**
      * 添加广告
      */
-    @RequestMapping(value = "/advertisements", method = RequestMethod.POST)
+    @PostMapping(value = "/advertisements")
     ResponseEntity create(@RequestBody Advertisement param);
 
     /**
      * 修改广告
      */
-    @RequestMapping(value = "/advertisements/{id}", method = RequestMethod.PUT)
+    @PutMapping(value = "/advertisements/{id}")
     ResponseEntity update(@PathVariable("id") Long id, @RequestBody Advertisement param);
 
     /**
      * 根据Id查找广告
      */
-    @RequestMapping(value = "/advertisements/{id}", method = RequestMethod.GET)
+    @GetMapping(value = "/advertisements/{id}")
     ResponseEntity<Advertisement> findById(@PathVariable("id") Long id);
 
     /**
      * 根据Ids删除广告
      */
-    @RequestMapping(value = "/advertisements/{ids}", method = RequestMethod.DELETE)
+    @DeleteMapping(value = "/advertisements/{ids}")
     ResponseEntity batchDelete(@PathVariable("ids") String ids);
 
 
     /**
      * 根据条件分页查询广告信息列表
      */
-    @RequestMapping(value = "/advertisements/pages", method = RequestMethod.POST)
+    @PostMapping(value = "/advertisements/pages")
     ResponseEntity<Pages<Advertisement>> pages(@RequestBody AdvertisementParam param);
 
 }

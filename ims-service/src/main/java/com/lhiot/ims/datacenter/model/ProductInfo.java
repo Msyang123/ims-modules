@@ -33,8 +33,8 @@ public class ProductInfo {
 
     @ApiModelProperty(notes = "主图", dataType = "String")
     private String mainImg;
-    @ApiModelProperty(notes = "附图", dataType = "String")
-    private String subImg;
+    @ApiModelProperty(notes = "附图", dataType = "List")
+    private List<String> subImg;
     @ApiModelProperty(notes = "详情图", dataType = "List")
     private List<String> detailImg;
 

@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 /**
  * @author hufan created in 2018/11/20 11:57
  **/
-@Api(description = "商品分类接口")
+@Api("商品分类接口")
 @Slf4j
 @RequestMapping("/product-categories")
 @RestController
@@ -49,12 +49,12 @@ public class ProductCategoryApi {
         log.debug("添加商品分类\t param:{}", productCategory);
 
         ResponseEntity entity = productCategoryFeign.create(productCategory);
-        if (Objects.isNull(entity) || entity.getStatusCode().isError()) {
+        if (entity.getStatusCode().isError()) {
             return ResponseEntity.badRequest().body(entity.getBody());
         }
         // 返回参数 例：<201 Created,{content-type=[application/json;charset=UTF-8], date=[Sat, 24 Nov 2018 06:37:59 GMT], location=[/product-sections/13], transfer-encoding=[chunked]}>
         String location = entity.getHeaders().getLocation().toString();
-        Long id = Long.valueOf(location.substring(location.lastIndexOf("/") + 1));
+        Long id = Long.valueOf(location.substring(location.lastIndexOf('/') + 1));
         return ResponseEntity.created(entity.getHeaders().getLocation()).body(Maps.of("id", id));
     }
 

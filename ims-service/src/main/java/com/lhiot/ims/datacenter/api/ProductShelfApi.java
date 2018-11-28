@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 /**
  * @author hufan created in 2018/11/21 16:57
  **/
-@Api(description = "商品上架接口")
+@Api("商品上架接口")
 @Slf4j
 @RestController
 @RequestMapping("/product-shelves")
@@ -43,7 +43,7 @@ public class ProductShelfApi {
         }
         // 返回参数 例：<201 Created,{content-type=[application/json;charset=UTF-8], date=[Sat, 24 Nov 2018 06:37:59 GMT], location=[/product-sections/13], transfer-encoding=[chunked]}>
         String location = entity.getHeaders().getLocation().toString();
-        Long id = Long.valueOf(location.substring(location.lastIndexOf("/") + 1));
+        Long id = Long.valueOf(location.substring(location.lastIndexOf('/') + 1));
         return ResponseEntity.created(entity.getHeaders().getLocation()).body(Maps.of("id", id));
     }
 

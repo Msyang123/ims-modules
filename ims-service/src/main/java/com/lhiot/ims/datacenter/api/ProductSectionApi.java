@@ -23,7 +23,7 @@ import java.util.Objects;
 /**
  * @author hufan created in 2018/11/21 16:57
  **/
-@Api(description = "商品版块接口")
+@Api("商品版块接口")
 @Slf4j
 @RestController
 @RequestMapping("/product-sections")

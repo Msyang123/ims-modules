@@ -22,7 +22,7 @@ import java.util.Objects;
 /**
  * @author hufan created in 2018/11/21 16:57
  **/
-@Api(description = "商品规格接口")
+@Api("商品规格接口")
 @Slf4j
 @RestController
 @RequestMapping("/product-specifications")
@@ -43,12 +43,12 @@ public class ProductSpecificationApi {
         log.debug("添加商品规格\t param:{}", productSpecification);
 
         ResponseEntity entity = productSpecificationFegin.create(productSpecification);
-        if (Objects.isNull(entity) || entity.getStatusCode().isError()) {
+        if (entity.getStatusCode().isError()) {
             return ResponseEntity.badRequest().body(entity.getBody());
         }
         // 返回参数 例：<201 Created,{content-type=[application/json;charset=UTF-8], date=[Sat, 24 Nov 2018 06:37:59 GMT], location=[/product-sections/13], transfer-encoding=[chunked]}>
         String location = entity.getHeaders().getLocation().toString();
-        Long id = Long.valueOf(location.substring(location.lastIndexOf("/") + 1));
+        Long id = Long.valueOf(location.substring(location.lastIndexOf('/') + 1));
         return ResponseEntity.created(entity.getHeaders().getLocation()).body(Maps.of("id", id));
     }
 
