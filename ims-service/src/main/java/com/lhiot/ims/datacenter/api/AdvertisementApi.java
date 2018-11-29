@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 /**
  * @author hufan created in 2018/11/22 16:13
  **/
-@Api("广告管理接口")
+@Api(description = "广告管理接口")
 @Slf4j
 @RestController
 @RequestMapping("/advertisements")

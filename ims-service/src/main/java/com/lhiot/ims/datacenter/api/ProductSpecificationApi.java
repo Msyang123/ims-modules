@@ -17,12 +17,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Objects;
-
 /**
  * @author hufan created in 2018/11/21 16:57
  **/
-@Api("商品规格接口")
+@Api(description = "商品规格接口")
 @Slf4j
 @RestController
 @RequestMapping("/product-specifications")
@@ -55,7 +53,7 @@ public class ProductSpecificationApi {
     @ApiOperation("修改商品规格")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = ApiParamType.PATH, name = "id", value = "商品规格id", dataType = "Long", required = true),
-            @ApiImplicitParam(paramType = ApiParamType.BODY, name = "productSpecification", value = "ProductSpecification", dataType = "ProductSpecification", required = true)
+            @ApiImplicitParam(paramType = ApiParamType.BODY, name = "productSpecification", value = "商品规格信息", dataType = "ProductSpecification", required = true)
     })
     @PutMapping("/{id}")
     public ResponseEntity update(@PathVariable("id") Long id, @RequestBody ProductSpecification productSpecification) {

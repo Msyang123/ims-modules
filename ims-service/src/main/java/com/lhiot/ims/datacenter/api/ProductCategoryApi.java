@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 /**
  * @author hufan created in 2018/11/20 11:57
  **/
-@Api("商品分类接口")
+@Api(description = "商品分类接口")
 @Slf4j
 @RequestMapping("/product-categories")
 @RestController
@@ -75,10 +75,10 @@ public class ProductCategoryApi {
     @ApiOperation(value = "根据Id查找商品分类", response = ProductCategory.class)
     @ApiImplicitParam(paramType = ApiParamType.PATH, name = "id", value = "商品分类Id", dataType = "Long", required = true)
     @GetMapping("/{id}")
-    public ResponseEntity findById(@PathVariable("id") Long categoryId) {
-        log.debug("根据Id查找商品分类\t param:{}", categoryId);
+    public ResponseEntity findById(@PathVariable("id") Long id) {
+        log.debug("根据Id查找商品分类\t param:{}", id);
 
-        ResponseEntity<ProductCategory> entity = productCategoryFeign.findById(categoryId);
+        ResponseEntity<ProductCategory> entity = productCategoryFeign.findById(id);
         return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok(entity.getBody());
     }
 

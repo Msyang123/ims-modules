@@ -36,7 +36,7 @@ public class ProductCategoryService {
         Pages<ProductCategory> pages = (Pages<ProductCategory>) entity.getBody();
         List<ProductCategory> productCategory = pages.getArray();
         Tips tips = new Tips();
-        if (productCategory.isEmpty()) {
+        if (!productCategory.isEmpty()) {
             tips.setData(productCategory);
             return tips;
         }

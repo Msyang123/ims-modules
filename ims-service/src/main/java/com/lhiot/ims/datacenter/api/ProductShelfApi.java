@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 /**
  * @author hufan created in 2018/11/21 16:57
  **/
-@Api("商品上架接口")
+@Api(description = "商品上架接口")
 @Slf4j
 @RestController
 @RequestMapping("/product-shelves")
@@ -32,6 +32,7 @@ public class ProductShelfApi {
     }
 
     @ApiOperation("添加商品上架")
+    @ApiImplicitParam(paramType = ApiParamType.BODY, name = "productShelf", value = "商品上架信息", dataType = "ProductShelf", required = true)
     @PostMapping("/")
     @ApiHideBodyProperty("productSpecification")
     public ResponseEntity create(@RequestBody ProductShelf productShelf) {
@@ -49,7 +50,8 @@ public class ProductShelfApi {
 
     @ApiOperation("修改商品上架")
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType = ApiParamType.PATH, name = "id", value = "商品上架id", dataType = "Long", required = true)
+            @ApiImplicitParam(paramType = ApiParamType.PATH, name = "id", value = "商品上架id", dataType = "Long", required = true),
+            @ApiImplicitParam(paramType = ApiParamType.BODY, name = "productShelf", value = "商品上架信息", dataType = "ProductShelf", required = true)
     })
     @PutMapping("/{id}")
     @ApiHideBodyProperty("productSpecification")

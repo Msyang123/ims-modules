@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 /**
  * @author hufan created in 2018/11/21 20:00
  **/
-@Api("UI位置接口")
+@Api(description = "UI位置接口")
 @Slf4j
 @RestController
 @RequestMapping("/ui-positions")
@@ -60,11 +60,12 @@ public class UiPositionApi {
         return ResponseEntity.ok(pages);
     }
 
-    @ApiOperation(value = "查询板块位置列表集合", response = String.class, responseContainer = "List")
-    @ApiImplicitParam(paramType = ApiParamType.BODY, name = "uiPositionParam", value = "板块位置", dataType = "UiPositionParam")
+    // FIXME UI位置列表集合存数据字典
+    @ApiOperation(value = "查询UI位置列表集合", response = String.class, responseContainer = "List")
+    @ApiImplicitParam(paramType = ApiParamType.BODY, name = "uiPositionParam", value = "UI位置信息", dataType = "UiPositionParam")
     @PostMapping("/")
     public ResponseEntity list(@RequestBody UiPositionParam uiPositionParam) {
-        log.debug("查询板块位置列表集合\t param{}", uiPositionParam);
+        log.debug("查询UI位置列表集合\t param{}", uiPositionParam);
 
         ResponseEntity entity = uiPositionFeign.pages(uiPositionParam);
         if (entity.getStatusCode().isError()) {
