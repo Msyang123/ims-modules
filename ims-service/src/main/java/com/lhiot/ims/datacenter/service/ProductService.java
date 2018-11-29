@@ -96,10 +96,16 @@ public class ProductService {
             // 设置附件信息
             BeanUtils.copyProperties(product, productInfo);
             if (!product.getAttachments().isEmpty()) {
-                productInfo.setMainImg(product.getAttachments().stream().filter(item -> item.getAttachmentType().equals(AttachmentType.MAIN_IMG)).map(ProductAttachment::getUrl).collect(Collectors.toList()).get(0));
+                List<String> mainImg = product.getAttachments().stream().filter(item -> item.getAttachmentType().equals(AttachmentType.MAIN_IMG)).map(ProductAttachment::getUrl).collect(Collectors.toList());
+                if (!mainImg.isEmpty()) {
+                    productInfo.setMainImg(mainImg.get(0));
+                }
                 productInfo.setSubImg(product.getAttachments().stream().filter(item -> item.getAttachmentType().equals(AttachmentType.SUB_IMG)).map(ProductAttachment::getUrl).collect(Collectors.toList()));
                 productInfo.setDetailImg(product.getAttachments().stream().filter(item -> item.getAttachmentType().equals(AttachmentType.DETAIL_IMG)).map(ProductAttachment::getUrl).collect(Collectors.toList()));
-                productInfo.setIcon(product.getAttachments().stream().filter(item -> item.getAttachmentType().equals(AttachmentType.ICON)).map(ProductAttachment::getUrl).collect(Collectors.toList()).get(0));
+                List<String> subImg = product.getAttachments().stream().filter(item -> item.getAttachmentType().equals(AttachmentType.ICON)).map(ProductAttachment::getUrl).collect(Collectors.toList());
+                if (!subImg.isEmpty()) {
+                    productInfo.setIcon(subImg.get(0));
+                }
             }
             // 查询基础规格信息
             ProductSpecificationParam productSpecificationParam = new ProductSpecificationParam();
