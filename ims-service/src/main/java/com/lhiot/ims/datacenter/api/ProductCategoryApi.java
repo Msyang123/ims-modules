@@ -115,12 +115,12 @@ public class ProductCategoryApi {
         ProductCategoryParam productCategoryParam = new ProductCategoryParam();
         productCategoryParam.setParentId(parentId);
         ResponseEntity<Pages<ProductCategory>> entity = productCategoryFeign.pages(productCategoryParam);
-        if (Objects.nonNull(entity) && entity.getStatusCodeValue() < 400) {
-            List<ProductCategory> productCategoryList = entity.getBody().getArray();
-            List<String> groupNameList = productCategoryList.stream().map(ProductCategory::getGroupName).collect(Collectors.toList());
-            return ResponseEntity.ok(groupNameList);
+        if (entity.getStatusCode().isError()) {
+            return ResponseEntity.badRequest().body(entity.getBody());
         }
-        return ResponseEntity.badRequest().body(entity.getBody());
+        List<ProductCategory> productCategoryList = entity.getBody().getArray();
+        List<String> groupNameList = productCategoryList.stream().map(ProductCategory::getGroupName).collect(Collectors.toList());
+        return ResponseEntity.ok(groupNameList);
     }
 
     @ApiOperation(value = "查询商品分类树结构")
