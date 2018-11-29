@@ -17,8 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Objects;
-
 /**
  * @author hufan created in 2018/11/21 16:57
  **/
@@ -43,19 +41,19 @@ public class ProductSpecificationApi {
         log.debug("添加商品规格\t param:{}", productSpecification);
 
         ResponseEntity entity = productSpecificationFegin.create(productSpecification);
-        if (Objects.isNull(entity) || entity.getStatusCode().isError()) {
+        if (entity.getStatusCode().isError()) {
             return ResponseEntity.badRequest().body(entity.getBody());
         }
         // 返回参数 例：<201 Created,{content-type=[application/json;charset=UTF-8], date=[Sat, 24 Nov 2018 06:37:59 GMT], location=[/product-sections/13], transfer-encoding=[chunked]}>
         String location = entity.getHeaders().getLocation().toString();
-        Long id = Long.valueOf(location.substring(location.lastIndexOf("/") + 1));
+        Long id = Long.valueOf(location.substring(location.lastIndexOf('/') + 1));
         return ResponseEntity.created(entity.getHeaders().getLocation()).body(Maps.of("id", id));
     }
 
     @ApiOperation("修改商品规格")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = ApiParamType.PATH, name = "id", value = "商品规格id", dataType = "Long", required = true),
-            @ApiImplicitParam(paramType = ApiParamType.BODY, name = "productSpecification", value = "ProductSpecification", dataType = "ProductSpecification", required = true)
+            @ApiImplicitParam(paramType = ApiParamType.BODY, name = "productSpecification", value = "商品规格信息", dataType = "ProductSpecification", required = true)
     })
     @PutMapping("/{id}")
     public ResponseEntity update(@PathVariable("id") Long id, @RequestBody ProductSpecification productSpecification) {

@@ -32,6 +32,7 @@ public class ProductShelfApi {
     }
 
     @ApiOperation("添加商品上架")
+    @ApiImplicitParam(paramType = ApiParamType.BODY, name = "productShelf", value = "商品上架信息", dataType = "ProductShelf", required = true)
     @PostMapping("/")
     @ApiHideBodyProperty("productSpecification")
     public ResponseEntity create(@RequestBody ProductShelf productShelf) {
@@ -43,13 +44,14 @@ public class ProductShelfApi {
         }
         // 返回参数 例：<201 Created,{content-type=[application/json;charset=UTF-8], date=[Sat, 24 Nov 2018 06:37:59 GMT], location=[/product-sections/13], transfer-encoding=[chunked]}>
         String location = entity.getHeaders().getLocation().toString();
-        Long id = Long.valueOf(location.substring(location.lastIndexOf("/") + 1));
+        Long id = Long.valueOf(location.substring(location.lastIndexOf('/') + 1));
         return ResponseEntity.created(entity.getHeaders().getLocation()).body(Maps.of("id", id));
     }
 
     @ApiOperation("修改商品上架")
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType = ApiParamType.PATH, name = "id", value = "商品上架id", dataType = "Long", required = true)
+            @ApiImplicitParam(paramType = ApiParamType.PATH, name = "id", value = "商品上架id", dataType = "Long", required = true),
+            @ApiImplicitParam(paramType = ApiParamType.BODY, name = "productShelf", value = "商品上架信息", dataType = "ProductShelf", required = true)
     })
     @PutMapping("/{id}")
     @ApiHideBodyProperty("productSpecification")

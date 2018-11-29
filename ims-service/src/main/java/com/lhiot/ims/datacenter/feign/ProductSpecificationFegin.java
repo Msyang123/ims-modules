@@ -6,10 +6,7 @@ import com.lhiot.ims.datacenter.model.ProductSpecificationParam;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author hufan created in 2018/11/21 16:07
@@ -21,32 +18,32 @@ public interface ProductSpecificationFegin {
      * 添加商品规格
      *
      */
-    @RequestMapping(value = "/product-specifications", method = RequestMethod.POST)
+    @PostMapping(value = "/product-specifications")
     ResponseEntity create(@RequestBody ProductSpecification param);
 
     /**
      * 修改商品规格
      */
-    @RequestMapping(value = "/product-specifications/{id}", method = RequestMethod.PUT)
+    @PutMapping(value = "/product-specifications/{id}")
     ResponseEntity update(@PathVariable("id") Long id, @RequestBody ProductSpecification param);
 
     /**
      * 根据Id查找商品规格
      */
-    @RequestMapping(value = "/product-specifications/{id}", method = RequestMethod.GET)
+    @GetMapping(value = "/product-specifications/{id}")
     ResponseEntity<ProductSpecification> findById(@PathVariable("id") Long id);
 
     /**
      * 根据Id删除商品规格
      */
-    @RequestMapping(value = "/product-specifications/{ids}", method = RequestMethod.DELETE)
+    @DeleteMapping(value = "/product-specifications/{ids}")
     ResponseEntity batchDelete(@PathVariable("ids") String ids);
 
 
     /**
      * 根据条件分页查询商品规格信息列表
      */
-    @RequestMapping(value = "/product-specifications/pages", method = RequestMethod.POST)
+    @PostMapping(value = "/product-specifications/pages")
     ResponseEntity<Pages<ProductSpecification>> pages(@RequestBody ProductSpecificationParam param);
 
 }

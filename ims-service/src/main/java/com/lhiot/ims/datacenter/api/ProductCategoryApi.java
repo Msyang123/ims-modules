@@ -49,12 +49,12 @@ public class ProductCategoryApi {
         log.debug("添加商品分类\t param:{}", productCategory);
 
         ResponseEntity entity = productCategoryFeign.create(productCategory);
-        if (Objects.isNull(entity) || entity.getStatusCode().isError()) {
+        if (entity.getStatusCode().isError()) {
             return ResponseEntity.badRequest().body(entity.getBody());
         }
         // 返回参数 例：<201 Created,{content-type=[application/json;charset=UTF-8], date=[Sat, 24 Nov 2018 06:37:59 GMT], location=[/product-sections/13], transfer-encoding=[chunked]}>
         String location = entity.getHeaders().getLocation().toString();
-        Long id = Long.valueOf(location.substring(location.lastIndexOf("/") + 1));
+        Long id = Long.valueOf(location.substring(location.lastIndexOf('/') + 1));
         return ResponseEntity.created(entity.getHeaders().getLocation()).body(Maps.of("id", id));
     }
 
@@ -75,10 +75,10 @@ public class ProductCategoryApi {
     @ApiOperation(value = "根据Id查找商品分类", response = ProductCategory.class)
     @ApiImplicitParam(paramType = ApiParamType.PATH, name = "id", value = "商品分类Id", dataType = "Long", required = true)
     @GetMapping("/{id}")
-    public ResponseEntity findById(@PathVariable("id") Long categoryId) {
-        log.debug("根据Id查找商品分类\t param:{}", categoryId);
+    public ResponseEntity findById(@PathVariable("id") Long id) {
+        log.debug("根据Id查找商品分类\t param:{}", id);
 
-        ResponseEntity<ProductCategory> entity = productCategoryFeign.findById(categoryId);
+        ResponseEntity<ProductCategory> entity = productCategoryFeign.findById(id);
         return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok(entity.getBody());
     }
 
@@ -115,12 +115,12 @@ public class ProductCategoryApi {
         ProductCategoryParam productCategoryParam = new ProductCategoryParam();
         productCategoryParam.setParentId(parentId);
         ResponseEntity<Pages<ProductCategory>> entity = productCategoryFeign.pages(productCategoryParam);
-        if (Objects.nonNull(entity) && entity.getStatusCodeValue() < 400) {
-            List<ProductCategory> productCategoryList = entity.getBody().getArray();
-            List<String> groupNameList = productCategoryList.stream().map(ProductCategory::getGroupName).collect(Collectors.toList());
-            return ResponseEntity.ok(groupNameList);
+        if (entity.getStatusCode().isError()) {
+            return ResponseEntity.badRequest().body(entity.getBody());
         }
-        return ResponseEntity.badRequest().body(entity.getBody());
+        List<ProductCategory> productCategoryList = entity.getBody().getArray();
+        List<String> groupNameList = productCategoryList.stream().map(ProductCategory::getGroupName).collect(Collectors.toList());
+        return ResponseEntity.ok(groupNameList);
     }
 
     @ApiOperation(value = "查询商品分类树结构")

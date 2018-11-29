@@ -50,7 +50,7 @@ public class ProductApi {
     @ApiOperation("修改商品")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = ApiParamType.PATH, name = "id", value = "商品id", dataType = "Long", required = true),
-            @ApiImplicitParam(paramType = ApiParamType.BODY, name = "product", value = "Product", dataType = "Product", required = true)
+            @ApiImplicitParam(paramType = ApiParamType.BODY, name = "productInfo", value = "商品信息", dataType = "ProductInfo", required = true)
     })
     @PutMapping("/{id}")
     public ResponseEntity update(@PathVariable("id") Long id, @RequestBody ProductInfo productInfo) {
@@ -60,7 +60,7 @@ public class ProductApi {
         return tips.err() ? ResponseEntity.badRequest().body(tips.getMessage()) : ResponseEntity.ok(tips.getData());
     }
 
-    @ApiOperation(value = "根据Id查找商品", response = Product.class)
+    @ApiOperation(value = "根据Id查找商品", response = ProductInfo.class)
     @ApiImplicitParam(paramType = ApiParamType.PATH, name = "id", value = "商品id", dataType = "Long", required = true)
     @GetMapping("/{id}")
     public ResponseEntity findById(@PathVariable("id") Long id) {
@@ -77,10 +77,7 @@ public class ProductApi {
         log.debug("根据商品Ids删除商品\t param:{}", ids);
 
         ResponseEntity entity = productFegin.batchDelete(ids);
-        if (entity.getStatusCode().isError()) {
-            return ResponseEntity.badRequest().body(entity.getBody());
-        }
-        return ResponseEntity.noContent().build();
+        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.noContent().build();
     }
 
     @ApiOperation(value = "根据条件分页查询商品信息列表", response = Product.class, responseContainer = "Set")

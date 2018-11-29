@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Objects;
 
 /**
  * @author hufan created in 2018/11/26 9:09
@@ -31,13 +30,13 @@ public class ProductCategoryService {
     public Tips<List<ProductCategory>> tree(){
         ProductCategoryParam productCategoryParam = new ProductCategoryParam();
         ResponseEntity entity = productCategoryFeign.pages(productCategoryParam);
-        if (Objects.isNull(entity) || entity.getStatusCode().isError()) {
+        if (entity.getStatusCode().isError()) {
             return Tips.warn(entity.getBody().toString());
         }
         Pages<ProductCategory> pages = (Pages<ProductCategory>) entity.getBody();
         List<ProductCategory> productCategory = pages.getArray();
         Tips tips = new Tips();
-        if (productCategory.size() != 0) {
+        if (!productCategory.isEmpty()) {
             tips.setData(productCategory);
             return tips;
         }

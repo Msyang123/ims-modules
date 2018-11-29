@@ -15,25 +15,27 @@ public interface ProductSectionRelationFegin {
     /**
      * 添加版块与商品上架关系
      */
-    @RequestMapping(value = "/product-section-relations", method = RequestMethod.POST)
+    @PostMapping(value = "/product-section-relations")
     ResponseEntity create(@RequestBody ProductSectionRelation param);
 
     /**
      * 批量添加版块与商品上架关系
+     * 多个商品上架Id以英文逗号分隔
      */
-    @RequestMapping(value = "/product-section-relations/batches", method = RequestMethod.POST)
+    @PostMapping(value = "/product-section-relations/batches")
     ResponseEntity createBatch(@RequestParam("sectionId") Long sectionId, @RequestParam("shelfIds") String shelfIds);
 
     /**
      * 根据Id删除版块与商品上架关系
      */
-    @RequestMapping(value = "/product-section-relations/{id}", method = RequestMethod.DELETE)
+    @DeleteMapping(value = "/product-section-relations/{id}")
     ResponseEntity delete(@PathVariable("id") Long id);
 
     /**
      * 批量删除版块与商品上架关系
+     * 多个商品上架Id以英文逗号分隔
      */
-    @RequestMapping(value = "/product-section-relations/batches", method = RequestMethod.DELETE)
+    @DeleteMapping(value = "/product-section-relations/batches")
     ResponseEntity deleteBatch(@RequestParam("sectionId") Long sectionId, @RequestParam("shelfIds") String shelfIds);
 
 }
