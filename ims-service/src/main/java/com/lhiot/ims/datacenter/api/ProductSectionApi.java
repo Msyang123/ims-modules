@@ -6,8 +6,10 @@ import com.leon.microx.web.result.Tips;
 import com.leon.microx.web.swagger.ApiParamType;
 import com.lhiot.ims.datacenter.feign.ProductSectionFegin;
 import com.lhiot.ims.datacenter.feign.ProductSectionRelationFegin;
+import com.lhiot.ims.datacenter.feign.entity.ProductCategory;
 import com.lhiot.ims.datacenter.feign.entity.ProductSection;
-import com.lhiot.ims.datacenter.model.ProductSectionParam;
+import com.lhiot.ims.datacenter.feign.model.ProductCategoryParam;
+import com.lhiot.ims.datacenter.feign.model.ProductSectionParam;
 import com.lhiot.ims.datacenter.service.ProductSectionService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -18,7 +20,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * @author hufan created in 2018/11/21 16:57
@@ -115,4 +119,18 @@ public class ProductSectionApi {
         return tips.err() ? ResponseEntity.badRequest().body(tips.getMessage()) : ResponseEntity.ok().body(tips.getMessage());
     }
 
+    @ApiOperation(value = "查询去重的商品板块集合", response = String.class, responseContainer = "List")
+    @GetMapping("/")
+    public ResponseEntity list() {
+        log.debug("查询去重的商品板块集合\t");
+
+        ProductSectionParam productSectionParam = new ProductSectionParam();
+        ResponseEntity<Pages<ProductSection>> entity = productSectionFegin.pages(productSectionParam);
+        if (entity.getStatusCode().isError()) {
+            return ResponseEntity.badRequest().body(entity.getBody());
+        }
+        List<ProductSection> productSectionList = entity.getBody().getArray();
+        List<String> sectionNameList = productSectionList.stream().map(ProductSection::getSectionName).distinct().collect(Collectors.toList());
+        return ResponseEntity.ok(sectionNameList);
+    }
 }

@@ -1,4 +1,4 @@
-package com.lhiot.ims.datacenter.feign.entity.type;
+package com.lhiot.ims.datacenter.feign.type;
 
 /**
  * @author zhangfeng created in 2018/9/22 10:24

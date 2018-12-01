@@ -7,7 +7,7 @@ import com.leon.microx.web.result.Tuple;
 import com.leon.microx.web.swagger.ApiParamType;
 import com.lhiot.ims.datacenter.feign.ProductCategoryFeign;
 import com.lhiot.ims.datacenter.feign.entity.ProductCategory;
-import com.lhiot.ims.datacenter.model.ProductCategoryParam;
+import com.lhiot.ims.datacenter.feign.model.ProductCategoryParam;
 import com.lhiot.ims.datacenter.service.ProductCategoryService;
 import com.lhiot.ims.rbac.domain.MenuDisplay;
 import io.swagger.annotations.Api;
@@ -118,7 +118,7 @@ public class ProductCategoryApi {
             return ResponseEntity.badRequest().body(entity.getBody());
         }
         List<ProductCategory> productCategoryList = entity.getBody().getArray();
-        List<String> groupNameList = productCategoryList.stream().map(ProductCategory::getGroupName).collect(Collectors.toList());
+        List<String> groupNameList = productCategoryList.stream().map(ProductCategory::getGroupName).distinct().collect(Collectors.toList());
         return ResponseEntity.ok(groupNameList);
     }
 

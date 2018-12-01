@@ -1,7 +1,7 @@
 package com.lhiot.ims.rbac.api;
 
-import com.leon.microx.web.result.Multiple;
 import com.leon.microx.web.result.Pages;
+import com.leon.microx.web.result.Tuple;
 import com.leon.microx.web.session.Sessions;
 import com.lhiot.ims.rbac.aspect.LogCollection;
 import com.lhiot.ims.rbac.domain.ImsRole;
@@ -117,11 +117,11 @@ public class ImsRoleApi {
    @PostMapping("/relation/menus/{id}")
    @ApiOperation(value = "查询角色id查询已关联的菜单列表")
    @ApiImplicitParam(paramType = "path", name = "id", value = "要查询的角色id", required = true, dataType = "Long")
-   public ResponseEntity<Multiple<MenuDisplay>> getRelationMenusById(@PathVariable("id") Long id){
+   public ResponseEntity<Tuple<MenuDisplay>> getRelationMenusById(@PathVariable("id") Long id){
        log.debug("查询角色id查询已关联的菜单列表\t param:{}",id);
 
        List<MenuDisplay> menuDisplayList = imsRoleService.getRelationMenusById(id).stream().map(MenuDisplay::new).collect(Collectors.toList());
-       return ResponseEntity.ok(Multiple.of(menuDisplayList));
+       return ResponseEntity.ok(Tuple.of(menuDisplayList));
    }
 
     @GetMapping("/list/all")

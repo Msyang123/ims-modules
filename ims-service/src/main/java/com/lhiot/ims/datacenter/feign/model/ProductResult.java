@@ -1,4 +1,4 @@
-package com.lhiot.ims.datacenter.model;
+package com.lhiot.ims.datacenter.feign.model;
 
 import com.lhiot.ims.datacenter.feign.entity.ProductSpecification;
 import io.swagger.annotations.ApiModel;
@@ -13,7 +13,7 @@ import java.util.List;
  */
 @ApiModel
 @Data
-public class ProductInfo {
+public class ProductResult {
     @ApiModelProperty(notes = "主键Id", dataType = "Long", readOnly = true)
     private Long id;
     @ApiModelProperty(notes = "商品编码", dataType = "String")

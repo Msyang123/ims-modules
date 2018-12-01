@@ -1,8 +1,8 @@
-package com.lhiot.ims.datacenter.model;
+package com.lhiot.ims.datacenter.feign.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.leon.microx.predefine.Use;
-import com.lhiot.ims.datacenter.feign.entity.type.InventorySpecification;
+import com.lhiot.ims.datacenter.feign.type.InventorySpecification;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;

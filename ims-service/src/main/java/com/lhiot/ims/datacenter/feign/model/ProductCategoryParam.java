@@ -1,8 +1,6 @@
-package com.lhiot.ims.datacenter.model;
+package com.lhiot.ims.datacenter.feign.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.leon.microx.predefine.OnOff;
-import com.lhiot.ims.datacenter.feign.entity.type.AdvertiseType;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -10,20 +8,15 @@ import lombok.Data;
 import java.util.Date;
 
 /**
- * @author xiaojian  created in  2018/11/21 12:21
+ * @author xiaojian  created in  2018/11/17 9:59
  */
 @ApiModel
 @Data
-public class AdvertisementParam {
-    @ApiModelProperty(notes = "位置Id", dataType = "Long")
-    private Long positionId;
-    @ApiModelProperty(notes = "广告名", dataType = "String")
-    private String advertiseName;
-    @ApiModelProperty(notes = "广告类别（PRODUCT_DETAILS- 商品详情 STORE_LIVE_TELECAST- 门店直播 MORE_AMUSEMENT- 多娱\n" +
-            "EXTERNAL_LINKS- 外部链接）", dataType = "AdvertiseType")
-    private AdvertiseType advertiseType;
-    @ApiModelProperty(notes = "广告状态（ON- 开启 OFF-关闭）", dataType = "AdvertiseStatus")
-    private OnOff advertiseStatus;
+public class ProductCategoryParam {
+    @ApiModelProperty(notes = "父级ID", dataType = "Long")
+    private Long parentId;
+    @ApiModelProperty(notes = "分类名", dataType = "String")
+    private String groupName;
     @ApiModelProperty(notes = "起始创建时间", dataType = "Date")
     private Date beginCreateAt;
     @ApiModelProperty(notes = "截止创建时间", dataType = "Date")

@@ -2,7 +2,7 @@ package com.lhiot.ims.datacenter.feign;
 
 import com.leon.microx.web.result.Pages;
 import com.lhiot.ims.datacenter.feign.entity.Advertisement;
-import com.lhiot.ims.datacenter.model.AdvertisementParam;
+import com.lhiot.ims.datacenter.feign.model.AdvertisementParam;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;

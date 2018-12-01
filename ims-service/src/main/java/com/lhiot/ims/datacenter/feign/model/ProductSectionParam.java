@@ -1,4 +1,4 @@
-package com.lhiot.ims.datacenter.model;
+package com.lhiot.ims.datacenter.feign.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModel;

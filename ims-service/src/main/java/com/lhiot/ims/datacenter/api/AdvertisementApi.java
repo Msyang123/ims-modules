@@ -4,7 +4,7 @@ import com.leon.microx.web.result.Pages;
 import com.leon.microx.web.swagger.ApiParamType;
 import com.lhiot.ims.datacenter.feign.AdvertisementFeign;
 import com.lhiot.ims.datacenter.feign.entity.Advertisement;
-import com.lhiot.ims.datacenter.model.AdvertisementParam;
+import com.lhiot.ims.datacenter.feign.model.AdvertisementParam;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;

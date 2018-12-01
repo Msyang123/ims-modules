@@ -1,7 +1,7 @@
 package com.lhiot.ims.datacenter.feign.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.lhiot.ims.datacenter.feign.entity.type.AttachmentType;
+import com.lhiot.ims.datacenter.feign.type.AttachmentType;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;

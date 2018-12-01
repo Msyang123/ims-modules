@@ -1,0 +1,106 @@
+package com.lhiot.ims.healthygood.api.customplan;
+
+import com.leon.microx.util.Maps;
+import com.leon.microx.web.result.Tips;
+import com.leon.microx.web.swagger.ApiParamType;
+import com.lhiot.ims.healthygood.feign.customplan.CustomPlanFeign;
+import com.lhiot.ims.healthygood.feign.customplan.model.CustomPlanDetailResult;
+import com.lhiot.ims.healthygood.feign.customplan.model.CustomPlanParam;
+import com.lhiot.ims.healthygood.feign.customplan.model.CustomPlanResult;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.net.URI;
+
+/**
+ * @author hufan created in 2018/12/1 15:20
+ **/
+@Api(description = "定制计划接口")
+@Slf4j
+@RestController
+public class CustomPlanApi {
+    private final CustomPlanFeign customPlanFeign;
+
+    public CustomPlanApi(CustomPlanFeign customPlanFeign) {
+        this.customPlanFeign = customPlanFeign;
+    }
+
+    @ApiOperation("添加定制计划")
+    @ApiImplicitParam(paramType = ApiParamType.BODY, name = "customPlanResult", value = "定制计划", dataType = "CustomPlanResult", required = true)
+    @PostMapping("/custom-plans")
+    public ResponseEntity create(@Valid @RequestBody CustomPlanResult customPlanResult) {
+        log.debug("添加定制计划\t param:{}", customPlanResult);
+
+        ResponseEntity entity = customPlanFeign.create(customPlanResult);
+        if (entity.getStatusCode().isError()) {
+            return ResponseEntity.badRequest().body(entity.getBody());
+        }
+        String location = entity.getHeaders().getLocation().toString();
+        Long id = Long.valueOf(location.substring(location.lastIndexOf('/') + 1));
+        return id > 0 ?
+                ResponseEntity.created(URI.create("/custom-plans/" + id)).body(Maps.of("id", id)) :
+                ResponseEntity.badRequest().body(entity.getBody());
+    }
+
+    @GetMapping("/custom-plans/{id}")
+    @ApiOperation(value = "定制计划详细信息")
+    @ApiImplicitParam(paramType = ApiParamType.PATH, name = "id", value = "定制计划id", dataType = "Long", required = true)
+    public ResponseEntity<CustomPlanDetailResult> customPlans(@PathVariable Long id) {
+        log.debug("定制计划详细信息\t param:{}", id);
+
+        ResponseEntity<CustomPlanDetailResult> entity = customPlanFeign.findById(id);
+        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok(entity.getBody());
+    }
+
+    @ApiOperation("修改定制计划")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = ApiParamType.PATH, name = "id", value = "定制计划id", dataType = "Long", required = true),
+            @ApiImplicitParam(paramType = ApiParamType.BODY, name = "customPlanResult", value = "定制计划", dataType = "CustomPlanResult", required = true)
+    })
+    @PutMapping("/custom-plans/{id}")
+    public ResponseEntity update(@PathVariable("id") Long id, @Valid @RequestBody CustomPlanResult customPlanResult) {
+        log.debug("修改定制计划\t param:{}", customPlanResult);
+
+        ResponseEntity entity = customPlanFeign.update(id, customPlanResult);
+        return !entity.getStatusCode().isError() ? ResponseEntity.ok().build() : ResponseEntity.badRequest().body(Tips.warn("修改信息失败!"));
+    }
+
+    @ApiOperation("修改定制计划商品")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = ApiParamType.PATH, name = "id", value = "定制计划id", dataType = "Long", required = true),
+            @ApiImplicitParam(paramType = ApiParamType.BODY, name = "customPlanResult", value = "定制计划商品", dataType = "CustomPlanResult", required = true)
+    })
+    @PutMapping("/custom-plan-product/{id}")
+    public ResponseEntity updateProduct(@PathVariable("id") Long id, @RequestBody CustomPlanResult customPlanResult) {
+        log.debug("修改定制计划\t param:{}", customPlanResult);
+
+        ResponseEntity entity = customPlanFeign.updateProduct(id, customPlanResult);
+        return !entity.getStatusCode().isError() ? ResponseEntity.ok().build() : ResponseEntity.badRequest().body(entity.getBody());
+    }
+
+    @ApiOperation("根据ids删除定制计划")
+    @ApiImplicitParam(paramType = ApiParamType.PATH, name = "ids", value = "多个定制计划id以英文逗号分隔", dataType = "String", required = true)
+    @DeleteMapping("/custom-plans/{ids}")
+    public ResponseEntity batchDelete(@PathVariable("ids") String ids) {
+        log.debug("批量删除定制计划\t param:{}", ids);
+
+        ResponseEntity entity = customPlanFeign.batchDelete(ids);
+        return !entity.getStatusCode().isError() ? ResponseEntity.noContent().build() : ResponseEntity.badRequest().body(entity.getBody());
+    }
+
+    @ApiOperation(value = "根据条件分页查询定制计划信息列表", response = CustomPlanResult.class, responseContainer = "Set")
+    @ApiImplicitParam(paramType = ApiParamType.BODY, name = "param", value = "查询条件", dataType = "CustomPlanParam")
+    @PostMapping("/custom-plans/pages")
+    public ResponseEntity search(@RequestBody CustomPlanParam param) {
+        log.debug("根据条件分页查询定制计划信息列表\t param:{}", param);
+
+        ResponseEntity entity = customPlanFeign.search(param);
+        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok(entity.getBody());
+    }
+}

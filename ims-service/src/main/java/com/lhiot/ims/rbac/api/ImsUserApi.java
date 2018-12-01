@@ -141,9 +141,8 @@ public class ImsUserApi {
 
     @GetMapping("/sessions")
     @ApiOperation("获取登录用户信息")
-    public ResponseEntity userInfo(HttpServletRequest request, Sessions.User user) {
-        String sessionId = session.id(request);
-        return ResponseEntity.ok(session.user(sessionId).getUser());
+    public ResponseEntity userInfo(Sessions.User user) {
+        return ResponseEntity.ok(user.getUser());
     }
 
     @LogCollection

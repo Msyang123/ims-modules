@@ -6,7 +6,7 @@ import com.leon.microx.web.swagger.ApiHideBodyProperty;
 import com.leon.microx.web.swagger.ApiParamType;
 import com.lhiot.ims.datacenter.feign.ProductShelfFegin;
 import com.lhiot.ims.datacenter.feign.entity.ProductShelf;
-import com.lhiot.ims.datacenter.model.ProductShelfParam;
+import com.lhiot.ims.datacenter.feign.model.ProductShelfParam;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
