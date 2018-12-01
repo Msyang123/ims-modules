@@ -3,7 +3,7 @@ package com.lhiot.ims.datacenter.feign;
 import com.leon.microx.web.result.Pages;
 
 import com.lhiot.ims.datacenter.feign.entity.UiPosition;
-import com.lhiot.ims.datacenter.model.UiPositionParam;
+import com.lhiot.ims.datacenter.feign.model.UiPositionParam;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;

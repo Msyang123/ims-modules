@@ -1,26 +1,23 @@
-package com.lhiot.ims.datacenter.model;
+package com.lhiot.ims.datacenter.feign.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.lhiot.ims.datacenter.feign.type.PositionType;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
-import java.util.Date;
-
 /**
- * @author xiaojian  created in  2018/11/17 9:59
+ * @author xiaojian  created in  2018/11/20 18:14
  */
 @ApiModel
 @Data
-public class ProductCategoryParam {
-    @ApiModelProperty(notes = "父级ID", dataType = "Long")
-    private Long parentId;
-    @ApiModelProperty(notes = "分类名", dataType = "String")
-    private String groupName;
-    @ApiModelProperty(notes = "起始创建时间", dataType = "Date")
-    private Date beginCreateAt;
-    @ApiModelProperty(notes = "截止创建时间", dataType = "Date")
-    private Date endCreateAt;
+public class UiPositionParam {
+    @ApiModelProperty(notes = "类别:PRODUCT-商品，ADVERTISEMENT-广告，ARTICLE-文章", dataType = "PositionType")
+    private PositionType positionType;
+    @ApiModelProperty(notes = "应用类型", dataType = "String")
+    private String applicationType;
+    @ApiModelProperty(notes = "位置编码", dataType = "String")
+    private String codes;
     @ApiModelProperty(notes = "每页查询条数(为空或0不分页查所有)", dataType = "Integer")
     private Integer rows;
     @ApiModelProperty(notes = "当前页", dataType = "Integer")

@@ -1,4 +1,4 @@
-package com.lhiot.ims.datacenter.feign.entity.type;
+package com.lhiot.ims.datacenter.feign.type;
 
 import com.leon.microx.util.StringUtils;
 import lombok.Getter;

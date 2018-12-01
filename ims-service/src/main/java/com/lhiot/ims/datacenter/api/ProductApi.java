@@ -6,8 +6,8 @@ import com.leon.microx.web.result.Tips;
 import com.leon.microx.web.swagger.ApiParamType;
 import com.lhiot.ims.datacenter.feign.ProductFegin;
 import com.lhiot.ims.datacenter.feign.entity.Product;
-import com.lhiot.ims.datacenter.model.ProductInfo;
-import com.lhiot.ims.datacenter.model.ProductParam;
+import com.lhiot.ims.datacenter.feign.model.ProductResult;
+import com.lhiot.ims.datacenter.feign.model.ProductParam;
 import com.lhiot.ims.datacenter.service.ProductService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -38,29 +38,29 @@ public class ProductApi {
     }
 
     @ApiOperation("添加商品")
-    @ApiImplicitParam(paramType = ApiParamType.BODY, name = "productInfo", value = "商品信息", dataType = "ProductInfo", required = true)
+    @ApiImplicitParam(paramType = ApiParamType.BODY, name = "productResult", value = "商品信息", dataType = "ProductResult", required = true)
     @PostMapping("/")
-    public ResponseEntity create(@RequestBody ProductInfo productInfo) {
-        log.debug("添加商品\t param:{}", productInfo);
+    public ResponseEntity create(@RequestBody ProductResult productResult) {
+        log.debug("添加商品\t param:{}", productResult);
 
-        Tips tips = productService.create(productInfo);
+        Tips tips = productService.create(productResult);
         return Objects.nonNull(tips) ? ResponseEntity.ok(Maps.of("id", tips.getMessage())) : ResponseEntity.badRequest().body("添加失败");
     }
 
     @ApiOperation("修改商品")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = ApiParamType.PATH, name = "id", value = "商品id", dataType = "Long", required = true),
-            @ApiImplicitParam(paramType = ApiParamType.BODY, name = "productInfo", value = "商品信息", dataType = "ProductInfo", required = true)
+            @ApiImplicitParam(paramType = ApiParamType.BODY, name = "productResult", value = "商品信息", dataType = "ProductResult", required = true)
     })
     @PutMapping("/{id}")
-    public ResponseEntity update(@PathVariable("id") Long id, @RequestBody ProductInfo productInfo) {
-        log.debug("根据id修改商品\t id:{} param:{}", id, productInfo);
+    public ResponseEntity update(@PathVariable("id") Long id, @RequestBody ProductResult productResult) {
+        log.debug("根据id修改商品\t id:{} param:{}", id, productResult);
 
-        Tips tips = productService.update(id , productInfo);
+        Tips tips = productService.update(id , productResult);
         return tips.err() ? ResponseEntity.badRequest().body(tips.getMessage()) : ResponseEntity.ok(tips.getData());
     }
 
-    @ApiOperation(value = "根据Id查找商品", response = ProductInfo.class)
+    @ApiOperation(value = "根据Id查找商品", response = ProductResult.class)
     @ApiImplicitParam(paramType = ApiParamType.PATH, name = "id", value = "商品id", dataType = "Long", required = true)
     @GetMapping("/{id}")
     public ResponseEntity findById(@PathVariable("id") Long id) {

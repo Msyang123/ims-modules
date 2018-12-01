@@ -1,7 +1,7 @@
 package com.lhiot.ims.datacenter.feign.entity;
 
 import com.leon.microx.predefine.OnOff;
-import com.lhiot.ims.datacenter.feign.entity.type.AdvertiseType;
+import com.lhiot.ims.datacenter.feign.type.AdvertiseType;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;

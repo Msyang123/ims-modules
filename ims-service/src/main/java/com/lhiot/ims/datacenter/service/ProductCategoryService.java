@@ -4,7 +4,7 @@ import com.leon.microx.web.result.Pages;
 import com.leon.microx.web.result.Tips;
 import com.lhiot.ims.datacenter.feign.ProductCategoryFeign;
 import com.lhiot.ims.datacenter.feign.entity.ProductCategory;
-import com.lhiot.ims.datacenter.model.ProductCategoryParam;
+import com.lhiot.ims.datacenter.feign.model.ProductCategoryParam;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

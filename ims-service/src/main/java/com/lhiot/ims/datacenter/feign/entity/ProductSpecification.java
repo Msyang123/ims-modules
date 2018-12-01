@@ -1,7 +1,7 @@
 package com.lhiot.ims.datacenter.feign.entity;
 
 import com.leon.microx.predefine.Use;
-import com.lhiot.ims.datacenter.feign.entity.type.InventorySpecification;
+import com.lhiot.ims.datacenter.feign.type.InventorySpecification;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;

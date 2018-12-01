@@ -7,10 +7,10 @@ import com.lhiot.ims.datacenter.feign.ProductSpecificationFegin;
 import com.lhiot.ims.datacenter.feign.entity.Product;
 import com.lhiot.ims.datacenter.feign.entity.ProductAttachment;
 import com.lhiot.ims.datacenter.feign.entity.ProductSpecification;
-import com.lhiot.ims.datacenter.feign.entity.type.AttachmentType;
-import com.lhiot.ims.datacenter.feign.entity.type.InventorySpecification;
-import com.lhiot.ims.datacenter.model.ProductInfo;
-import com.lhiot.ims.datacenter.model.ProductSpecificationParam;
+import com.lhiot.ims.datacenter.feign.type.AttachmentType;
+import com.lhiot.ims.datacenter.feign.type.InventorySpecification;
+import com.lhiot.ims.datacenter.feign.model.ProductResult;
+import com.lhiot.ims.datacenter.feign.model.ProductSpecificationParam;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -39,14 +39,14 @@ public class ProductService {
     /**
      * 新增商品
      *
-     * @param productInfo
+     * @param productResult
      * @return
      */
-    public Tips create(ProductInfo productInfo) {
+    public Tips create(ProductResult productResult) {
         Product product = new Product();
-        BeanUtils.copyProperties(productInfo, product);
+        BeanUtils.copyProperties(productResult, product);
         // 设置附件
-        List<ProductAttachment> productAttachments = product.setAttachmentImages(productInfo.getMainImg(), productInfo.getSubImg(), productInfo.getDetailImg(), productInfo.getIcon());
+        List<ProductAttachment> productAttachments = product.setAttachmentImages(productResult.getMainImg(), productResult.getSubImg(), productResult.getDetailImg(), productResult.getIcon());
         product.setAttachments(productAttachments);
         ResponseEntity entity = productFegin.create(product);
         if (entity.getStatusCode().isError()) {
@@ -62,14 +62,14 @@ public class ProductService {
      * 修改商品
      *
      * @param id
-     * @param productInfo
+     * @param productResult
      * @return
      */
-    public Tips update(Long id, ProductInfo productInfo) {
+    public Tips update(Long id, ProductResult productResult) {
         Product product = new Product();
-        BeanUtils.copyProperties(productInfo, product);
+        BeanUtils.copyProperties(productResult, product);
         // 设置附件
-        List<ProductAttachment> productAttachments = product.setAttachmentImages(productInfo.getMainImg(), productInfo.getSubImg(), productInfo.getDetailImg(), productInfo.getIcon());
+        List<ProductAttachment> productAttachments = product.setAttachmentImages(productResult.getMainImg(), productResult.getSubImg(), productResult.getDetailImg(), productResult.getIcon());
         product.setAttachments(productAttachments);
         ResponseEntity entity = productFegin.update(id, product);
         if (entity.getStatusCode().isError()) {
@@ -84,9 +84,9 @@ public class ProductService {
      * @param id
      * @return
      */
-    public Tips<ProductInfo> findProductById(Long id) {
-        Tips<ProductInfo> tips = new Tips();
-        ProductInfo productInfo = new ProductInfo();
+    public Tips<ProductResult> findProductById(Long id) {
+        Tips<ProductResult> tips = new Tips();
+        ProductResult productResult = new ProductResult();
         ResponseEntity productEntity = productFegin.findById(id);
         if (productEntity.getStatusCode().isError()) {
             return Tips.warn(productEntity.getBody().toString());
@@ -94,23 +94,23 @@ public class ProductService {
         Product product = (Product) productEntity.getBody();
         if (Objects.nonNull(product)) {
             // 设置附件信息
-            BeanUtils.copyProperties(product, productInfo);
+            BeanUtils.copyProperties(product, productResult);
             if (!product.getAttachments().isEmpty()) {
                 List<String> mainImg = product.getAttachments().stream().filter(item -> item.getAttachmentType().equals(AttachmentType.MAIN_IMG)).map(ProductAttachment::getUrl).collect(Collectors.toList());
                 if (!mainImg.isEmpty()) {
-                    productInfo.setMainImg(mainImg.get(0));
+                    productResult.setMainImg(mainImg.get(0));
                 }
-                productInfo.setSubImg(product.getAttachments().stream().filter(item -> item.getAttachmentType().equals(AttachmentType.SUB_IMG)).map(ProductAttachment::getUrl).collect(Collectors.toList()));
-                productInfo.setDetailImg(product.getAttachments().stream().filter(item -> item.getAttachmentType().equals(AttachmentType.DETAIL_IMG)).map(ProductAttachment::getUrl).collect(Collectors.toList()));
+                productResult.setSubImg(product.getAttachments().stream().filter(item -> item.getAttachmentType().equals(AttachmentType.SUB_IMG)).map(ProductAttachment::getUrl).collect(Collectors.toList()));
+                productResult.setDetailImg(product.getAttachments().stream().filter(item -> item.getAttachmentType().equals(AttachmentType.DETAIL_IMG)).map(ProductAttachment::getUrl).collect(Collectors.toList()));
                 List<String> subImg = product.getAttachments().stream().filter(item -> item.getAttachmentType().equals(AttachmentType.ICON)).map(ProductAttachment::getUrl).collect(Collectors.toList());
                 if (!subImg.isEmpty()) {
-                    productInfo.setIcon(subImg.get(0));
+                    productResult.setIcon(subImg.get(0));
                 }
             }
             // 查询基础规格信息
             ProductSpecificationParam productSpecificationParam = new ProductSpecificationParam();
             productSpecificationParam.setInventorySpecification(InventorySpecification.YES);
-            productSpecificationParam.setProductId(productInfo.getId());
+            productSpecificationParam.setProductId(productResult.getId());
             ResponseEntity productSpecificationEntity = productSpecificationFegin.pages(productSpecificationParam);
             if (productSpecificationEntity.getStatusCode().isError()) {
                 return Tips.warn(productSpecificationEntity.getBody().toString());
@@ -119,11 +119,11 @@ public class ProductService {
             Pages<ProductSpecification> pages = (Pages<ProductSpecification>) productSpecificationEntity.getBody();
             if (!pages.getArray().isEmpty()) {
                 ProductSpecification productSpecification = pages.getArray().get(0);
-                productInfo.setProductSpecification(productSpecification);
-                tips.setData(productInfo);
+                productResult.setProductSpecification(productSpecification);
+                tips.setData(productResult);
                 return tips;
             }
-            tips.setData(productInfo);
+            tips.setData(productResult);
             return tips;
         }
         return Tips.empty();

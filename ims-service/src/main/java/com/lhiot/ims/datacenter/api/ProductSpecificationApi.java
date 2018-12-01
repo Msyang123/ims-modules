@@ -6,7 +6,7 @@ import com.leon.microx.web.result.Tips;
 import com.leon.microx.web.swagger.ApiParamType;
 import com.lhiot.ims.datacenter.feign.ProductSpecificationFegin;
 import com.lhiot.ims.datacenter.feign.entity.ProductSpecification;
-import com.lhiot.ims.datacenter.model.ProductSpecificationParam;
+import com.lhiot.ims.datacenter.feign.model.ProductSpecificationParam;
 import com.lhiot.ims.datacenter.service.ProductSpecificationService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
