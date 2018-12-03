@@ -1,6 +1,7 @@
 package com.lhiot.ims.datacenter.api;
 
 import com.leon.microx.web.result.Pages;
+import com.leon.microx.web.result.Tips;
 import com.leon.microx.web.swagger.ApiParamType;
 import com.lhiot.ims.datacenter.feign.UiPositionFeign;
 import com.lhiot.ims.datacenter.feign.entity.UiPosition;
@@ -40,7 +41,7 @@ public class UiPositionApi {
 
         ResponseEntity entity = uiPositionFeign.findById(id);
         if (entity.getStatusCode().isError()) {
-            return ResponseEntity.badRequest().body(entity.getBody());
+            return ResponseEntity.badRequest().body(Tips.warn(entity.getBody().toString()));
         }
         UiPosition uiPosition = (UiPosition) entity.getBody();
         return ResponseEntity.ok(uiPosition);
@@ -54,7 +55,7 @@ public class UiPositionApi {
 
         ResponseEntity entity = uiPositionFeign.pages(param);
         if (entity.getStatusCode().isError()) {
-            return ResponseEntity.badRequest().body(entity.getBody());
+            return ResponseEntity.badRequest().body(Tips.warn(entity.getBody().toString()));
         }
         Pages pages = (Pages) entity.getBody();
         return ResponseEntity.ok(pages);
@@ -69,7 +70,7 @@ public class UiPositionApi {
 
         ResponseEntity entity = uiPositionFeign.pages(uiPositionParam);
         if (entity.getStatusCode().isError()) {
-            return ResponseEntity.badRequest().body(entity.getBody());
+            return ResponseEntity.badRequest().body(Tips.warn(entity.getBody().toString()));
         }
         Pages pages = (Pages) entity.getBody();
         List<UiPosition> uiPositionList = pages.getArray();
