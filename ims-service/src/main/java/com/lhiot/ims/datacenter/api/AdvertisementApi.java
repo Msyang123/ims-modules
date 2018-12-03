@@ -1,6 +1,7 @@
 package com.lhiot.ims.datacenter.api;
 
 import com.leon.microx.web.result.Pages;
+import com.leon.microx.web.result.Tips;
 import com.leon.microx.web.swagger.ApiParamType;
 import com.lhiot.ims.datacenter.feign.AdvertisementFeign;
 import com.lhiot.ims.datacenter.feign.entity.Advertisement;
@@ -34,7 +35,7 @@ public class AdvertisementApi {
         log.debug("添加广告\t param:{}", advertisement);
 
         ResponseEntity entity = advertisementFeign.create(advertisement);
-        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok(entity.getBody());
+        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(Tips.warn(entity.getBody().toString())) : ResponseEntity.ok(entity.getBody());
     }
 
     @ApiOperation("修改广告")
@@ -47,7 +48,7 @@ public class AdvertisementApi {
         log.debug("根据id修改广告\t id:{} param:{}", id, advertisement);
 
         ResponseEntity entity = advertisementFeign.update(id, advertisement);
-        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok(entity.getBody());
+        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(Tips.warn(entity.getBody().toString())) : ResponseEntity.ok(entity.getBody());
     }
 
     @ApiOperation(value = "根据Id查找广告", response = Advertisement.class)
@@ -58,7 +59,7 @@ public class AdvertisementApi {
 
         ResponseEntity entity = advertisementFeign.findById(id);
         if (entity.getStatusCode().isError()) {
-            return ResponseEntity.badRequest().body(entity.getBody());
+            return ResponseEntity.badRequest().body(Tips.warn(entity.getBody().toString()));
         }
         Advertisement advertisement = (Advertisement) entity.getBody();
         return ResponseEntity.ok(advertisement);
@@ -71,7 +72,7 @@ public class AdvertisementApi {
         log.debug("根据广告Ids删除广告\t param:{}", ids);
 
         ResponseEntity entity = advertisementFeign.batchDelete(ids);
-        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.noContent().build();
+        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(Tips.warn(entity.getBody().toString())) : ResponseEntity.noContent().build();
     }
 
     @ApiOperation(value = "根据条件分页查询广告信息列表", response = Advertisement.class, responseContainer = "Set")
@@ -81,7 +82,7 @@ public class AdvertisementApi {
         log.debug("查询广告信息列表\t param:{}", param);
 
         ResponseEntity<Pages<Advertisement>> entity = advertisementFeign.pages(param);
-        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok(entity.getBody());
+        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(Tips.warn(entity.getBody().toString())) : ResponseEntity.ok(entity.getBody());
     }
 
 }
