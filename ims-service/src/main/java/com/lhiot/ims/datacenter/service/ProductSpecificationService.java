@@ -77,6 +77,7 @@ public class ProductSpecificationService {
                 // 商品名称
                 Long productId = productSpecification.getProductId();
                 if (Objects.nonNull(productId)) {
+                    // FIXME 网络请求过于频繁
                     ResponseEntity prodcutEntity = productFegin.findById(productId);
                     if (prodcutEntity.getStatusCode().isError()) {
                         Tips.warn(prodcutEntity.getBody().toString());

@@ -54,7 +54,7 @@ public class ProductShelfApi {
             @ApiImplicitParam(paramType = ApiParamType.BODY, name = "productShelfResult", value = "商品上架信息", dataType = "ProductShelfResult", required = true)
     })
     @PutMapping("/{id}")
-    @ApiHideBodyProperty("productSpecification")
+    @ApiHideBodyProperty("sectionIds")
     public ResponseEntity update(@PathVariable("id") Long id, @RequestBody ProductShelfResult productShelfResult) {
         log.debug("根据id修改商品上架\t id:{} param:{}", id, productShelfResult);
 
@@ -82,7 +82,7 @@ public class ProductShelfApi {
         return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.noContent().build();
     }
 
-    @ApiOperation(value = "根据条件分页查询商品上架信息列表", response = ProductShelf.class, responseContainer = "Set")
+    @ApiOperation(value = "根据条件分页查询商品上架信息列表", response = ProductShelfResult.class, responseContainer = "Set")
     @ApiImplicitParam(paramType = ApiParamType.BODY, name = "param", value = "查询条件", dataType = "ProductShelfParam")
     @PostMapping("/pages")
     public ResponseEntity search(@RequestBody ProductShelfParam param) {

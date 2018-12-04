@@ -5,12 +5,12 @@ import com.leon.microx.web.result.Tips;
 import com.lhiot.ims.datacenter.feign.ProductFegin;
 import com.lhiot.ims.datacenter.feign.ProductSectionRelationFegin;
 import com.lhiot.ims.datacenter.feign.ProductShelfFegin;
-import com.lhiot.ims.datacenter.feign.ProductSpecificationFegin;
 import com.lhiot.ims.datacenter.feign.entity.Product;
 import com.lhiot.ims.datacenter.feign.entity.ProductShelf;
 import com.lhiot.ims.datacenter.feign.entity.ProductSpecification;
 import com.lhiot.ims.datacenter.feign.model.ProductShelfParam;
 import com.lhiot.ims.datacenter.feign.model.ProductShelfResult;
+import com.lhiot.ims.datacenter.feign.type.ApplicationType;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -28,14 +28,12 @@ import java.util.Objects;
 public class ProductShelfService {
     private final ProductShelfFegin productShelfFegin;
     private final ProductSectionRelationFegin productSectionRelationFegin;
-    private final ProductSpecificationFegin productSpecificationFegin;
     private final ProductFegin productFegin;
 
 
-    public ProductShelfService(ProductShelfFegin productShelfFegin, ProductSectionRelationFegin productSectionRelationFegin, ProductSpecificationFegin productSpecificationFegin, ProductFegin productFegin) {
+    public ProductShelfService(ProductShelfFegin productShelfFegin, ProductSectionRelationFegin productSectionRelationFegin, ProductFegin productFegin) {
         this.productShelfFegin = productShelfFegin;
         this.productSectionRelationFegin = productSectionRelationFegin;
-        this.productSpecificationFegin = productSpecificationFegin;
         this.productFegin = productFegin;
     }
 
@@ -43,6 +41,7 @@ public class ProductShelfService {
         ProductShelf productShelf = new ProductShelf();
         BeanUtils.copyProperties(productShelfResult, productShelf);
 
+        productShelf.setApplicationType(ApplicationType.HEALTH_GOOD);
         ResponseEntity productShelfEntity = productShelfFegin.create(productShelf);
         if (productShelfEntity.getStatusCode().isError()) {
             return Tips.warn(productShelfEntity.getBody().toString());

@@ -19,6 +19,8 @@ import java.util.Date;
 public class ProductShelfParam {
     @ApiModelProperty(notes = "主键Id", dataType = "Long", readOnly = true)
     private Long id;
+    @ApiModelProperty(notes = "上架ID(多个以英文逗号分隔)", dataType = "String")
+    private String ids;
     @NotNull(message = "上架名称不能为空")
     @ApiModelProperty(notes = "上架名称", dataType = "String")
     private String name;
@@ -46,6 +48,8 @@ public class ProductShelfParam {
     private Integer sorting;
     @ApiModelProperty(notes = "应用类型", dataType = "String")
     private String applicationType;
+    @ApiModelProperty(notes = "名称或条码关键字", dataType = "String")
+    private String keyword;
 
     @ApiModelProperty(notes = "商品名称", dataType = "String")
     private String productName;

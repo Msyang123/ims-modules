@@ -63,13 +63,15 @@ public class ProductService {
         }
         // 添加商品基础规格
         ProductSpecification productSpecification = productResult.getProductSpecification();
-        productSpecification.setInventorySpecification(InventorySpecification.YES);
-        productSpecification.setAvailableStatus(Use.ENABLE);
-        productSpecification.setProductId(productId);
-        // TODO  productSpecification.setSpecificationQty(XXX);
-        ResponseEntity specificationEntity = productSpecificationFegin.create(productSpecification);
-        if (specificationEntity.getStatusCode().isError()) {
-            return Tips.warn(specificationEntity.getBody().toString());
+        if (Objects.nonNull(productSpecification)) {
+            productSpecification.setInventorySpecification(InventorySpecification.YES);
+            productSpecification.setAvailableStatus(Use.ENABLE);
+            productSpecification.setProductId(productId);
+            // TODO  productSpecification.setSpecificationQty(XXX);
+            ResponseEntity specificationEntity = productSpecificationFegin.create(productSpecification);
+            if (specificationEntity.getStatusCode().isError()) {
+                return Tips.warn(specificationEntity.getBody().toString());
+            }
         }
         return Tips.info(productId + "");
     }

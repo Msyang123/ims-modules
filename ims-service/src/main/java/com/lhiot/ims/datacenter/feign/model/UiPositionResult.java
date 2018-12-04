@@ -1,20 +1,20 @@
-package com.lhiot.ims.datacenter.feign.entity;
+package com.lhiot.ims.datacenter.feign.model;
 
-import com.lhiot.dc.dictionary.HasEntries;
+import com.lhiot.ims.datacenter.feign.entity.ProductSection;
 import com.lhiot.ims.datacenter.feign.type.PositionType;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;
-
+import java.util.List;
 
 /**
- * @author xiaojian  created in  2018/11/20 15:58
- */
+ * @author hufan created in 2018/12/4 18:45
+ **/
 @Data
 @ApiModel
-public class UiPosition {
+public class UiPositionResult {
     @ApiModelProperty(notes = "主键Id", dataType = "Long", readOnly = true)
     private Long id;
     @ApiModelProperty(notes = "类别:PRODUCT-商品，ADVERTISEMENT-广告，ARTICLE-文章", dataType = "PositionType")
@@ -28,4 +28,6 @@ public class UiPosition {
 //    @HasEntries(from = DictionaryCodes.APPLICATION_TYPE, message = "没有找到此应用类型")
     private String applicationType;
 
+    @ApiModelProperty(notes = "关联的板块信息", dataType = "List")
+    private List<ProductSection> productSections;
 }
