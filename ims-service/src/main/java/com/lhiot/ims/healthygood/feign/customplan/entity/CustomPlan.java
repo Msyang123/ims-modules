@@ -2,6 +2,7 @@ package com.lhiot.ims.healthygood.feign.customplan.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.lhiot.ims.healthygood.feign.customplan.type.ValidOrInvalid;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -68,10 +69,9 @@ public class CustomPlan{
     private String overRule;
 
     /**
-    *VALID INVALID
-    */
+     *状态
+     */
     @JsonProperty("status")
-    @ApiModelProperty(value = "VALID INVALID", dataType = "String")
-    @NotNull
-    private String status;
+    @ApiModelProperty(value = "状态 VALID-有效, INVALID-无效;", dataType = "String")
+    private ValidOrInvalid status;
 }

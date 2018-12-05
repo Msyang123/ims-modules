@@ -63,51 +63,27 @@ public class ProductSpecificationService {
         if (entity.getStatusCode().isError()) {
             return Tips.warn(entity.getBody().toString());
         }
-        Pages<ProductSpecification> pages = (Pages<ProductSpecification>) entity.getBody();
+        Pages pages = (Pages) entity.getBody();
         List<ProductSpecification> productSpecificationList = pages.getArray();
+        productSpecificationList = productSpecificationList.stream().filter(productSpecification -> Objects.nonNull(productSpecification.getProduct())).collect(Collectors.toList());
         if (!productSpecificationList.isEmpty() && productSpecificationList.size() > 0) {
             productSpecificationList.forEach(productSpecification -> {
-                String specificationInfo = productSpecification.getProduct().getName() + " " + productSpecification.getWeight() + productSpecification.getPackagingUnit() + "[" + productSpecification.getBarcode() + "]";
-                productSpecification.setSpecificationInfo(specificationInfo);
-                List<ProductAttachment> attachmentList = productSpecification.getProduct().getAttachments();
-                if (!attachmentList.isEmpty() && attachmentList.size() > 0) {
-                    List<ProductAttachment> mainImgList = attachmentList.stream().filter(productAttachment -> Objects.equals(AttachmentType.MAIN_IMG, productAttachment.getAttachmentType())).collect(Collectors.toList());
-                    if (!mainImgList.isEmpty() && mainImgList.size() >0) {
-                        String productImage = mainImgList.get(0).getUrl();
-                        productSpecification.getProduct().setProductImage(productImage);
+                    String specificationInfo = productSpecification.getProduct().getName() + " " + productSpecification.getWeight() + productSpecification.getPackagingUnit() + "[" + productSpecification.getBarcode() + "]";
+                    productSpecification.setSpecificationInfo(specificationInfo);
+                    List<ProductAttachment> attachmentList = productSpecification.getProduct().getAttachments();
+                    if (!attachmentList.isEmpty() && attachmentList.size() > 0) {
+                        List<ProductAttachment> mainImgList = attachmentList.stream().filter(productAttachment -> Objects.equals(AttachmentType.MAIN_IMG, productAttachment.getAttachmentType())).collect(Collectors.toList());
+                        if (!mainImgList.isEmpty() && mainImgList.size() >0) {
+                            String productImage = mainImgList.get(0).getUrl();
+                            productSpecification.getProduct().setProductImage(productImage);
+                        }
                     }
-                }
+
+
             });
         }
         Tips tips = new Tips();
         tips.setData(productSpecificationList);
         return tips;
-//        List<ProductSpecificationResult> productSpecificationResultList = new ArrayList<>();
-//        if (!productSpecificationList.isEmpty() && productSpecificationList.size() > 0) {
-//            productSpecificationList.forEach(productSpecification -> {
-//                ProductSpecificationResult productSpecificationResult = new ProductSpecificationResult();
-//                BeanUtils.copyProperties(productSpecification, productSpecificationResult);
-//                // 规格
-//                String packagingUnit = productSpecification.getPackagingUnit();
-//                BigDecimal specificationQty = productSpecification.getSpecificationQty();
-//                String specification = specificationQty + packagingUnit;
-//                productSpecificationResult.setSpecification(specification);
-//                // 商品名称
-//                Long productId = productSpecification.getProductId();
-//                if (Objects.nonNull(productId)) {
-//                    // FIXME 网络请求过于频繁
-//                    ResponseEntity prodcutEntity = productFegin.findById(productId);
-//                    if (prodcutEntity.getStatusCode().isError()) {
-//                        Tips.warn(prodcutEntity.getBody().toString());
-//                    }
-//                    Product product = (Product) prodcutEntity.getBody();
-//                    productSpecificationResult.setProductName(product.getName());
-//                }
-//
-//                productSpecificationResultList.add(productSpecificationResult);
-//            });
-//        }
-//        tips.setData(Pages.of(pages.getTotal(), productSpecificationResultList));
-//        return tips;
     }
 }

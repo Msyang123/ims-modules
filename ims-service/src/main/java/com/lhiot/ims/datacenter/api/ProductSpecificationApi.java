@@ -16,6 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  * @author hufan created in 2018/11/21 16:57
  **/
@@ -90,7 +92,11 @@ public class ProductSpecificationApi {
         log.debug("查询商品规格信息列表\t param:{}", param);
 
         Tips tips = productSpecificationService.pages(param);
-        return tips.err() ? ResponseEntity.badRequest().body(Tips.warn(tips.getMessage())) : ResponseEntity.ok(tips.getData());
+        if (tips.err()) {
+            return ResponseEntity.badRequest().body(tips.getMessage());
+        }
+        List<ProductSpecification> productSpecificationList = (List<ProductSpecification>) tips.getData();
+        return  ResponseEntity.ok(productSpecificationList);
     }
 
     @ApiOperation(value = "查询所有基础规格单位列表", response = String.class, responseContainer = "List")
