@@ -1,14 +1,20 @@
 package com.lhiot.ims.datacenter.feign.entity;
 
 import com.leon.microx.predefine.OnOff;
+import com.leon.microx.web.swagger.ApiHideBodyProperty;
+import com.lhiot.dc.dictionary.HasEntries;
+import com.lhiot.ims.datacenter.feign.model.SelectedSection;
+import com.lhiot.ims.datacenter.feign.type.ApplicationType;
 import com.lhiot.ims.datacenter.feign.type.ShelfType;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import jdk.nashorn.internal.ir.annotations.Ignore;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author zhangfeng create in 15:38 2018/11/8
@@ -16,8 +22,6 @@ import java.util.Date;
 @Data
 @ApiModel
 public class ProductShelf {
-    @ApiModelProperty(notes = "规格对象", dataType = "ProductSpecification", readOnly = true)
-    private ProductSpecification productSpecification;
     @ApiModelProperty(notes = "主键Id", dataType = "Long")
     private Long id;
     @NotNull(message = "上架名称不能为空")
@@ -45,7 +49,18 @@ public class ProductShelf {
     private String description;
     @ApiModelProperty(notes = "排序字段", dataType = "Integer")
     private Integer sorting;
-    @ApiModelProperty(notes = "应用类型", dataType = "String")
-    private String applicationType;
+    @ApiModelProperty(notes = "应用类型", dataType = "String", readOnly = true)
+//    @HasEntries(from = DictionaryCodes.APPLICATION_TYPE, message = "没有找到此应用类型")
+    private ApplicationType applicationType;
+
+    @ApiModelProperty(notes = "规格对象", dataType = "ProductSpecification", readOnly = true)
+    private ProductSpecification productSpecification;
+
+//    /**
+//     * 已关联的板块信息
+//     */
+//    @ApiModelProperty(notes = "已关联的板块信息", dataType = "List")
+//    @Ignore
+//    private SelectedSection selected;
 
 }

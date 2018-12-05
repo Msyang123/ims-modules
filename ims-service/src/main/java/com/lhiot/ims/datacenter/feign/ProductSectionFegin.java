@@ -31,7 +31,7 @@ public interface ProductSectionFegin {
      */
     @GetMapping(value = "/product-sections/{id}")
     ResponseEntity<ProductSection> findById(@PathVariable("id") Long id, @RequestParam(value = "includeShelves", required = false) boolean includeShelves,
-                                            @RequestParam(value = "includeShelvesQty", required = false) Long includeShelvesQty);
+                                            @RequestParam(value = "includeShelvesQty", required = false) Long includeShelvesQty, @RequestParam(value = "includeProduct", required = false) boolean includeProduct);
 
     /**
      * 根据Ids删除商品版块

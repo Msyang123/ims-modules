@@ -1,16 +1,12 @@
 package com.lhiot.ims.datacenter.feign.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.lhiot.ims.datacenter.feign.type.AttachmentType;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 
 
 /**
@@ -36,6 +32,11 @@ public class Product {
     private String benefit;
     @ApiModelProperty(notes = "创建时间", dataType = "Date", readOnly = true)
     private Date createAt;
-    @ApiModelProperty(notes = "商品附件信息", dataType = "ProductAttachment")
+
+    @ApiModelProperty(notes = "商品图片", dataType = "productImage")
+    private String productImage;
+
+
+    @ApiModelProperty(notes = "商品附件信息", dataType = "ProductAttachment", readOnly = true)
     private List<ProductAttachment> attachments;
 }

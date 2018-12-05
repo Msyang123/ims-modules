@@ -2,13 +2,12 @@ package com.lhiot.ims.healthygood.feign.customplan.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.lhiot.ims.healthygood.feign.customplan.type.ValidOrInvalid;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-
-import javax.validation.constraints.NotNull;
 
 /**
 * Description:定制计划实体类
@@ -33,7 +32,6 @@ public class CustomPlan{
     */
     @JsonProperty("name")
     @ApiModelProperty(value = "名称", dataType = "String")
-    @NotNull
     private String name;
 
     /**
@@ -64,7 +62,6 @@ public class CustomPlan{
     */
     @JsonProperty("overRule")
     @ApiModelProperty(value = "到期规则", dataType = "String")
-    @NotNull
     private String overRule;
 
     /**
@@ -72,6 +69,12 @@ public class CustomPlan{
     */
     @JsonProperty("status")
     @ApiModelProperty(value = "VALID INVALID", dataType = "String")
-    @NotNull
-    private String status;
+    private ValidOrInvalid status;
+
+    /**
+     *创建人
+     */
+    @JsonProperty("createUser")
+    @ApiModelProperty(value = "创建人", dataType = "String")
+    private String createUser;
 }

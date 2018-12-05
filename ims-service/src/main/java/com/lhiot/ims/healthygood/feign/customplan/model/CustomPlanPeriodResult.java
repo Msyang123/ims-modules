@@ -1,6 +1,7 @@
 package com.lhiot.ims.healthygood.feign.customplan.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.lhiot.ims.healthygood.feign.customplan.entity.CustomPlanSpecification;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -13,23 +14,28 @@ import java.util.List;
 @ToString(callSuper = true)
 @ApiModel
 @NoArgsConstructor
-public class CustomPlanDatailStandardResult {
+/**
+ * 周期类型
+ */
+public class CustomPlanPeriodResult {
     /**
      *周期
      */
     @JsonProperty("planPeriod")
-    @ApiModelProperty(value = "planPeriod", dataType = "String")
-    private String planPeriod;
+    @ApiModelProperty(value = "定制周期（7-周 30-月）", dataType = "Integer")
+    private Integer planPeriod;
+
     /**
      *规格List
      */
     @JsonProperty("specificationList")
-    @ApiModelProperty(value = "specificationList", dataType = "List")
-    private List<CustomPlanSpecificationResult> specificationList;
+    @ApiModelProperty(value = "定制规格集合", dataType = "List")
+    private List<CustomPlanSpecification> specificationList;
     /**
-     *产品
+     *商品List
      */
     @JsonProperty("products")
-    @ApiModelProperty(value = "products", dataType = "List")
+    @ApiModelProperty(value = "定制商品集合", dataType = "List")
     private List<CustomPlanProductResult> products;
+
 }

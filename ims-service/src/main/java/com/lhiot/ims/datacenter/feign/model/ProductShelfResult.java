@@ -1,7 +1,7 @@
 package com.lhiot.ims.datacenter.feign.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.leon.microx.predefine.OnOff;
+import com.lhiot.ims.datacenter.feign.type.ApplicationType;
 import com.lhiot.ims.datacenter.feign.type.ShelfType;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -36,22 +36,22 @@ public class ProductShelfResult {
     private String productImage;
     @ApiModelProperty(notes = "上架状态：ON-上架，OFF-下架", dataType = "OnOff")
     private OnOff shelfStatus;
-    @ApiModelProperty(notes = "上架类型：NORMAL-普通商品,GIFT-赠品", dataType = "ShelfType")
-    private ShelfType shelfType;
+    @ApiModelProperty(notes = "上架类型：NORMAL-普通商品,GIFT-赠品", dataType = "ShelfType", readOnly = true)
+    private ShelfType shelfType = ShelfType.NORMAL;
     @ApiModelProperty(notes = "创建时间", dataType = "Date", readOnly = true)
     private Date createAt;
     @ApiModelProperty(notes = "描述", dataType = "String")
     private String description;
     @ApiModelProperty(notes = "排序字段", dataType = "Integer")
     private Integer sorting;
-    @ApiModelProperty(notes = "应用类型", dataType = "String")
-    private String applicationType;
+    @ApiModelProperty(notes = "应用类型", dataType = "String", readOnly = true)
+    private ApplicationType applicationType = ApplicationType.HEALTH_GOOD;
 
-    @ApiModelProperty(notes = "商品名称", dataType = "String")
+    @ApiModelProperty(notes = "商品名称", dataType = "String", readOnly = true)
     private String productName;
-    @ApiModelProperty(notes = "上架规格", dataType = "String")
+    @ApiModelProperty(notes = "上架规格", dataType = "String", readOnly = true)
     private String productSpecification;
-    @ApiModelProperty(notes = "规格条码", dataType = "String")
+    @ApiModelProperty(notes = "规格条码", dataType = "String", readOnly = true)
     private String barcode;
     @ApiModelProperty(notes = "板块ids", dataType = "String")
     private String sectionIds;

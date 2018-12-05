@@ -17,7 +17,7 @@ import java.util.Date;
 public class ProductSpecificationParam {
     @ApiModelProperty(notes = "商品ID", dataType = "Long")
     private Long productId;
-    @ApiModelProperty(notes = "商品条码(多个英文逗号分隔)", dataType = "String")
+    @ApiModelProperty(notes = "商品条码", dataType = "String")
     private String barCodes;
     @ApiModelProperty(notes = "打包单位", dataType = "String")
     private String packagingUnit;
@@ -29,6 +29,9 @@ public class ProductSpecificationParam {
     private Date beginCreateAt;
     @ApiModelProperty(notes = "截止创建时间", dataType = "Date")
     private Date endCreateAt;
+    @ApiModelProperty(notes = "名称或条码关键字", dataType = "String")
+    private String keyword;
+
     @ApiModelProperty(notes = "每页查询条数(为空或0不分页查所有)", dataType = "Integer")
     private Integer rows;
     @ApiModelProperty(notes = "当前页", dataType = "Integer")

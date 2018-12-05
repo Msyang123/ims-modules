@@ -7,9 +7,11 @@ import com.lhiot.dc.dictionary.module.Dictionary;
 import com.lhiot.ims.datacenter.feign.ProductFegin;
 import com.lhiot.ims.datacenter.feign.ProductSpecificationFegin;
 import com.lhiot.ims.datacenter.feign.entity.Product;
+import com.lhiot.ims.datacenter.feign.entity.ProductAttachment;
 import com.lhiot.ims.datacenter.feign.entity.ProductSpecification;
 import com.lhiot.ims.datacenter.feign.model.ProductSpecificationParam;
 import com.lhiot.ims.datacenter.feign.model.ProductSpecificationResult;
+import com.lhiot.ims.datacenter.feign.type.AttachmentType;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -57,38 +59,31 @@ public class ProductSpecificationService {
     }
 
     public Tips pages(ProductSpecificationParam param) {
-        Tips tips = new Tips();
         ResponseEntity entity = productSpecificationFegin.pages(param);
         if (entity.getStatusCode().isError()) {
-            Tips.warn(entity.getBody().toString());
+            return Tips.warn(entity.getBody().toString());
         }
-        Pages<ProductSpecification> pages = (Pages<ProductSpecification>) entity.getBody();
+        Pages pages = (Pages) entity.getBody();
         List<ProductSpecification> productSpecificationList = pages.getArray();
-        List<ProductSpecificationResult> productSpecificationResultList = new ArrayList<>();
+        productSpecificationList = productSpecificationList.stream().filter(productSpecification -> Objects.nonNull(productSpecification.getProduct())).collect(Collectors.toList());
         if (!productSpecificationList.isEmpty() && productSpecificationList.size() > 0) {
             productSpecificationList.forEach(productSpecification -> {
-                ProductSpecificationResult productSpecificationResult = new ProductSpecificationResult();
-                BeanUtils.copyProperties(productSpecification, productSpecificationResult);
-                // 规格
-                String packagingUnit = productSpecification.getPackagingUnit();
-                BigDecimal specificationQty = productSpecification.getSpecificationQty();
-                String specification = specificationQty + packagingUnit;
-                productSpecificationResult.setSpecification(specification);
-                // 商品名称
-                Long productId = productSpecification.getProductId();
-                if (Objects.nonNull(productId)) {
-                    ResponseEntity prodcutEntity = productFegin.findById(productId);
-                    if (prodcutEntity.getStatusCode().isError()) {
-                        Tips.warn(prodcutEntity.getBody().toString());
+                    String specificationInfo = productSpecification.getProduct().getName() + " " + productSpecification.getWeight() + productSpecification.getPackagingUnit() + "[" + productSpecification.getBarcode() + "]";
+                    productSpecification.setSpecificationInfo(specificationInfo);
+                    List<ProductAttachment> attachmentList = productSpecification.getProduct().getAttachments();
+                    if (!attachmentList.isEmpty() && attachmentList.size() > 0) {
+                        List<ProductAttachment> mainImgList = attachmentList.stream().filter(productAttachment -> Objects.equals(AttachmentType.MAIN_IMG, productAttachment.getAttachmentType())).collect(Collectors.toList());
+                        if (!mainImgList.isEmpty() && mainImgList.size() >0) {
+                            String productImage = mainImgList.get(0).getUrl();
+                            productSpecification.getProduct().setProductImage(productImage);
+                        }
                     }
-                    Product product = (Product) prodcutEntity.getBody();
-                    productSpecificationResult.setProductName(product.getName());
-                }
 
-                productSpecificationResultList.add(productSpecificationResult);
+
             });
         }
-        tips.setData(Pages.of(pages.getTotal(), productSpecificationResultList));
+        Tips tips = new Tips();
+        tips.setData(productSpecificationList);
         return tips;
     }
 }

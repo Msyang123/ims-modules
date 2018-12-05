@@ -11,54 +11,64 @@ import lombok.ToString;
 @ToString(callSuper = true)
 @ApiModel
 @NoArgsConstructor
+/**
+ * 定制计划商品信息
+ */
 public class CustomPlanProductResult {
     /**
-     *
+     *定制商品id
      */
     @JsonProperty("id")
-    @ApiModelProperty(value = "", dataType = "Long")
+    @ApiModelProperty(value = "定制商品id", dataType = "Long")
     private Long id;
 
     /**
      *名称
      */
     @JsonProperty("productName")
-    @ApiModelProperty(value = "状态", dataType = "String")
+    @ApiModelProperty(value = "商品名称", dataType = "String")
     private String productName;
 
     /**
      *上架Id
      */
     @JsonProperty("productShelfId")
-    @ApiModelProperty(value = "上架Id", dataType = "Long")
+    @ApiModelProperty(value = "商品上架Id", dataType = "Long")
     private Long productShelfId;
 
     /**
-     *名称
+     *第x天
      */
-    @JsonProperty("dayN")
-    @ApiModelProperty(value = "", dataType = "String")
-    private String dayN;
+    @JsonProperty("dayOfPeriod")
+    @ApiModelProperty(value = "第x天（如：第1天则为1 纯数字）", dataType = "Integer")
+    private Integer dayOfPeriod;
 
 
     /**
      *planId
      */
     @JsonProperty("planId")
-    @ApiModelProperty(value = "", dataType = "Long")
+    @ApiModelProperty(value = "定制计划id", dataType = "Long")
     private Long planId;
 
     /**
      *描述
      */
     @JsonProperty("description")
-    @ApiModelProperty(value = "", dataType = "String")
+    @ApiModelProperty(value = "描述", dataType = "String")
     private String description;
 
     /**
      *图片
      */
-    @JsonProperty("productImage")
-    @ApiModelProperty(value = "", dataType = "String")
-    private String productImage;
+    @JsonProperty("image")
+    @ApiModelProperty(value = "商品图片", dataType = "String")
+    private String image;
+
+    /**
+     * 益处
+     */
+    @JsonProperty("benefit")
+    @ApiModelProperty(value = "益处", dataType = "String")
+    private String benefit;
 }

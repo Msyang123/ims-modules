@@ -18,6 +18,10 @@
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-core</artifactId>
+        </dependency>
         <!-- microx-utils -->
         <dependency>
             <groupId>com.leon.microx.core</groupId>
@@ -71,9 +75,9 @@
         </dependency>
         <!--数据字典-->
         <dependency>
-            <groupId>com.lhiot.dc.dictionary</groupId>
+            <groupId>com.lhiot.dc</groupId>
             <artifactId>dictionary-client</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>1.0</version>
         </dependency>
     </dependencies>
 

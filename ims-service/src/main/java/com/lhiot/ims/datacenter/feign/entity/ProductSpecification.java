@@ -37,4 +37,9 @@ public class ProductSpecification {
     private Use availableStatus;
     @ApiModelProperty(notes = "创建时间", dataType = "Date", readOnly = true)
     private Date createAt;
+
+    @ApiModelProperty(notes = "规格信息（排毒养颜套餐  1盒  [00815]）", dataType = "String", readOnly = true)
+    private String specificationInfo;
+    @ApiModelProperty(notes = "商品对象", dataType = "Product", readOnly = true)
+    private Product product;
 }
