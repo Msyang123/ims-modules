@@ -27,6 +27,8 @@ public class ProductSectionParam {
     private Boolean includeShelves;
     @ApiModelProperty(notes = "加载商品上架最大条数(includeShelves为true起用，为空则加载所有)", dataType = "Long")
     private Long includeShelvesQty;
+    @ApiModelProperty(notes = "是否加载商品信息((includeShelves为true起作用，为空则默认为false)", dataType = "Boolean")
+    private Boolean includeProduct;
     @ApiModelProperty(notes = "每页查询条数(为空或0不分页查所有)", dataType = "Integer")
     private Integer rows;
     @ApiModelProperty(notes = "当前页", dataType = "Integer")

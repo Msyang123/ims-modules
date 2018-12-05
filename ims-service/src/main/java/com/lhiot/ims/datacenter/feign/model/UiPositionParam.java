@@ -14,6 +14,8 @@ import lombok.Data;
 @ApiModel
 @Data
 public class UiPositionParam {
+    @ApiModelProperty(notes = "主键Id", dataType = "Long", readOnly = true)
+    private Long id;
     @ApiModelProperty(notes = "类别:PRODUCT-商品，ADVERTISEMENT-广告，ARTICLE-文章", dataType = "PositionType")
     private PositionType positionType;
     @ApiModelProperty(notes = "应用类型", dataType = "String", readOnly = true)

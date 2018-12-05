@@ -32,6 +32,11 @@ public class Product {
     private String benefit;
     @ApiModelProperty(notes = "创建时间", dataType = "Date", readOnly = true)
     private Date createAt;
-    @ApiModelProperty(notes = "商品附件信息", dataType = "ProductAttachment")
+
+    @ApiModelProperty(notes = "商品图片", dataType = "productImage")
+    private String productImage;
+
+
+    @ApiModelProperty(notes = "商品附件信息", dataType = "ProductAttachment", readOnly = true)
     private List<ProductAttachment> attachments;
 }

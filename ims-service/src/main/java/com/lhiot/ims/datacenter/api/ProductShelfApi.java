@@ -68,8 +68,12 @@ public class ProductShelfApi {
     public ResponseEntity findById(@PathVariable("id") Long id) {
         log.debug("根据Id查找商品上架\t id:{}", id);
 
-                ResponseEntity<ProductShelf> entity = productShelfFegin.findById(id);
-        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(Tips.warn(entity.getBody().toString())) : ResponseEntity.ok(entity.getBody());
+        Tips tips = productShelfService.findById(id);
+        if (tips.err()) {
+            return ResponseEntity.badRequest().body(Tips.warn(tips.getMessage()));
+        }
+        ProductShelf productShelf = (ProductShelf) tips.getData();
+        return ResponseEntity.ok(productShelf);
     }
 
     @ApiOperation("根据商品上架Ids删除商品上架")

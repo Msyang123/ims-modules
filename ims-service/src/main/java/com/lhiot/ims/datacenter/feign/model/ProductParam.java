@@ -19,6 +19,8 @@ public class ProductParam {
     private Long categoryId;
     @ApiModelProperty(notes = "产地ID", dataType = "String")
     private String sourceCode;
+    @ApiModelProperty(notes = "商品编码或商品名称关键字", dataType = "String")
+    private String keyword;
     @ApiModelProperty(notes = "每页查询条数(为空或0不分页查所有)", dataType = "Integer")
     private Integer rows;
     @ApiModelProperty(notes = "当前页", dataType = "Integer")

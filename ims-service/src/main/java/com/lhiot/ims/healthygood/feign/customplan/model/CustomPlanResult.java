@@ -1,6 +1,7 @@
 package com.lhiot.ims.healthygood.feign.customplan.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.lhiot.ims.healthygood.feign.customplan.entity.CustomPlanSpecification;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -40,10 +41,8 @@ public class CustomPlanResult {
      * 定制计划和定制板块关联
      */
     @ApiModelProperty(value = "定制板块关联定制计划排序", dataType = "String")
-    @NotNull
     private String sorts;
     @ApiModelProperty(value = "定制板块ids", dataType = "String")
-    @NotNull
     private String customPlanSectionIds;
 
     /**
@@ -51,6 +50,6 @@ public class CustomPlanResult {
      */
     @ApiModelProperty(value = "定制计划规格", dataType = "CustomPlanSpecification")
     @NotNull
-    private List<CustomPlanSpecificationResult> customPlanSpecifications;
+    private List<CustomPlanSpecification> customPlanSpecifications;
 
 }

@@ -1,6 +1,7 @@
 package com.lhiot.ims.datacenter.feign.model;
 
 import com.leon.microx.predefine.Use;
+import com.lhiot.ims.datacenter.feign.entity.Product;
 import com.lhiot.ims.datacenter.feign.type.InventorySpecification;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -21,6 +22,8 @@ public class ProductSpecificationResult {
     @NotNull(message = "商品ID不能为空")
     @ApiModelProperty(notes = "商品名称", dataType = "Long")
     private String productName;
+    @ApiModelProperty(notes = "商品对象", dataType = "ProductResult", readOnly = true)
+    private ProductResult productResult;
     @ApiModelProperty(notes = "商品条码", dataType = "String")
     private String barcode;
     @ApiModelProperty(notes = "打包单位", dataType = "String")

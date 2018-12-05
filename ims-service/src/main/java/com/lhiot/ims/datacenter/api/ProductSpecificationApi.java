@@ -6,7 +6,6 @@ import com.leon.microx.web.swagger.ApiParamType;
 import com.lhiot.ims.datacenter.feign.ProductSpecificationFegin;
 import com.lhiot.ims.datacenter.feign.entity.ProductSpecification;
 import com.lhiot.ims.datacenter.feign.model.ProductSpecificationParam;
-import com.lhiot.ims.datacenter.feign.model.ProductSpecificationResult;
 import com.lhiot.ims.datacenter.service.ProductSpecificationService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -84,7 +83,7 @@ public class ProductSpecificationApi {
         return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.noContent().build();
     }
 
-    @ApiOperation(value = "根据条件分页查询商品规格信息列表(传值produtId/输入条码或品名)", response = ProductSpecificationResult.class, responseContainer = "Set")
+    @ApiOperation(value = "根据条件分页查询商品规格信息列表(传值produtId/输入条码或品名)", response = ProductSpecification.class, responseContainer = "Set")
     @ApiImplicitParam(paramType = ApiParamType.BODY, name = "param", value = "查询条件", dataType = "ProductSpecificationParam")
     @PostMapping("/pages")
     public ResponseEntity search(@RequestBody ProductSpecificationParam param) {

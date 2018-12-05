@@ -30,7 +30,7 @@ public interface ProductShelfFegin {
      * 根据Id查找商品上架
      */
     @GetMapping(value = "/product-shelves/{id}")
-    ResponseEntity<ProductShelf> findById(@PathVariable("id") Long id);
+    ResponseEntity<ProductShelf> findById(@PathVariable("id") Long id,@RequestParam(value = "includeProduct", required = false) boolean includeProduct);
 
     /**
      * 根据Ids删除商品上架

@@ -50,6 +50,8 @@ public class ProductShelfParam {
     private String applicationType;
     @ApiModelProperty(notes = "名称或条码关键字", dataType = "String")
     private String keyword;
+    @ApiModelProperty(notes = "是否加载商品信息(为空则默认为false)", dataType = "Boolean")
+    private Boolean includeProduct;
 
     @ApiModelProperty(notes = "商品名称", dataType = "String")
     private String productName;

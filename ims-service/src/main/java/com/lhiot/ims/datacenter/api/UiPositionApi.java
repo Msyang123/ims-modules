@@ -6,6 +6,7 @@ import com.leon.microx.web.result.Tuple;
 import com.leon.microx.web.swagger.ApiParamType;
 import com.lhiot.ims.datacenter.feign.UiPositionFeign;
 import com.lhiot.ims.datacenter.feign.entity.UiPosition;
+import com.lhiot.ims.datacenter.feign.model.UiPositionDetail;
 import com.lhiot.ims.datacenter.feign.model.UiPositionResult;
 import com.lhiot.ims.datacenter.feign.type.ApplicationType;
 import com.lhiot.ims.datacenter.feign.model.UiPositionParam;
@@ -37,18 +38,18 @@ public class UiPositionApi {
         this.uiPositionService = uiPositionService;
     }
 
-    @ApiOperation(value = "根据Id查找UI位置", response = UiPosition.class)
+    @ApiOperation(value = "根据Id查找UI位置", response = UiPositionDetail.class)
     @ApiImplicitParam(paramType = ApiParamType.PATH, name = "id", value = "UI位置id", dataType = "Long", required = true)
     @GetMapping("/{id}")
     public ResponseEntity findById(@PathVariable("id") Long id) {
         log.debug("根据Id查找UI位置\t id:{}", id);
 
-        ResponseEntity entity = uiPositionFeign.findById(id);
-        if (entity.getStatusCode().isError()) {
-            return ResponseEntity.badRequest().body(Tips.warn(entity.getBody().toString()));
+        Tips tips = uiPositionService.findById(id);
+        if (tips.err()) {
+            return ResponseEntity.badRequest().body(Tips.warn(tips.getMessage()));
         }
-        UiPosition uiPosition = (UiPosition) entity.getBody();
-        return ResponseEntity.ok(uiPosition);
+        UiPositionDetail uiPositionDetail = (UiPositionDetail) tips.getData();
+        return ResponseEntity.ok(uiPositionDetail);
     }
 
     @ApiOperation(value = "根据条件分页查询UI位置信息列表", response = UiPosition.class, responseContainer = "Set")
