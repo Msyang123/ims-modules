@@ -32,12 +32,12 @@ public class CustomPlanApi {
     }
 
     @ApiOperation("添加定制计划")
-    @ApiImplicitParam(paramType = ApiParamType.BODY, name = "customPlanResult", value = "定制计划", dataType = "CustomPlanResult", required = true)
+    @ApiImplicitParam(paramType = ApiParamType.BODY, name = "customPlanDetailResult", value = "定制计划", dataType = "CustomPlanDetailResult", required = true)
     @PostMapping("/custom-plans")
-    public ResponseEntity create(@Valid @RequestBody CustomPlanResult customPlanResult) {
-        log.debug("添加定制计划\t param:{}", customPlanResult);
+    public ResponseEntity create(@Valid @RequestBody CustomPlanDetailResult customPlanDetailResult) {
+        log.debug("添加定制计划\t param:{}", customPlanDetailResult);
 
-        ResponseEntity entity = customPlanFeign.create(customPlanResult);
+        ResponseEntity entity = customPlanFeign.create(customPlanDetailResult);
         if (entity.getStatusCode().isError()) {
             return ResponseEntity.badRequest().body(entity.getBody());
         }
@@ -61,26 +61,26 @@ public class CustomPlanApi {
     @ApiOperation("修改定制计划")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = ApiParamType.PATH, name = "id", value = "定制计划id", dataType = "Long", required = true),
-            @ApiImplicitParam(paramType = ApiParamType.BODY, name = "customPlanResult", value = "定制计划", dataType = "CustomPlanResult", required = true)
+            @ApiImplicitParam(paramType = ApiParamType.BODY, name = "customPlanDetailResult", value = "定制计划", dataType = "CustomPlanDetailResult", required = true)
     })
     @PutMapping("/custom-plans/{id}")
-    public ResponseEntity update(@PathVariable("id") Long id, @Valid @RequestBody CustomPlanResult customPlanResult) {
-        log.debug("修改定制计划\t param:{}", customPlanResult);
+    public ResponseEntity update(@PathVariable("id") Long id, @Valid @RequestBody CustomPlanDetailResult customPlanDetailResult) {
+        log.debug("修改定制计划\t param:{}", customPlanDetailResult);
 
-        ResponseEntity entity = customPlanFeign.update(id, customPlanResult);
+        ResponseEntity entity = customPlanFeign.update(id, customPlanDetailResult);
         return !entity.getStatusCode().isError() ? ResponseEntity.ok().build() : ResponseEntity.badRequest().body(Tips.warn("修改信息失败!"));
     }
 
     @ApiOperation("修改定制计划商品")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = ApiParamType.PATH, name = "id", value = "定制计划id", dataType = "Long", required = true),
-            @ApiImplicitParam(paramType = ApiParamType.BODY, name = "customPlanResult", value = "定制计划商品", dataType = "CustomPlanResult", required = true)
+            @ApiImplicitParam(paramType = ApiParamType.BODY, name = "customPlanDetailResult", value = "定制计划商品", dataType = "CustomPlanDetailResult", required = true)
     })
     @PutMapping("/custom-plan-product/{id}")
-    public ResponseEntity updateProduct(@PathVariable("id") Long id, @RequestBody CustomPlanResult customPlanResult) {
-        log.debug("修改定制计划\t param:{}", customPlanResult);
+    public ResponseEntity updateProduct(@PathVariable("id") Long id, @RequestBody CustomPlanDetailResult customPlanDetailResult) {
+        log.debug("修改定制计划\t param:{}", customPlanDetailResult);
 
-        ResponseEntity entity = customPlanFeign.updateProduct(id, customPlanResult);
+        ResponseEntity entity = customPlanFeign.updateProduct(id, customPlanDetailResult);
         return !entity.getStatusCode().isError() ? ResponseEntity.ok().build() : ResponseEntity.badRequest().body(entity.getBody());
     }
 

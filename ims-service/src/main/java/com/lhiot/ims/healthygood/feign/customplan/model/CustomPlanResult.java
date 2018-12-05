@@ -2,6 +2,7 @@ package com.lhiot.ims.healthygood.feign.customplan.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.lhiot.ims.healthygood.feign.customplan.entity.CustomPlanSpecification;
+import com.lhiot.ims.healthygood.feign.customplan.type.ValidOrInvalid;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -20,7 +21,7 @@ public class CustomPlanResult {
      */
     @ApiModelProperty(value = "主键Id", dataType = "Long", readOnly = true)
     private Long id;
-    @ApiModelProperty(value = "名称", dataType = "String")
+    @ApiModelProperty(value = "定制计划名称", dataType = "String")
     @NotNull
     private String name;
     @ApiModelProperty(value = "描述", dataType = "String")
@@ -33,16 +34,18 @@ public class CustomPlanResult {
     @ApiModelProperty(value = "到期规则", dataType = "String")
     @NotNull
     private String overRule;
-    @ApiModelProperty(value = "定制计划状态 有效-VALID 无效-INVALID", dataType = "String")
+    @ApiModelProperty(value = "定制计划状态 有效-VALID 无效-INVALID", dataType = "ValidOrInvalid")
     @NotNull
-    private String status;
+    private ValidOrInvalid status;
 
     /**
      * 定制计划和定制板块关联
      */
     @ApiModelProperty(value = "定制板块关联定制计划排序", dataType = "String")
+    @NotNull
     private String sorts;
     @ApiModelProperty(value = "定制板块ids", dataType = "String")
+    @NotNull
     private String customPlanSectionIds;
 
     /**

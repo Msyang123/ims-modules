@@ -9,8 +9,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-import javax.validation.constraints.NotNull;
-
 /**
 * Description:定制计划实体类
 * @author zhangs
@@ -34,7 +32,6 @@ public class CustomPlan{
     */
     @JsonProperty("name")
     @ApiModelProperty(value = "名称", dataType = "String")
-    @NotNull
     private String name;
 
     /**
@@ -65,13 +62,19 @@ public class CustomPlan{
     */
     @JsonProperty("overRule")
     @ApiModelProperty(value = "到期规则", dataType = "String")
-    @NotNull
     private String overRule;
 
     /**
-     *状态
-     */
+    *VALID INVALID
+    */
     @JsonProperty("status")
-    @ApiModelProperty(value = "状态 VALID-有效, INVALID-无效;", dataType = "String")
+    @ApiModelProperty(value = "VALID INVALID", dataType = "String")
     private ValidOrInvalid status;
+
+    /**
+     *创建人
+     */
+    @JsonProperty("createUser")
+    @ApiModelProperty(value = "创建人", dataType = "String")
+    private String createUser;
 }

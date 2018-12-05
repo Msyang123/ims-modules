@@ -29,13 +29,13 @@ public class CustomPlanPeriodResult {
      *规格List
      */
     @JsonProperty("specificationList")
-    @ApiModelProperty(value = "specificationList", dataType = "List")
+    @ApiModelProperty(value = "定制规格集合", dataType = "List")
     private List<CustomPlanSpecification> specificationList;
-
     /**
      *商品List
      */
     @JsonProperty("products")
-    @ApiModelProperty(value = "products", dataType = "List")
+    @ApiModelProperty(value = "定制商品集合", dataType = "List")
     private List<CustomPlanProductResult> products;
+
 }
