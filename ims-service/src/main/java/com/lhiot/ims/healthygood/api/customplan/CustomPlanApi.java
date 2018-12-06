@@ -1,6 +1,7 @@
 package com.lhiot.ims.healthygood.api.customplan;
 
 import com.leon.microx.util.Maps;
+import com.leon.microx.web.result.Pages;
 import com.leon.microx.web.result.Tips;
 import com.leon.microx.web.swagger.ApiParamType;
 import com.lhiot.ims.healthygood.feign.customplan.CustomPlanFeign;
@@ -100,7 +101,7 @@ public class CustomPlanApi {
     public ResponseEntity search(@RequestBody CustomPlanParam param) {
         log.debug("根据条件分页查询定制计划信息列表\t param:{}", param);
 
-        ResponseEntity entity = customPlanFeign.search(param);
+        ResponseEntity<Pages<CustomPlanResult>> entity = customPlanFeign.search(param);
         return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok(entity.getBody());
     }
 }

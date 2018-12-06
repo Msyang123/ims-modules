@@ -1,8 +1,8 @@
 package com.lhiot.ims.healthygood.api.activity;
 
 import com.leon.microx.util.Maps;
+import com.leon.microx.web.result.Pages;
 import com.leon.microx.web.result.Tips;
-import com.leon.microx.web.session.Sessions;
 import com.leon.microx.web.swagger.ApiHideBodyProperty;
 import com.leon.microx.web.swagger.ApiParamType;
 import com.lhiot.ims.healthygood.feign.activity.ActivityProductFeign;
@@ -33,7 +33,6 @@ public class ActivityProductApi {
         this.activityProductFeign = activityProductFeign;
     }
 
-    @Sessions.Uncheck
     @ApiOperation("添加新品尝鲜活动商品(后台)")
     @ApiImplicitParam(paramType = ApiParamType.BODY, name = "activityProduct", value = "新品尝鲜活动商品", dataType = "ActivityProduct", required = true)
     @PostMapping("/activity-products")
@@ -52,7 +51,6 @@ public class ActivityProductApi {
                 ResponseEntity.badRequest().body(entity.getBody());
     }
 
-    @Sessions.Uncheck
     @ApiOperation("修改新品尝鲜活动商品(后台)")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = ApiParamType.PATH, name = "id", value = "新品尝鲜活动商品id", dataType = "Long", required = true),
@@ -66,7 +64,6 @@ public class ActivityProductApi {
         return !entity.getStatusCode().isError() ? ResponseEntity.ok().build() : ResponseEntity.badRequest().body(Tips.warn("修改信息失败!"));
     }
 
-    @Sessions.Uncheck
     @ApiOperation("根据ids删除新品尝鲜活动商品(后台)")
     @ApiImplicitParam(paramType = ApiParamType.PATH, name = "ids", value = "多个新品尝鲜活动商品id以英文逗号分隔", dataType = "String", required = true)
     @DeleteMapping("/activity-products/{ids}")
@@ -77,14 +74,13 @@ public class ActivityProductApi {
         return !entity.getStatusCode().isError() ? ResponseEntity.noContent().build() : ResponseEntity.badRequest().body(Tips.warn(entity.getBody().toString()));
     }
 
-    @Sessions.Uncheck
     @ApiOperation(value = "根据条件分页查询新品尝鲜活动商品信息列表(后台)", response = ActivityProductResult.class, responseContainer = "Set")
     @ApiImplicitParam(paramType = ApiParamType.BODY, name = "param", value = "查询条件", dataType = "ActivityProductParam")
     @PostMapping("/activity-products/pages")
     public ResponseEntity search(@RequestBody ActivityProductParam param) {
         log.debug("根据条件分页查询新品尝鲜活动商品信息列表\t param:{}", param);
 
-        ResponseEntity entity = activityProductFeign.search(param);
+        ResponseEntity<Pages<ActivityProductResult>> entity = activityProductFeign.search(param);
         return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok(entity.getBody());
     }
 }

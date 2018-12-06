@@ -45,7 +45,7 @@ public class ProductApi {
         log.debug("添加商品\t param:{}", productResult);
 
         Tips tips = productService.create(productResult);
-        return Objects.nonNull(tips) ? ResponseEntity.created(URI.create("/products/" + tips.getMessage())).body(Maps.of("id", tips.getMessage())) : ResponseEntity.badRequest().body(Tips.warn("添加失败"));
+        return Objects.nonNull(tips) || !tips.err() ? ResponseEntity.created(URI.create("/products/" + tips.getMessage())).body(Maps.of("id", tips.getMessage())) : ResponseEntity.badRequest().body(Tips.warn("添加失败"));
     }
 
     @ApiOperation("修改商品")
