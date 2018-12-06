@@ -57,12 +57,8 @@ public class AdvertisementApi {
     public ResponseEntity findById(@PathVariable("id") Long id) {
         log.debug("根据Id查找广告\t id:{}", id);
 
-        ResponseEntity entity = advertisementFeign.findById(id);
-        if (entity.getStatusCode().isError()) {
-            return ResponseEntity.badRequest().body(Tips.warn(entity.getBody().toString()));
-        }
-        Advertisement advertisement = (Advertisement) entity.getBody();
-        return ResponseEntity.ok(advertisement);
+        ResponseEntity<Advertisement> entity = advertisementFeign.findById(id);
+        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(Tips.warn(entity.getBody().toString())) : ResponseEntity.ok(entity.getBody());
     }
 
     @ApiOperation("根据广告Ids删除广告")

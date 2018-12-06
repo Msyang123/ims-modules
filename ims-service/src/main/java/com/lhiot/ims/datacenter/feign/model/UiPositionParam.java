@@ -22,6 +22,8 @@ public class UiPositionParam {
     private ApplicationType applicationType;
     @ApiModelProperty(notes = "位置编码", dataType = "String")
     private String codes;
+    @ApiModelProperty(notes = "描述", dataType = "String")
+    private String description;
     @ApiModelProperty(notes = "是否查询UI关联的板块信息，YES-查询， NO-不查询，默认为NO")
     private YesOrNo includeSection;
 

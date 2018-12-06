@@ -59,8 +59,7 @@ public class ImsUserApi {
         this.remoteInvoker = remoteInvoker;
     }
 
-    @LogCollection
-    @Sessions.Uncheck
+       @Sessions.Uncheck
     @PostMapping("/backdoor")
     @ApiOperation("管理后门。（绕开所有权限）")
     public ResponseEntity backdoor(HttpServletRequest request) {
@@ -127,7 +126,7 @@ public class ImsUserApi {
         }
     }
 
-    @LogCollection
+
     @DeleteMapping("/sessions")
     @ApiOperation("管理员退出登录")
     public ResponseEntity logout(HttpServletRequest request, Sessions.User user) {
@@ -145,7 +144,7 @@ public class ImsUserApi {
         return ResponseEntity.ok(user.getUser());
     }
 
-    @LogCollection
+
     @PostMapping("/")
     @ApiOperation(value = "添加用户")
     @ApiImplicitParam(paramType = "body", name = "imsUser", value = "要添加的用户", required = true, dataType = "ImsUser")
@@ -156,7 +155,7 @@ public class ImsUserApi {
         return ResponseEntity.ok(imsUserService.create(imsUser));
     }
 
-    @LogCollection
+
     @PutMapping("/{id}")
     @ApiOperation(value = "根据id更新用户")
     @ApiImplicitParams({
@@ -170,7 +169,7 @@ public class ImsUserApi {
         return ResponseEntity.ok(imsUserService.updateById(imsUser));
     }
 
-    @LogCollection
+
     @PutMapping("/update/relation/{id}/{roleIds}")
     @ApiOperation(value = "根据id更新用户角色信息")
     @ApiImplicitParams({
@@ -183,7 +182,6 @@ public class ImsUserApi {
         return ResponseEntity.ok(imsRelationUserRoleService.create(id, roleIds));
     }
 
-    @LogCollection
     @DeleteMapping("/batch/{ids}")
     @ApiOperation(value = "根据ids删除用户")
     @ApiImplicitParam(paramType = "path", name = "ids", value = "要删除用户的ids,逗号分割", required = true, dataType = "String")

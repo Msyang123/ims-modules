@@ -1,20 +1,15 @@
 package com.lhiot.ims.datacenter.feign.entity;
 
 import com.leon.microx.predefine.OnOff;
-import com.leon.microx.web.swagger.ApiHideBodyProperty;
-import com.lhiot.dc.dictionary.HasEntries;
-import com.lhiot.ims.datacenter.feign.model.SelectedSection;
 import com.lhiot.ims.datacenter.feign.type.ApplicationType;
 import com.lhiot.ims.datacenter.feign.type.ShelfType;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import jdk.nashorn.internal.ir.annotations.Ignore;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.Date;
-import java.util.List;
 
 /**
  * @author zhangfeng create in 15:38 2018/11/8
@@ -22,7 +17,7 @@ import java.util.List;
 @Data
 @ApiModel
 public class ProductShelf {
-    @ApiModelProperty(notes = "主键Id", dataType = "Long")
+    @ApiModelProperty(notes = "主键Id", dataType = "Long", readOnly = true)
     private Long id;
     @NotNull(message = "上架名称不能为空")
     @ApiModelProperty(notes = "上架名称", dataType = "String")
@@ -55,6 +50,19 @@ public class ProductShelf {
 
     @ApiModelProperty(notes = "规格对象", dataType = "ProductSpecification", readOnly = true)
     private ProductSpecification productSpecification;
+
+
+    @ApiModelProperty(notes = "商品名称", dataType = "String", readOnly = true)
+    private String productName;
+    @ApiModelProperty(notes = "上架规格", dataType = "String", readOnly = true)
+    private String shelfSpecification;
+    @ApiModelProperty(notes = "规格条码", dataType = "String", readOnly = true)
+    private String barcode;
+    @ApiModelProperty(notes = "板块ids", dataType = "String")
+    private String sectionIds;
+
+    @ApiModelProperty(notes = "规格信息", dataType = "String", readOnly = true)
+    private String specificationInfo;
 
 //    /**
 //     * 已关联的板块信息
