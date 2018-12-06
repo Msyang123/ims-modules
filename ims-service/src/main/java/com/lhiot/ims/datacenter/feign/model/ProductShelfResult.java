@@ -55,4 +55,8 @@ public class ProductShelfResult {
     private String barcode;
     @ApiModelProperty(notes = "板块ids", dataType = "String")
     private String sectionIds;
+
+    @ApiModelProperty(notes = "规格信息", dataType = "String", readOnly = true)
+    private String specificationInfo;
+
 }

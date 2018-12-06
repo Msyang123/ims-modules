@@ -7,7 +7,6 @@ import com.leon.microx.web.swagger.ApiParamType;
 import com.lhiot.ims.datacenter.feign.ProductShelfFegin;
 import com.lhiot.ims.datacenter.feign.entity.ProductShelf;
 import com.lhiot.ims.datacenter.feign.model.ProductShelfParam;
-import com.lhiot.ims.datacenter.feign.model.ProductShelfResult;
 import com.lhiot.ims.datacenter.service.ProductShelfService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -38,27 +37,27 @@ public class ProductShelfApi {
     }
 
     @ApiOperation("添加商品上架")
-    @ApiImplicitParam(paramType = ApiParamType.BODY, name = "productShelfResult", value = "商品上架信息", dataType = "ProductShelfResult", required = true)
+    @ApiImplicitParam(paramType = ApiParamType.BODY, name = "productShelf", value = "商品上架信息", dataType = "ProductShelf", required = true)
     @PostMapping("/")
     @ApiHideBodyProperty("productSpecification")
-    public ResponseEntity create(@RequestBody ProductShelfResult productShelfResult) {
-        log.debug("添加商品上架\t param:{}", productShelfResult);
+    public ResponseEntity create(@RequestBody ProductShelf productShelf) {
+        log.debug("添加商品上架\t param:{}", productShelf);
 
-        Tips tips = productShelfService.create(productShelfResult);
+        Tips tips = productShelfService.create(productShelf);
         return tips.err() ? ResponseEntity.badRequest().body(Tips.warn(tips.getMessage())) : ResponseEntity.created(URI.create("/product-shelves/" + tips.getMessage())).body(Maps.of("id", tips.getMessage()));
     }
 
     @ApiOperation("修改商品上架")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = ApiParamType.PATH, name = "id", value = "商品上架id", dataType = "Long", required = true),
-            @ApiImplicitParam(paramType = ApiParamType.BODY, name = "productShelfResult", value = "商品上架信息", dataType = "ProductShelfResult", required = true)
+            @ApiImplicitParam(paramType = ApiParamType.BODY, name = "productShelf", value = "商品上架信息", dataType = "ProductShelf", required = true)
     })
     @PutMapping("/{id}")
     @ApiHideBodyProperty("sectionIds")
-    public ResponseEntity update(@PathVariable("id") Long id, @RequestBody ProductShelfResult productShelfResult) {
-        log.debug("根据id修改商品上架\t id:{} param:{}", id, productShelfResult);
+    public ResponseEntity update(@PathVariable("id") Long id, @RequestBody ProductShelf productShelf) {
+        log.debug("根据id修改商品上架\t id:{} param:{}", id, productShelf);
 
-        Tips tips = productShelfService.update(id, productShelfResult);
+        Tips tips = productShelfService.update(id, productShelf);
         return tips.err() ? ResponseEntity.badRequest().body(Tips.warn(tips.getMessage())) : ResponseEntity.ok(tips.getMessage());
     }
 
@@ -86,7 +85,7 @@ public class ProductShelfApi {
         return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.noContent().build();
     }
 
-    @ApiOperation(value = "根据条件分页查询商品上架信息列表", response = ProductShelfResult.class, responseContainer = "Set")
+    @ApiOperation(value = "根据条件分页查询商品上架信息列表", response = ProductShelf.class, responseContainer = "Set")
     @ApiImplicitParam(paramType = ApiParamType.BODY, name = "param", value = "查询条件", dataType = "ProductShelfParam")
     @PostMapping("/pages")
     public ResponseEntity search(@RequestBody ProductShelfParam param) {
