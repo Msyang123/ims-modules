@@ -14,7 +14,7 @@ import javax.validation.Valid;
 /**
  * @author hufan created in 2018/12/4 15:45
  **/
-@FeignClient(value = "healthy-good-service-v2-0-hufan")
+@FeignClient(value = "healthy-good-service-v2-0")
 @Component
 public interface ActivityProductFeign {
 
