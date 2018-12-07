@@ -3,15 +3,11 @@ package com.lhiot.ims.datacenter.feign.type;
 import lombok.Getter;
 
 /**
- * 广告类别枚举
- * @author xiaojian  created in  2018/11/21 10:15
- */
+ * @author hufan created in 2018/12/7 16:44
+ **/
 public enum AdvertiseType {
-    PRODUCT_DETAILS("商品详情"),
-    STORE_LIVE_TELECAST("门店直播"),
-    MORE_AMUSEMENT("多娱"),
-    EXTERNAL_LINKS("外部链接");
-
+    IMAGE("图片广告"),
+    TEXT("文字广告");
 
     @Getter
     private String description;

@@ -4,6 +4,7 @@ import com.leon.microx.util.Maps;
 import com.leon.microx.web.result.Pages;
 import com.leon.microx.web.result.Tips;
 import com.leon.microx.web.result.Tuple;
+import com.leon.microx.web.swagger.ApiHideBodyProperty;
 import com.leon.microx.web.swagger.ApiParamType;
 import com.lhiot.ims.datacenter.feign.ProductCategoryFeign;
 import com.lhiot.ims.datacenter.feign.entity.ProductCategory;
@@ -42,8 +43,8 @@ public class ProductCategoryApi {
     }
 
     @ApiOperation("添加商品分类")
-    @ApiImplicitParam(paramType = ApiParamType.BODY, name = "productCategory", value = "商品分类信息", dataType = "ProductCategory", required = true)
     @PostMapping("/")
+    @ApiHideBodyProperty({"id", "createAt"})
     public ResponseEntity create(@RequestBody ProductCategory productCategory) {
         log.debug("添加商品分类\t param:{}", productCategory);
 
@@ -58,11 +59,9 @@ public class ProductCategoryApi {
     }
 
     @ApiOperation("修改商品分类")
-    @ApiImplicitParams({
-            @ApiImplicitParam(paramType = ApiParamType.PATH, name = "id", value = "商品分类Id", dataType = "Long", required = true),
-            @ApiImplicitParam(paramType = ApiParamType.BODY, name = "productCategory", value = "商品分类信息", dataType = "ProductCategory", required = true)
-    })
+    @ApiImplicitParam(paramType = ApiParamType.PATH, name = "id", value = "商品分类Id", dataType = "Long", required = true)
     @PutMapping("/{id}")
+    @ApiHideBodyProperty({"id", "createAt"})
     public ResponseEntity update(@PathVariable("id") Long id, @RequestBody ProductCategory productCategory) {
         log.debug("根据id更新商品分类\t id:{} param:{}", id, productCategory);
 
@@ -94,9 +93,7 @@ public class ProductCategoryApi {
 
 
     @ApiOperation(value = "根据条件分页查询商品分类信息列表", response = ProductCategory.class, responseContainer = "Set")
-    @ApiImplicitParams({
-            @ApiImplicitParam(paramType = ApiParamType.BODY, name = "param", value = "查询条件", dataType = "ProductCategoryParam")
-    })
+    @ApiImplicitParam(paramType = ApiParamType.BODY, name = "param", value = "查询条件", dataType = "ProductCategoryParam")
     @PostMapping("/pages")
     public ResponseEntity search(@RequestBody ProductCategoryParam param) {
         log.debug("查询商品分类信息列表\t param:{}", param);

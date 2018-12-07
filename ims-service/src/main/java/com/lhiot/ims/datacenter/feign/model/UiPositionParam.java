@@ -1,6 +1,7 @@
 package com.lhiot.ims.datacenter.feign.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.lhiot.ims.datacenter.feign.type.ApplicationType;
 import com.lhiot.ims.datacenter.feign.type.PositionType;
 import com.lhiot.ims.datacenter.type.YesOrNo;
@@ -14,7 +15,10 @@ import lombok.Data;
 @ApiModel
 @Data
 public class UiPositionParam {
-    @ApiModelProperty(notes = "主键Id", dataType = "Long", readOnly = true)
+ /*   @ApiModelProperty(notes = "主键Id", dataType = "Long", readOnly = true)
+    private Long id;*/
+    @ApiModelProperty(notes = "位置Id", dataType = "Long", readOnly = true)
+    @JsonProperty("positionId")
     private Long id;
     @ApiModelProperty(notes = "类别:PRODUCT-商品，ADVERTISEMENT-广告，ARTICLE-文章", dataType = "PositionType")
     private PositionType positionType;

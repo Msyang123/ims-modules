@@ -3,6 +3,7 @@ package com.lhiot.ims.datacenter.api;
 import com.leon.microx.util.Maps;
 import com.leon.microx.web.result.Pages;
 import com.leon.microx.web.result.Tips;
+import com.leon.microx.web.swagger.ApiHideBodyProperty;
 import com.leon.microx.web.swagger.ApiParamType;
 import com.lhiot.ims.datacenter.feign.ProductFegin;
 import com.lhiot.ims.datacenter.feign.entity.Product;
@@ -41,6 +42,7 @@ public class ProductApi {
     @ApiOperation("添加商品")
     @ApiImplicitParam(paramType = ApiParamType.BODY, name = "productResult", value = "商品信息", dataType = "ProductResult", required = true)
     @PostMapping("/")
+    @ApiHideBodyProperty({"id", "createAt"})
     public ResponseEntity create(@RequestBody ProductResult productResult) {
         log.debug("添加商品\t param:{}", productResult);
 
@@ -49,15 +51,13 @@ public class ProductApi {
     }
 
     @ApiOperation("修改商品")
-    @ApiImplicitParams({
-            @ApiImplicitParam(paramType = ApiParamType.PATH, name = "id", value = "商品id", dataType = "Long", required = true),
-            @ApiImplicitParam(paramType = ApiParamType.BODY, name = "productResult", value = "商品信息", dataType = "ProductResult", required = true)
-    })
+    @ApiImplicitParam(paramType = ApiParamType.PATH, name = "id", value = "商品id", dataType = "Long", required = true)
     @PutMapping("/{id}")
+    @ApiHideBodyProperty({"id", "createAt"})
     public ResponseEntity update(@PathVariable("id") Long id, @RequestBody ProductResult productResult) {
         log.debug("根据id修改商品\t id:{} param:{}", id, productResult);
 
-        Tips tips = productService.update(id , productResult);
+        Tips tips = productService.update(id, productResult);
         return tips.err() ? ResponseEntity.badRequest().body(Tips.warn(tips.getMessage())) : ResponseEntity.ok(Tips.info(tips.getMessage()));
     }
 

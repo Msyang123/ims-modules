@@ -7,9 +7,9 @@ import com.leon.microx.web.swagger.ApiParamType;
 import com.lhiot.ims.datacenter.feign.UiPositionFeign;
 import com.lhiot.ims.datacenter.feign.entity.UiPosition;
 import com.lhiot.ims.datacenter.feign.model.UiPositionDetail;
+import com.lhiot.ims.datacenter.feign.model.UiPositionParam;
 import com.lhiot.ims.datacenter.feign.model.UiPositionResult;
 import com.lhiot.ims.datacenter.feign.type.ApplicationType;
-import com.lhiot.ims.datacenter.feign.model.UiPositionParam;
 import com.lhiot.ims.datacenter.service.UiPositionService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -69,11 +69,9 @@ public class UiPositionApi {
 
     @ApiOperation(value = "查询UI位置列表集合（可包括位置的子板块）", response = UiPosition.class, responseContainer = "List")
     @ApiImplicitParam(paramType = ApiParamType.BODY, name = "uiPositionParam", value = "UI位置信息", dataType = "UiPositionParam")
-
     @PostMapping("/")
     public ResponseEntity list(@RequestBody UiPositionParam uiPositionParam) {
         log.debug("查询UI位置列表集合\t param{}", uiPositionParam);
-
 
         Tips tips = uiPositionService.search(uiPositionParam);
         if (tips.err()) {

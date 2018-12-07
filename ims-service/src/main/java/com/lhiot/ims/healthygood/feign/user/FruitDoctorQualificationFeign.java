@@ -24,7 +24,7 @@ public interface FruitDoctorQualificationFeign {
      * @return
      */
 
-    @PutMapping("/fruit-doctor-qualifications/{id}")
+    @PutMapping("/fruit-doctors/qualifications/{id}")
     ResponseEntity update(@PathVariable("id") Long id, @RequestBody RegisterApplication registerApplication);
 
     /**
@@ -32,6 +32,6 @@ public interface FruitDoctorQualificationFeign {
      * @param registerApplication
      * @return
      */
-    @PostMapping("/fruit-doctor-qualifications/pages")
+    @PostMapping("/fruit-doctors/qualifications/pages")
     ResponseEntity<Pages<RegisterApplication>> search(@RequestBody RegisterApplication registerApplication);
 }

@@ -31,13 +31,13 @@ public class ActivityProductParam {
     @ApiModelProperty(value = "序号", dataType = "Integer", readOnly = true)
     private Integer sort;
 
-    @ApiModelProperty(notes = "上架名称", dataType = "String", readOnly = true)
+    @ApiModelProperty(notes = "上架名称", dataType = "String")
     private String name;
     @ApiModelProperty(notes = "上架图片", dataType = "String", readOnly = true)
     private String image;
     @ApiModelProperty(notes = "上架规格", dataType = "String", readOnly = true)
     private String specification;
-    @ApiModelProperty(notes = "规格条码", dataType = "String", readOnly = true)
+    @ApiModelProperty(notes = "规格条码", dataType = "String")
     private String barcode;
     @ApiModelProperty(notes = "特价", dataType = "Integer", readOnly = true)
     private Integer price;

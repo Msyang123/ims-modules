@@ -1,8 +1,10 @@
 package com.lhiot.ims.datacenter.feign.entity;
 
 import com.leon.microx.predefine.OnOff;
+import com.lhiot.dc.dictionary.HasEntries;
 import com.lhiot.ims.datacenter.feign.type.ApplicationType;
 import com.lhiot.ims.datacenter.feign.type.ShelfType;
+import com.lhiot.ims.datacenter.util.DictionaryCodes;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -45,7 +47,7 @@ public class ProductShelf {
     @ApiModelProperty(notes = "排序字段", dataType = "Integer")
     private Integer sorting;
     @ApiModelProperty(notes = "应用类型", dataType = "String", readOnly = true)
-//    @HasEntries(from = DictionaryCodes.APPLICATION_TYPE, message = "没有找到此应用类型")
+    @HasEntries(from = DictionaryCodes.APPLICATION_TYPE, message = "没有找到此应用类型")
     private ApplicationType applicationType;
 
     @ApiModelProperty(notes = "规格对象", dataType = "ProductSpecification", readOnly = true)

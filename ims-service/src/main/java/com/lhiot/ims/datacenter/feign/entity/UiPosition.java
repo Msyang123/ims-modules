@@ -2,6 +2,7 @@ package com.lhiot.ims.datacenter.feign.entity;
 
 import com.lhiot.dc.dictionary.HasEntries;
 import com.lhiot.ims.datacenter.feign.type.PositionType;
+import com.lhiot.ims.datacenter.util.DictionaryCodes;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -25,7 +26,7 @@ public class UiPosition {
     @ApiModelProperty(notes = "描述", dataType = "String")
     private String description;
     @ApiModelProperty(notes = "应用类型", dataType = "String")
-//    @HasEntries(from = DictionaryCodes.APPLICATION_TYPE, message = "没有找到此应用类型")
+    @HasEntries(from = DictionaryCodes.APPLICATION_TYPE, message = "没有找到此应用类型")
     private String applicationType;
 
 }

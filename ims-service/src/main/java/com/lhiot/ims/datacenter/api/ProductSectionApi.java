@@ -3,6 +3,7 @@ package com.lhiot.ims.datacenter.api;
 import com.leon.microx.util.Maps;
 import com.leon.microx.web.result.Pages;
 import com.leon.microx.web.result.Tips;
+import com.leon.microx.web.swagger.ApiHideBodyProperty;
 import com.leon.microx.web.swagger.ApiParamType;
 import com.lhiot.ims.datacenter.feign.ProductSectionFegin;
 import com.lhiot.ims.datacenter.feign.ProductSectionRelationFegin;
@@ -18,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -42,9 +44,9 @@ public class ProductSectionApi {
     }
 
     @ApiOperation("添加商品版块(包括添加商品关联关系)")
-    @ApiImplicitParam(paramType = ApiParamType.BODY, name = "productSection", value = "商品版块信息", dataType = "ProductSection", required = true)
     @PostMapping("/")
-    public ResponseEntity create(@RequestBody ProductSection productSection) {
+    @ApiHideBodyProperty({"id", "createAt"})
+    public ResponseEntity create(@Valid @RequestBody ProductSection productSection) {
         log.debug("添加商品版块\t param:{}", productSection);
 
         Tips tips = productSectionService.create(productSection);
@@ -52,12 +54,10 @@ public class ProductSectionApi {
     }
 
     @ApiOperation("修改商品版块")
-    @ApiImplicitParams({
-            @ApiImplicitParam(paramType = ApiParamType.PATH, name = "id", value = "商品版块id", dataType = "Long", required = true),
-            @ApiImplicitParam(paramType = ApiParamType.BODY, name = "productSection", value = "商品版块信息", dataType = "ProductSection", required = true)
-    })
+    @ApiImplicitParam(paramType = ApiParamType.PATH, name = "id", value = "商品版块id", dataType = "Long", required = true)
     @PutMapping("/{id}")
-    public ResponseEntity update(@PathVariable("id") Long id, @RequestBody ProductSection productSection) {
+    @ApiHideBodyProperty({"id", "createAt"})
+    public ResponseEntity update(@PathVariable("id") Long id, @Valid @RequestBody ProductSection productSection) {
         log.debug("根据id修改商品版块\t id:{} param:{}", id, productSection);
 
         ResponseEntity entity = productSectionFegin.update(id, productSection);
