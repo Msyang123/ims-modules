@@ -9,5 +9,4 @@ package com.lhiot.ims.datacenter.util;
 public final class DictionaryCodes {
     public static final String APPLICATION_TYPE = "applications";
     public static final String UNITS = "units";
-    public static final String SEX = "sex";
 }

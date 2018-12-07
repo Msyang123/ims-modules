@@ -3,7 +3,6 @@ package com.lhiot.ims.datacenter.feign.model;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.leon.microx.predefine.OnOff;
-import com.lhiot.ims.datacenter.feign.entity.UiPosition;
 import com.lhiot.ims.datacenter.feign.type.AdvertiseType;
 import com.lhiot.ims.datacenter.feign.type.RelationType;
 import io.swagger.annotations.ApiModel;

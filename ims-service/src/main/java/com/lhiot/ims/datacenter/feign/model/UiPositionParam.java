@@ -15,8 +15,6 @@ import lombok.Data;
 @ApiModel
 @Data
 public class UiPositionParam {
- /*   @ApiModelProperty(notes = "主键Id", dataType = "Long", readOnly = true)
-    private Long id;*/
     @ApiModelProperty(notes = "位置Id", dataType = "Long", readOnly = true)
     @JsonProperty("positionId")
     private Long id;

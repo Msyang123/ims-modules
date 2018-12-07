@@ -12,7 +12,6 @@ import com.lhiot.ims.datacenter.feign.model.ProductResult;
 import com.lhiot.ims.datacenter.service.ProductService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,7 +46,7 @@ public class ProductApi {
         log.debug("添加商品\t param:{}", productResult);
 
         Tips tips = productService.create(productResult);
-        return Objects.nonNull(tips) || !tips.err() ? ResponseEntity.created(URI.create("/products/" + tips.getMessage())).body(Maps.of("id", tips.getMessage())) : ResponseEntity.badRequest().body(Tips.warn("添加失败"));
+        return !tips.err() ? ResponseEntity.created(URI.create("/products/" + tips.getMessage())).body(Maps.of("id", tips.getMessage())) : ResponseEntity.badRequest().body(Tips.warn("添加失败"));
     }
 
     @ApiOperation("修改商品")
