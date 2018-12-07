@@ -17,6 +17,8 @@ public class ProductSectionParam {
     private Long positionId;
     @ApiModelProperty(notes = "父级ID", dataType = "Long")
     private Long parentId;
+    @ApiModelProperty(notes = "描述", dataType = "String")
+    private String description;
     @ApiModelProperty(notes = "板块名称", dataType = "String")
     private String sectionName;
     @ApiModelProperty(notes = "起始创建时间", dataType = "Date")
@@ -29,6 +31,8 @@ public class ProductSectionParam {
     private Long includeShelvesQty;
     @ApiModelProperty(notes = "是否加载商品信息((includeShelves为true起作用，为空则默认为false)", dataType = "Boolean")
     private Boolean includeProduct;
+    @ApiModelProperty(notes = "版块内商品上架ID", dataType = "Long")
+    private Long shelfId;
     @ApiModelProperty(notes = "每页查询条数(为空或0不分页查所有)", dataType = "Integer")
     private Integer rows;
     @ApiModelProperty(notes = "当前页", dataType = "Integer")

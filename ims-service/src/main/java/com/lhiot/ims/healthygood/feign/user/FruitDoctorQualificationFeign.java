@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 /**
  * @author hufan created in 2018/12/6 12:19
  **/
-@FeignClient(value = "healthy-good-service-v2-0-hufan")
+@FeignClient(value = "healthy-good-service-v2-0")
 @Component
 public interface FruitDoctorQualificationFeign {
 
@@ -24,7 +24,7 @@ public interface FruitDoctorQualificationFeign {
      * @return
      */
 
-    @PutMapping("/fruit-doctor-qualifications/{id}")
+    @PutMapping("/fruit-doctors/qualifications/{id}")
     ResponseEntity update(@PathVariable("id") Long id, @RequestBody RegisterApplication registerApplication);
 
     /**
@@ -32,6 +32,6 @@ public interface FruitDoctorQualificationFeign {
      * @param registerApplication
      * @return
      */
-    @PostMapping("/fruit-doctor-qualifications/pages")
+    @PostMapping("/fruit-doctors/qualifications/pages")
     ResponseEntity<Pages<RegisterApplication>> search(@RequestBody RegisterApplication registerApplication);
 }

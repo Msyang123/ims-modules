@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
  * @author hufan created in 2018/12/1 15:12
  **/
 @Component
-@FeignClient(value = "healthy-good-service-v2-0-hufan")
+@FeignClient(value = "healthy-good-service-v2-0")
 public interface CustomPlanSectionRelationFeign {
 
     /**

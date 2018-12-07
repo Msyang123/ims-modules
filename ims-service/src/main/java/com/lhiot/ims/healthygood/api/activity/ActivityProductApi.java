@@ -33,8 +33,7 @@ public class ActivityProductApi {
         this.activityProductFeign = activityProductFeign;
     }
 
-    @ApiOperation("添加新品尝鲜活动商品(后台)")
-    @ApiImplicitParam(paramType = ApiParamType.BODY, name = "activityProduct", value = "新品尝鲜活动商品", dataType = "ActivityProduct", required = true)
+    @ApiOperation("添加新品尝鲜活动商品")
     @PostMapping("/activity-products")
     @ApiHideBodyProperty("id")
     public ResponseEntity create(@Valid @RequestBody ActivityProduct activityProduct) {
@@ -51,7 +50,7 @@ public class ActivityProductApi {
                 ResponseEntity.badRequest().body(entity.getBody());
     }
 
-    @ApiOperation("修改新品尝鲜活动商品(后台)")
+    @ApiOperation("修改新品尝鲜活动商品")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = ApiParamType.PATH, name = "id", value = "新品尝鲜活动商品id", dataType = "Long", required = true),
             @ApiImplicitParam(paramType = ApiParamType.BODY, name = "activityProduct", value = "新品尝鲜活动商品", dataType = "ActivityProduct", required = true)
@@ -64,7 +63,7 @@ public class ActivityProductApi {
         return !entity.getStatusCode().isError() ? ResponseEntity.ok().build() : ResponseEntity.badRequest().body(Tips.warn("修改信息失败!"));
     }
 
-    @ApiOperation("根据ids删除新品尝鲜活动商品(后台)")
+    @ApiOperation("根据ids删除新品尝鲜活动商品")
     @ApiImplicitParam(paramType = ApiParamType.PATH, name = "ids", value = "多个新品尝鲜活动商品id以英文逗号分隔", dataType = "String", required = true)
     @DeleteMapping("/activity-products/{ids}")
     public ResponseEntity batchDelete(@PathVariable("ids") String ids) {
@@ -74,8 +73,7 @@ public class ActivityProductApi {
         return !entity.getStatusCode().isError() ? ResponseEntity.noContent().build() : ResponseEntity.badRequest().body(Tips.warn(entity.getBody().toString()));
     }
 
-    @ApiOperation(value = "根据条件分页查询新品尝鲜活动商品信息列表(后台)", response = ActivityProductResult.class, responseContainer = "Set")
-    @ApiImplicitParam(paramType = ApiParamType.BODY, name = "param", value = "查询条件", dataType = "ActivityProductParam")
+    @ApiOperation(value = "根据条件分页查询新品尝鲜活动商品信息列表", response = ActivityProductResult.class, responseContainer = "Set")
     @PostMapping("/activity-products/pages")
     public ResponseEntity search(@RequestBody ActivityProductParam param) {
         log.debug("根据条件分页查询新品尝鲜活动商品信息列表\t param:{}", param);

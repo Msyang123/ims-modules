@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
  * @author hufan created in 2018/11/21 16:07
  **/
 @Component
-@FeignClient(value = "basic-data-service-v1-0-hufan")
+@FeignClient(value = "basic-data-service-v1-0")
 public interface ProductSpecificationFegin {
     /**
      * 添加商品规格

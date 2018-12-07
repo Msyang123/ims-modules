@@ -1,8 +1,9 @@
 package com.lhiot.ims.datacenter.feign.model;
 
 import com.leon.microx.predefine.Use;
-import com.lhiot.ims.datacenter.feign.entity.Product;
+import com.lhiot.dc.dictionary.HasEntries;
 import com.lhiot.ims.datacenter.feign.type.InventorySpecification;
+import com.lhiot.ims.datacenter.util.DictionaryCodes;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -27,6 +28,7 @@ public class ProductSpecificationResult {
     @ApiModelProperty(notes = "商品条码", dataType = "String")
     private String barcode;
     @ApiModelProperty(notes = "打包单位", dataType = "String")
+    @HasEntries(from = DictionaryCodes.UNITS, message = "没有找到此规格单位")
     private String packagingUnit;
     @ApiModelProperty(notes = "单份规格商品的重量", dataType = "BigDecimal")
     private BigDecimal weight;

@@ -10,13 +10,13 @@ import com.lhiot.ims.datacenter.feign.model.ProductShelfParam;
 import com.lhiot.ims.datacenter.service.ProductShelfService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.net.URI;
 
 /**
@@ -37,10 +37,9 @@ public class ProductShelfApi {
     }
 
     @ApiOperation("添加商品上架")
-    @ApiImplicitParam(paramType = ApiParamType.BODY, name = "productShelf", value = "商品上架信息", dataType = "ProductShelf", required = true)
     @PostMapping("/")
-    @ApiHideBodyProperty("productSpecification")
-    public ResponseEntity create(@RequestBody ProductShelf productShelf) {
+    @ApiHideBodyProperty({"id","productSpecification","applicationType","createAt","productName","shelfSpecification","barcode","specificationInfo"})
+    public ResponseEntity create(@Valid @RequestBody ProductShelf productShelf) {
         log.debug("添加商品上架\t param:{}", productShelf);
 
         Tips tips = productShelfService.create(productShelf);
@@ -48,13 +47,10 @@ public class ProductShelfApi {
     }
 
     @ApiOperation("修改商品上架")
-    @ApiImplicitParams({
-            @ApiImplicitParam(paramType = ApiParamType.PATH, name = "id", value = "商品上架id", dataType = "Long", required = true),
-            @ApiImplicitParam(paramType = ApiParamType.BODY, name = "productShelf", value = "商品上架信息", dataType = "ProductShelf", required = true)
-    })
+    @ApiImplicitParam(paramType = ApiParamType.PATH, name = "id", value = "商品上架id", dataType = "Long", required = true)
     @PutMapping("/{id}")
-    @ApiHideBodyProperty("sectionIds")
-    public ResponseEntity update(@PathVariable("id") Long id, @RequestBody ProductShelf productShelf) {
+    @ApiHideBodyProperty({"id","productSpecification","applicationType","createAt","productName","shelfSpecification","barcode","specificationInfo","sectionIds"})
+    public ResponseEntity update(@PathVariable("id") Long id, @Valid @RequestBody ProductShelf productShelf) {
         log.debug("根据id修改商品上架\t id:{} param:{}", id, productShelf);
 
         Tips tips = productShelfService.update(id, productShelf);
@@ -86,7 +82,6 @@ public class ProductShelfApi {
     }
 
     @ApiOperation(value = "根据条件分页查询商品上架信息列表", response = ProductShelf.class, responseContainer = "Set")
-    @ApiImplicitParam(paramType = ApiParamType.BODY, name = "param", value = "查询条件", dataType = "ProductShelfParam")
     @PostMapping("/pages")
     public ResponseEntity search(@RequestBody ProductShelfParam param) {
         log.debug("查询商品上架信息列表\t param:{}", param);

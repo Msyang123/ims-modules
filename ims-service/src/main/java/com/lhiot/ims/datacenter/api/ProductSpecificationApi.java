@@ -2,6 +2,7 @@ package com.lhiot.ims.datacenter.api;
 
 import com.leon.microx.util.Maps;
 import com.leon.microx.web.result.Tips;
+import com.leon.microx.web.swagger.ApiHideBodyProperty;
 import com.leon.microx.web.swagger.ApiParamType;
 import com.lhiot.ims.datacenter.feign.ProductSpecificationFegin;
 import com.lhiot.ims.datacenter.feign.entity.ProductSpecification;
@@ -9,7 +10,6 @@ import com.lhiot.ims.datacenter.feign.model.ProductSpecificationParam;
 import com.lhiot.ims.datacenter.service.ProductSpecificationService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,8 +36,8 @@ public class ProductSpecificationApi {
     }
 
     @ApiOperation("添加商品规格")
-    @ApiImplicitParam(paramType = ApiParamType.BODY, name = "productSpecification", value = "商品规格信息", dataType = "ProductSpecification", required = true)
     @PostMapping("/")
+    @ApiHideBodyProperty({"id", "createAt", "specificationInfo", "product"})
     public ResponseEntity create(@RequestBody ProductSpecification productSpecification) {
         log.debug("添加商品规格\t param:{}", productSpecification);
 
@@ -52,11 +52,9 @@ public class ProductSpecificationApi {
     }
 
     @ApiOperation("修改商品规格")
-    @ApiImplicitParams({
-            @ApiImplicitParam(paramType = ApiParamType.PATH, name = "id", value = "商品规格id", dataType = "Long", required = true),
-            @ApiImplicitParam(paramType = ApiParamType.BODY, name = "productSpecification", value = "商品规格信息", dataType = "ProductSpecification", required = true)
-    })
+    @ApiImplicitParam(paramType = ApiParamType.PATH, name = "id", value = "商品规格id", dataType = "Long", required = true)
     @PutMapping("/{id}")
+    @ApiHideBodyProperty({"id", "createAt", "specificationInfo", "product"})
     public ResponseEntity update(@PathVariable("id") Long id, @RequestBody ProductSpecification productSpecification) {
         log.debug("根据id修改商品规格\t id:{} param:{}", id, productSpecification);
 
@@ -86,8 +84,8 @@ public class ProductSpecificationApi {
     }
 
     @ApiOperation(value = "根据条件分页查询商品规格信息列表(传值produtId/输入条码或品名)", response = ProductSpecification.class, responseContainer = "Set")
-    @ApiImplicitParam(paramType = ApiParamType.BODY, name = "param", value = "查询条件", dataType = "ProductSpecificationParam")
     @PostMapping("/pages")
+    @ApiHideBodyProperty("inventorySpecification")
     public ResponseEntity search(@RequestBody ProductSpecificationParam param) {
         log.debug("查询商品规格信息列表\t param:{}", param);
 
@@ -96,7 +94,7 @@ public class ProductSpecificationApi {
             return ResponseEntity.badRequest().body(tips.getMessage());
         }
         List<ProductSpecification> productSpecificationList = (List<ProductSpecification>) tips.getData();
-        return  ResponseEntity.ok(productSpecificationList);
+        return ResponseEntity.ok(productSpecificationList);
     }
 
     @ApiOperation(value = "查询所有基础规格单位列表", response = String.class, responseContainer = "List")
