@@ -70,7 +70,6 @@ public class ProductSpecificationApi {
 
         ResponseEntity<ProductSpecification> entity = productSpecificationFegin.findById(id);
         return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(Tips.warn(entity.getBody().toString())) : ResponseEntity.ok(entity.getBody());
-
     }
 
     @ApiOperation("根据商品规格Ids删除商品规格")
