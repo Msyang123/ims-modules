@@ -10,6 +10,7 @@ import com.lhiot.ims.datacenter.feign.ProductSectionRelationFegin;
 import com.lhiot.ims.datacenter.feign.entity.ProductSection;
 import com.lhiot.ims.datacenter.feign.model.ProductSectionParam;
 import com.lhiot.ims.datacenter.service.ProductSectionService;
+import com.lhiot.ims.rbac.aspect.LogCollection;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -43,6 +44,7 @@ public class ProductSectionApi {
         this.productSectionService = productSectionService;
     }
 
+    @LogCollection
     @ApiOperation("添加商品版块(包括添加商品关联关系)")
     @PostMapping("/")
     @ApiHideBodyProperty({"id", "createAt"})
@@ -53,6 +55,7 @@ public class ProductSectionApi {
         return !tips.err() ? ResponseEntity.created(URI.create("/product-sections/" + tips.getMessage())).body(Maps.of("id", tips.getMessage())) : ResponseEntity.badRequest().body(Tips.warn("添加失败"));
     }
 
+    @LogCollection
     @ApiOperation("修改商品版块")
     @ApiImplicitParam(paramType = ApiParamType.PATH, name = "id", value = "商品版块id", dataType = "Long", required = true)
     @PutMapping("/{id}")
@@ -74,6 +77,7 @@ public class ProductSectionApi {
         return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(Tips.warn(entity.getBody().toString())) : ResponseEntity.ok(entity.getBody());
     }
 
+    @LogCollection
     @ApiOperation("根据商品Ids删除商品版块")
     @ApiImplicitParam(paramType = ApiParamType.PATH, name = "ids", value = "多个商品Id以英文逗号分隔", dataType = "String", required = true)
     @DeleteMapping("/{ids}")
@@ -94,6 +98,7 @@ public class ProductSectionApi {
         return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(Tips.warn(entity.getBody().toString())) : ResponseEntity.ok(entity.getBody());
     }
 
+    @LogCollection
     @ApiOperation("根据关联id删除商品和板块关联")
     @ApiImplicitParam(paramType = ApiParamType.PATH, name = "relationId", value = "商品板块关联id", dataType = "Long", required = true)
     @DeleteMapping("relation/{relationId}")

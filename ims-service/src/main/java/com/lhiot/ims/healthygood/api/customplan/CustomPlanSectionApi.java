@@ -11,6 +11,7 @@ import com.lhiot.ims.healthygood.feign.customplan.CustomPlanSectionFeign;
 import com.lhiot.ims.healthygood.feign.customplan.entity.CustomPlanSection;
 import com.lhiot.ims.healthygood.feign.customplan.model.CustomPlanSectionParam;
 import com.lhiot.ims.healthygood.feign.customplan.model.CustomPlanSectionResultAdmin;
+import com.lhiot.ims.rbac.aspect.LogCollection;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -37,7 +38,7 @@ public class CustomPlanSectionApi {
         this.customPlanSectionFeign = customPlanSectionFeign;
     }
 
-
+    @LogCollection
     @ApiOperation("添加定制板块")
     @ApiImplicitParam(paramType = ApiParamType.BODY, name = "customPlanSectionResultAdmin", value = "定制计划板块", dataType = "CustomPlanSectionResultAdmin", required = true)
     @PostMapping("/custom-plan-sections")
@@ -56,6 +57,7 @@ public class CustomPlanSectionApi {
     }
 
 
+    @LogCollection
     @ApiOperation("修改定制板块")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = ApiParamType.PATH, name = "id", value = "定制板块id", dataType = "Long", required = true),
@@ -83,6 +85,7 @@ public class CustomPlanSectionApi {
         return !entity.getStatusCode().isError() ? ResponseEntity.ok().body(entity.getBody()) : ResponseEntity.badRequest().body(entity.getBody());
     }
 
+    @LogCollection
     @ApiOperation("根据ids删除定制板块")
     @ApiImplicitParam(paramType = ApiParamType.PATH, name = "ids", value = "多个定制板块id以英文逗号分隔", dataType = "String", required = true)
     @DeleteMapping("/custom-plan-sections/{ids}")

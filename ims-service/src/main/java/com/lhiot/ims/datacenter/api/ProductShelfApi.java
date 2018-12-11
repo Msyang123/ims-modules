@@ -8,6 +8,7 @@ import com.lhiot.ims.datacenter.feign.ProductShelfFegin;
 import com.lhiot.ims.datacenter.feign.entity.ProductShelf;
 import com.lhiot.ims.datacenter.feign.model.ProductShelfParam;
 import com.lhiot.ims.datacenter.service.ProductShelfService;
+import com.lhiot.ims.rbac.aspect.LogCollection;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
@@ -36,6 +37,7 @@ public class ProductShelfApi {
         this.productShelfService = productShelfService;
     }
 
+    @LogCollection
     @ApiOperation("添加商品上架")
     @PostMapping("/")
     @ApiHideBodyProperty({"id","productSpecification","applicationType","createAt","productName","shelfSpecification","barcode","specificationInfo"})
@@ -46,6 +48,7 @@ public class ProductShelfApi {
         return tips.err() ? ResponseEntity.badRequest().body(Tips.warn(tips.getMessage())) : ResponseEntity.created(URI.create("/product-shelves/" + tips.getMessage())).body(Maps.of("id", tips.getMessage()));
     }
 
+    @LogCollection
     @ApiOperation("修改商品上架")
     @ApiImplicitParam(paramType = ApiParamType.PATH, name = "id", value = "商品上架id", dataType = "Long", required = true)
     @PutMapping("/{id}")
@@ -71,6 +74,7 @@ public class ProductShelfApi {
         return ResponseEntity.ok(productShelf);
     }
 
+    @LogCollection
     @ApiOperation("根据商品上架Ids删除商品上架")
     @ApiImplicitParam(paramType = ApiParamType.PATH, name = "ids", value = "多个商品上架Id以英文逗号分隔", dataType = "String", required = true)
     @DeleteMapping("/{ids}")

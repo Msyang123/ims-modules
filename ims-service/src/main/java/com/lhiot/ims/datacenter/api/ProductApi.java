@@ -10,6 +10,7 @@ import com.lhiot.ims.datacenter.feign.entity.Product;
 import com.lhiot.ims.datacenter.feign.model.ProductParam;
 import com.lhiot.ims.datacenter.feign.model.ProductResult;
 import com.lhiot.ims.datacenter.service.ProductService;
+import com.lhiot.ims.rbac.aspect.LogCollection;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
@@ -38,6 +39,7 @@ public class ProductApi {
         this.productService = productService;
     }
 
+    @LogCollection
     @ApiOperation("添加商品")
     @ApiImplicitParam(paramType = ApiParamType.BODY, name = "productResult", value = "商品信息", dataType = "ProductResult", required = true)
     @PostMapping("/")
@@ -49,6 +51,7 @@ public class ProductApi {
         return !tips.err() ? ResponseEntity.created(URI.create("/products/" + tips.getMessage())).body(Maps.of("id", tips.getMessage())) : ResponseEntity.badRequest().body(Tips.warn("添加失败"));
     }
 
+    @LogCollection
     @ApiOperation("修改商品")
     @ApiImplicitParam(paramType = ApiParamType.PATH, name = "id", value = "商品id", dataType = "Long", required = true)
     @PutMapping("/{id}")
@@ -70,6 +73,7 @@ public class ProductApi {
         return tips.err() ? ResponseEntity.badRequest().body(Tips.warn(tips.getMessage())) : ResponseEntity.ok(tips.getData());
     }
 
+    @LogCollection
     @ApiOperation("根据商品Ids删除商品")
     @ApiImplicitParam(paramType = ApiParamType.PATH, name = "ids", value = "多个商品Id以英文逗号分隔", dataType = "String", required = true)
     @DeleteMapping("/{ids}")

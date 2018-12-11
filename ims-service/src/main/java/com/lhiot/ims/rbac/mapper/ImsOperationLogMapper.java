@@ -2,6 +2,7 @@ package com.lhiot.ims.rbac.mapper;
 
 import com.lhiot.ims.rbac.domain.ImsOperationLog;
 import org.apache.ibatis.annotations.Mapper;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Map;
@@ -12,6 +13,7 @@ import java.util.Map;
 * @date 2018/09/29
 */
 @Mapper
+@Repository
 public interface ImsOperationLogMapper {
 
     /**
@@ -22,7 +24,7 @@ public interface ImsOperationLogMapper {
     * @author hufan
     * @date 2018/11/16 11:42:57
     */
-    int create(Map<String, Object> params);
+    int create(ImsOperationLog params);
 
     /**
     * Description:根据id修改操作表日志

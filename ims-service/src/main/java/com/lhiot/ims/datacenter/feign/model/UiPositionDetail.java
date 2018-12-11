@@ -2,6 +2,7 @@ package com.lhiot.ims.datacenter.feign.model;
 
 import com.lhiot.dc.dictionary.HasEntries;
 import com.lhiot.ims.datacenter.feign.entity.Advertisement;
+import com.lhiot.ims.datacenter.feign.entity.Article;
 import com.lhiot.ims.datacenter.feign.entity.ProductSection;
 import com.lhiot.ims.datacenter.feign.type.PositionType;
 import com.lhiot.ims.datacenter.util.DictionaryCodes;
@@ -47,6 +48,10 @@ public class UiPositionDetail {
     @ApiModelProperty(notes = "商品板块列表（包括上架商品）", dataType = "List")
     List<ProductSection> productSectionList;
 
-    // TODO 文章信息列表
+
+    /**
+     * 文章信息列表
+     */
+    List<Article> articleList;
 
 }

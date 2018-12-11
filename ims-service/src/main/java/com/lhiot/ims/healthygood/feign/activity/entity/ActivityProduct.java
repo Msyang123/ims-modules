@@ -1,6 +1,5 @@
 package com.lhiot.ims.healthygood.feign.activity.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.lhiot.ims.healthygood.feign.activity.type.ActivityType;
 import io.swagger.annotations.ApiModel;

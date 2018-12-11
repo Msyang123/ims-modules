@@ -8,6 +8,7 @@ import com.leon.microx.web.swagger.ApiParamType;
 import com.lhiot.ims.datacenter.feign.ArticleFeign;
 import com.lhiot.ims.datacenter.feign.entity.Article;
 import com.lhiot.ims.datacenter.feign.model.ArticleParam;
+import com.lhiot.ims.rbac.aspect.LogCollection;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -29,6 +30,7 @@ public class ArticleApi {
         this.articleFeign = articleFeign;
     }
 
+    @LogCollection
     @ApiOperation("添加文章")
     @PostMapping("/articles")
     public ResponseEntity create(@RequestBody Article article) {
@@ -44,6 +46,7 @@ public class ArticleApi {
     }
 
 
+    @LogCollection
     @ApiOperation("修改文章")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = ApiParamType.PATH, name = "id", value = "文章Id", dataType = "Long", required = true)
@@ -73,6 +76,7 @@ public class ArticleApi {
     }
 
 
+    @LogCollection
     @ApiOperation("根据Id删除文章")
     @ApiImplicitParam(paramType = ApiParamType.PATH, name = "ids", value = "多个文章Id以英文逗号分隔", dataType = "String", required = true)
     @DeleteMapping("/articles/{ids}")

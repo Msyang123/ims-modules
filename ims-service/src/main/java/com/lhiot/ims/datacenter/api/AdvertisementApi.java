@@ -7,6 +7,7 @@ import com.leon.microx.web.swagger.ApiParamType;
 import com.lhiot.ims.datacenter.feign.AdvertisementFeign;
 import com.lhiot.ims.datacenter.feign.entity.Advertisement;
 import com.lhiot.ims.datacenter.feign.model.AdvertisementParam;
+import com.lhiot.ims.rbac.aspect.LogCollection;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -32,6 +33,7 @@ public class AdvertisementApi {
         this.advertisementFeign = advertisementFeign;
     }
 
+    @LogCollection
     @ApiOperation("添加广告")
     @PostMapping("/")
     @ApiHideBodyProperty({"id","uiPosition","createAt","validityPeriod"})
@@ -42,6 +44,7 @@ public class AdvertisementApi {
         return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(Tips.warn(entity.getBody().toString())) : ResponseEntity.ok(entity.getBody());
     }
 
+    @LogCollection
     @ApiOperation("修改广告")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = ApiParamType.PATH, name = "id", value = "广告id", dataType = "Long", required = true)
@@ -65,6 +68,7 @@ public class AdvertisementApi {
         return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(Tips.warn(entity.getBody().toString())) : ResponseEntity.ok(entity.getBody());
     }
 
+    @LogCollection
     @ApiOperation("根据广告Ids删除广告")
     @ApiImplicitParam(paramType = ApiParamType.PATH, name = "ids", value = "多个广告Id以英文逗号分隔", dataType = "String", required = true)
     @DeleteMapping("/{ids}")

@@ -1,17 +1,16 @@
 package com.lhiot.ims.rbac.aspect;
 
-import com.leon.microx.util.Maps;
 import com.leon.microx.web.session.Sessions;
-import com.lhiot.ims.rbac.service.ImsOperationLogService;
+import com.lhiot.ims.rbac.domain.ImsOperationLog;
 import io.swagger.annotations.ApiOperation;
-import org.aspectj.lang.ProceedingJoinPoint;
-import org.aspectj.lang.annotation.Around;
+import lombok.extern.slf4j.Slf4j;
+import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Before;
-import org.aspectj.lang.annotation.Pointcut;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -26,21 +25,13 @@ import java.util.Objects;
  **/
 @Aspect
 @Component
+@Slf4j
 public class LogCollectionAspect {
-    private static final Logger logger = LoggerFactory.getLogger(LogCollectionAspect.class);
-    private final ImsOperationLogService imsOperationLogService;
+    private ApplicationEventPublisher publisher;
 
     @Autowired
-    public LogCollectionAspect(ImsOperationLogService imsOperationLogService) {
-        this.imsOperationLogService = imsOperationLogService;
-    }
-
-    /**
-     * 切点
-     * 定义拦截规则：拦截包下面的所有类中，有@PostMapping注解的方法
-     */
-    @Pointcut("@annotation(com.lhiot.ims.rbac.aspect.LogCollection)")
-    public void MethodPointcut() {
+    public LogCollectionAspect(ApplicationEventPublisher publisher) {
+        this.publisher = publisher;
     }
 
     /**
@@ -48,25 +39,38 @@ public class LogCollectionAspect {
      *
      * @param joinPoint
      */
-    @Around("MethodPointcut()")
-    public void doBefore(ProceedingJoinPoint joinPoint) throws Exception {
-        logger.info("LogCollectionAspect");
-        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-        HttpServletRequest request = attributes.getRequest();
+    @AfterReturning(returning = "result", pointcut = "@annotation(logCollection)")
+    public void afterReturn(JoinPoint joinPoint, ResponseEntity result, LogCollection logCollection) throws Exception {
+        log.info("LogCollectionAspect");
 
-        // 有格式的打印日志，收集日志信息到ES
-        logger.info(System.currentTimeMillis() + "|" + request.getRequestURL().toString() + "|" + request.getMethod() + "|" +
-                joinPoint.getSignature().getDeclaringTypeName() + "|" + Arrays.toString(joinPoint.getArgs()));
+        if (result.getStatusCode().equals(HttpStatus.OK) && result.hasBody()) {
+            ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+            HttpServletRequest request = attributes.getRequest();
 
-        String content = "请求URL：" + request.getRequestURL() + " ==> 请求类型：" + request.getMethod() + " ==> 请求参数：" + joinPoint.getArgs()[0].toString();
-        Sessions.User sessionUser = Arrays.stream(joinPoint.getArgs()).filter(para -> para instanceof Sessions.User).findFirst().map(para -> (Sessions.User) para).orElse(null);
+            // 有格式的打印日志，收集日志信息到ES
+            log.info(System.currentTimeMillis() + "|" + request.getRequestURL().toString() + "|" + request.getMethod() + "|" +
+                    joinPoint.getSignature().getDeclaringTypeName() + "|" + Arrays.toString(joinPoint.getArgs()));
 
-        long userId = 0L;
-        if (Objects.nonNull(sessionUser)) {
-            userId = (long)sessionUser.getUser().get("id");
+
+            String content = "请求URL：" + request.getRequestURL() + " ==> 请求类型：" + request.getMethod() + " ==> 请求参数：" + joinPoint.getArgs()[0].toString() + " ==> 返回结果：" + result.getBody();
+            content = content.substring(0, 2047);
+            String ip = request.getRemoteAddr();
+            String description = descriptionExpression(joinPoint);
+            Sessions.User sessionUser = Arrays.stream(joinPoint.getArgs()).filter(para -> para instanceof Sessions.User).findFirst().map(para -> (Sessions.User) para).orElse(null);
+
+            long userId = 0L;
+            if (Objects.nonNull(sessionUser)) {
+                userId = (long) sessionUser.getUser().get("id");
+            }
+            // 写操作日志
+            // imsOperationLogService.create(Maps.of("content", content, "userId", userId, "ip", ip, "description", description));
+            ImsOperationLog imsOperationLog = new ImsOperationLog();
+            imsOperationLog.setContent(content);
+            imsOperationLog.setUserId(userId);
+            imsOperationLog.setIp(ip);
+            imsOperationLog.setDescription(description);
+            publisher.publishEvent(imsOperationLog);
         }
-        // 写操作日志
-        imsOperationLogService.create(Maps.of("content", content, "userId", userId, "ip", request.getRemoteAddr(), "description", descriptionExpression(joinPoint)));
 
     }
 
@@ -77,7 +81,7 @@ public class LogCollectionAspect {
      * @return
      * @throws Exception
      */
-    public static String descriptionExpression(ProceedingJoinPoint joinPoint) throws Exception {
+    public static String descriptionExpression(JoinPoint joinPoint) throws Exception {
 
         String targetName = joinPoint.getTarget().getClass().getName();
         String methodName = joinPoint.getSignature().getName();
@@ -100,4 +104,5 @@ public class LogCollectionAspect {
         }
         return methode;
     }
+
 }

@@ -3,6 +3,7 @@ package com.lhiot.ims.datacenter.feign.type;
 import lombok.Getter;
 
 /**
+ * 广告类型
  * @author hufan created in 2018/12/7 16:44
  **/
 public enum AdvertiseType {

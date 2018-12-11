@@ -8,6 +8,7 @@ import com.lhiot.ims.datacenter.feign.ProductSpecificationFegin;
 import com.lhiot.ims.datacenter.feign.entity.ProductSpecification;
 import com.lhiot.ims.datacenter.feign.model.ProductSpecificationParam;
 import com.lhiot.ims.datacenter.service.ProductSpecificationService;
+import com.lhiot.ims.rbac.aspect.LogCollection;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
@@ -35,6 +36,7 @@ public class ProductSpecificationApi {
         this.productSpecificationService = productSpecificationService;
     }
 
+    @LogCollection
     @ApiOperation("添加商品规格")
     @PostMapping("/")
     @ApiHideBodyProperty({"id", "createAt", "specificationInfo", "product"})
@@ -51,6 +53,7 @@ public class ProductSpecificationApi {
         return ResponseEntity.created(entity.getHeaders().getLocation()).body(Maps.of("id", id));
     }
 
+    @LogCollection
     @ApiOperation("修改商品规格")
     @ApiImplicitParam(paramType = ApiParamType.PATH, name = "id", value = "商品规格id", dataType = "Long", required = true)
     @PutMapping("/{id}")
@@ -72,6 +75,7 @@ public class ProductSpecificationApi {
         return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(Tips.warn(entity.getBody().toString())) : ResponseEntity.ok(entity.getBody());
     }
 
+    @LogCollection
     @ApiOperation("根据商品规格Ids删除商品规格")
     @ApiImplicitParam(paramType = ApiParamType.PATH, name = "ids", value = "多个商品规格Id以英文逗号分隔", dataType = "String", required = true)
     @DeleteMapping("/{ids}")

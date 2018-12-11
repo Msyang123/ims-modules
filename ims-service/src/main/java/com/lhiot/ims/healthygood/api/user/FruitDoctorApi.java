@@ -2,6 +2,7 @@ package com.lhiot.ims.healthygood.api.user;
 
 import com.leon.microx.web.result.Pages;
 import com.leon.microx.web.result.Tips;
+import com.leon.microx.web.session.Sessions;
 import com.leon.microx.web.swagger.ApiParamType;
 import com.lhiot.ims.healthygood.feign.user.FruitDoctorFeign;
 import com.lhiot.ims.healthygood.feign.user.FruitDoctorQualificationFeign;
@@ -79,10 +80,11 @@ public class FruitDoctorApi {
             @ApiImplicitParam(paramType = "body", name = "registerApplication", value = "要更新的鲜果师申请记录", required = true, dataType = "RegisterApplication")
     })
     @PutMapping("/fruit-doctors/qualifications/{id}")
-    public ResponseEntity update(@PathVariable("id") Long id, @RequestBody RegisterApplication registerApplication){
+    public ResponseEntity update(@PathVariable("id") Long id, @RequestBody RegisterApplication registerApplication,Sessions.User user){
         log.debug("根据id更新鲜果师申请记录\t id:{} param:{}", id,registerApplication);
 
         registerApplication.setAuditAt(Date.from(Instant.now()));
+        registerApplication.setAuditUser(user.getUser().get("name").toString());
         ResponseEntity entity = fruitDoctorQualificationFeign.update(id, registerApplication);
         return  !entity.getStatusCode().isError() ? ResponseEntity.ok().build() : ResponseEntity.badRequest().body("修改鲜果师申请记录失败");
     }

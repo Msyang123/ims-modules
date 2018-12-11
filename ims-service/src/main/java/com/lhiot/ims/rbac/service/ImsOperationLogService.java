@@ -35,7 +35,7 @@ public class ImsOperationLogService {
     * @author yijun
     * @date 2018/09/29 11:42:57
     */  
-    public int create(Map<String, Object> params){
+    public int create(ImsOperationLog params){
         return this.imsOperationLogMapper.create(params);
     }
 

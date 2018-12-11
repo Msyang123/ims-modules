@@ -3,6 +3,7 @@ package com.lhiot.ims.datacenter.feign.type;
 import lombok.Getter;
 
 /**
+ * 商品附件
  * @author zhangfeng created in 2018/9/20 12:22
  **/
 public enum  AttachmentType {

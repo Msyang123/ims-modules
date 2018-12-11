@@ -71,7 +71,7 @@ public class ProductShelfService {
         }
         ProductShelf productShelf = (ProductShelf) entity.getBody();
         ProductSpecification productSpecification = productShelf.getProductSpecification();
-        if (Objects.nonNull(productSpecification)) {
+        if (Objects.nonNull(productSpecification) && Objects.nonNull(productSpecification.getProduct())) {
             String specificationInfo = productSpecification.getProduct().getName() + " " + productSpecification.getWeight() + productSpecification.getPackagingUnit() + "[" + productSpecification.getBarcode() + "]";
             productShelf.getProductSpecification().setSpecificationInfo(specificationInfo);
             List<ProductAttachment> attachmentList = productSpecification.getProduct().getAttachments();

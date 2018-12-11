@@ -6,6 +6,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.Objects;
 
 /**
  * @author xiaojian  created in  2018/11/17 9:59
@@ -25,15 +26,4 @@ public class ProductCategoryParam {
     private Integer rows;
     @ApiModelProperty(notes = "当前页", dataType = "Integer")
     private Integer page;
-
-    @ApiModelProperty(hidden = true)
-    private Integer startRow;
-
-    @JsonIgnore
-    public Integer getStartRow() {
-        if (this.rows != null && this.rows > 0) {
-            return (this.page != null && this.page > 0 ? this.page - 1 : 0) * this.rows;
-        }
-        return null;
-    }
 }
