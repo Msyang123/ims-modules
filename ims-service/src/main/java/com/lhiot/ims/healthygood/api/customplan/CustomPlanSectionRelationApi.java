@@ -2,11 +2,13 @@ package com.lhiot.ims.healthygood.api.customplan;
 
 import com.leon.microx.web.swagger.ApiParamType;
 import com.lhiot.ims.healthygood.feign.customplan.CustomPlanSectionRelationFeign;
+import com.lhiot.ims.rbac.aspect.LogCollection;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -21,10 +23,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class CustomPlanSectionRelationApi {
     private final CustomPlanSectionRelationFeign customPlanSectionRelationFeign;
 
+    @Autowired
     public CustomPlanSectionRelationApi(CustomPlanSectionRelationFeign customPlanSectionRelationFeign) {
         this.customPlanSectionRelationFeign = customPlanSectionRelationFeign;
     }
 
+    @LogCollection
     @ApiOperation("批量修改定制版块与定制计划关系")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = ApiParamType.QUERY, name = "sectionId", value = "定制版块Id", dataType = "Long", required = true),

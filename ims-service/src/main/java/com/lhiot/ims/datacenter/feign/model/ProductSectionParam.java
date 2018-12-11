@@ -13,10 +13,10 @@ import java.util.Date;
 @ApiModel
 @Data
 public class ProductSectionParam {
-    @ApiModelProperty(notes = "位置ID", dataType = "Long")
-    private Long positionId;
-    @ApiModelProperty(notes = "父级ID", dataType = "Long")
-    private Long parentId;
+    @ApiModelProperty(notes = "板块主键Id集合",dataType = "String")
+    private String ids;
+    @ApiModelProperty(notes = "位置ID(多个以英文逗号分隔)", dataType = "String")
+    private String positionIds;
     @ApiModelProperty(notes = "描述", dataType = "String")
     private String description;
     @ApiModelProperty(notes = "板块名称", dataType = "String")

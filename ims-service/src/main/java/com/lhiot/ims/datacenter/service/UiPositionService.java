@@ -3,9 +3,11 @@ package com.lhiot.ims.datacenter.service;
 import com.leon.microx.web.result.Pages;
 import com.leon.microx.web.result.Tips;
 import com.lhiot.ims.datacenter.feign.AdvertisementFeign;
+import com.lhiot.ims.datacenter.feign.ArticleFeign;
 import com.lhiot.ims.datacenter.feign.ProductSectionFegin;
 import com.lhiot.ims.datacenter.feign.UiPositionFeign;
 import com.lhiot.ims.datacenter.feign.entity.Advertisement;
+import com.lhiot.ims.datacenter.feign.entity.Article;
 import com.lhiot.ims.datacenter.feign.entity.ProductSection;
 import com.lhiot.ims.datacenter.feign.entity.UiPosition;
 import com.lhiot.ims.datacenter.feign.model.*;
@@ -30,11 +32,13 @@ public class UiPositionService {
     private final UiPositionFeign uiPositionFeign;
     private final ProductSectionFegin productSectionFegin;
     private final AdvertisementFeign advertisementFeign;
+    private final ArticleFeign articleFeign;
 
-    public UiPositionService(UiPositionFeign uiPositionFeign, ProductSectionFegin productSectionFegin, AdvertisementFeign advertisementFeign) {
+    public UiPositionService(UiPositionFeign uiPositionFeign, ProductSectionFegin productSectionFegin, AdvertisementFeign advertisementFeign, ArticleFeign articleFeign) {
         this.uiPositionFeign = uiPositionFeign;
         this.productSectionFegin = productSectionFegin;
         this.advertisementFeign = advertisementFeign;
+        this.articleFeign = articleFeign;
     }
 
     public Tips findById(Long id) {
@@ -49,10 +53,23 @@ public class UiPositionService {
         Long uiPositionId = uiPosition.getId();
         switch (positionType) {
             case ARTICLE:
+
+                ArticleParam articleParam = new ArticleParam();
+                // FIXME 后期与基础服务保持同步修改
+                // articleParam.setPositionId(uiPosition);
+                ResponseEntity<Pages<Article>> articleEntity = articleFeign.search(articleParam);
+                if (articleEntity.getStatusCode().isError()) {
+                    return Tips.warn(articleEntity.getBody().toString());
+                }
+                Pages<Article> articlePages = articleEntity.getBody();
+                List<Article> articleList = articlePages.getArray();
+                if (!articleList.isEmpty() && articleList.size() > 0) {
+                    uiPositionDetail.setArticleList(articleList);
+                }
                 break;
             case PRODUCT:
                 ProductSectionParam productSectionParam = new ProductSectionParam();
-                productSectionParam.setPositionId(uiPositionId);
+                productSectionParam.setPositionIds(uiPositionId.toString());
                 productSectionParam.setIncludeShelves(true);
                 ResponseEntity productSectionEntity = productSectionFegin.pages(productSectionParam);
                 if (productSectionEntity.getStatusCode().isError()) {
@@ -108,7 +125,7 @@ public class UiPositionService {
         if (Objects.equals(YesOrNo.YES, uiPositionParam.getIncludeSection())) {
             ProductSectionParam productSectionParam = new ProductSectionParam();
             result.forEach(item -> {
-                productSectionParam.setPositionId(item.getId());
+                productSectionParam.setPositionIds(item.getId().toString());
                 ResponseEntity sectionEntity = productSectionFegin.pages(productSectionParam);
                 if (sectionEntity.getStatusCode().isError()) {
 //                    return Tips.warn(sectionEntity.getBody().toString());

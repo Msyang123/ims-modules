@@ -1,6 +1,7 @@
 package com.lhiot.ims.datacenter.service;
 
 import com.leon.microx.predefine.Use;
+import com.leon.microx.util.StringUtils;
 import com.leon.microx.web.result.Pages;
 import com.leon.microx.web.result.Tips;
 import com.lhiot.ims.datacenter.feign.ProductFegin;
@@ -122,18 +123,34 @@ public class ProductService {
         if (Objects.nonNull(product)) {
             // 设置附件信息
             BeanUtils.copyProperties(product, productResult);
-            if (!product.getAttachments().isEmpty()) {
-                List<String> mainImg = product.getAttachments().stream().filter(item -> item.getAttachmentType().equals(AttachmentType.MAIN_IMG)).map(ProductAttachment::getUrl).collect(Collectors.toList());
-                if (!mainImg.isEmpty()) {
-                    productResult.setMainImg(mainImg.get(0));
+            List<String> subImgs = new ArrayList<>();
+            List<String> detailImgs = new ArrayList<>();
+            List<String> mainImags = new ArrayList<>();
+            List<String> icons = new ArrayList<>();
+            product.getAttachments().stream().filter(Objects::nonNull).forEach(productAttachment -> {
+                switch (productAttachment.getAttachmentType()) {
+                    case SUB_IMG:
+                        subImgs.add(productAttachment.getUrl());
+                        break;
+                    case DETAIL_IMG:
+                        detailImgs.add(productAttachment.getUrl());
+                        break;
+                    case MAIN_IMG:
+                        mainImags.add(productAttachment.getUrl());
+                        break;
+                    case ICON:
+                        icons.add(productAttachment.getUrl());
+                        break;
+                    default:
+                        break;
                 }
-                productResult.setSubImg(product.getAttachments().stream().filter(item -> item.getAttachmentType().equals(AttachmentType.SUB_IMG)).map(ProductAttachment::getUrl).collect(Collectors.toList()));
-                productResult.setDetailImg(product.getAttachments().stream().filter(item -> item.getAttachmentType().equals(AttachmentType.DETAIL_IMG)).map(ProductAttachment::getUrl).collect(Collectors.toList()));
-                List<String> subImg = product.getAttachments().stream().filter(item -> item.getAttachmentType().equals(AttachmentType.ICON)).map(ProductAttachment::getUrl).collect(Collectors.toList());
-                if (!subImg.isEmpty()) {
-                    productResult.setIcon(subImg.get(0));
-                }
-            }
+            });
+
+            productResult.setSubImg(subImgs);
+            productResult.setDetailImg(detailImgs);
+            productResult.setMainImg(StringUtils.collectionToDelimitedString(mainImags, ","));
+            productResult.setIcon(StringUtils.collectionToDelimitedString(icons, ","));
+
             // 查询基础规格信息
             ProductSpecificationParam productSpecificationParam = new ProductSpecificationParam();
             productSpecificationParam.setInventorySpecification(InventorySpecification.YES);
@@ -187,7 +204,6 @@ public class ProductService {
         if (Objects.nonNull(detailImgs)) {
             for (String imgs : detailImgs) {
                 ProductAttachment attachmentDetailImg = new ProductAttachment();
-                attachmentDetailImg.setUrl(imgs);
                 attachmentDetailImg.setSorting(detailImgs.indexOf(imgs) + 1);
                 attachmentDetailImg.setAttachmentType(AttachmentType.DETAIL_IMG);
                 productAttachments.add(attachmentDetailImg);

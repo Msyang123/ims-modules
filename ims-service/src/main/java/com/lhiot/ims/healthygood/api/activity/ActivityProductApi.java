@@ -9,6 +9,7 @@ import com.lhiot.ims.healthygood.feign.activity.ActivityProductFeign;
 import com.lhiot.ims.healthygood.feign.activity.entity.ActivityProduct;
 import com.lhiot.ims.healthygood.feign.activity.model.ActivityProductParam;
 import com.lhiot.ims.healthygood.feign.activity.model.ActivityProductResult;
+import com.lhiot.ims.rbac.aspect.LogCollection;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -33,6 +34,7 @@ public class ActivityProductApi {
         this.activityProductFeign = activityProductFeign;
     }
 
+    @LogCollection
     @ApiOperation("添加新品尝鲜活动商品")
     @PostMapping("/activity-products")
     @ApiHideBodyProperty("id")
@@ -50,6 +52,7 @@ public class ActivityProductApi {
                 ResponseEntity.badRequest().body(entity.getBody());
     }
 
+    @LogCollection
     @ApiOperation("修改新品尝鲜活动商品")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = ApiParamType.PATH, name = "id", value = "新品尝鲜活动商品id", dataType = "Long", required = true),
@@ -63,6 +66,7 @@ public class ActivityProductApi {
         return !entity.getStatusCode().isError() ? ResponseEntity.ok().build() : ResponseEntity.badRequest().body(Tips.warn("修改信息失败!"));
     }
 
+    @LogCollection
     @ApiOperation("根据ids删除新品尝鲜活动商品")
     @ApiImplicitParam(paramType = ApiParamType.PATH, name = "ids", value = "多个新品尝鲜活动商品id以英文逗号分隔", dataType = "String", required = true)
     @DeleteMapping("/activity-products/{ids}")

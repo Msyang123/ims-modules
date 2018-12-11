@@ -9,6 +9,7 @@ import com.leon.microx.web.swagger.ApiHideBodyProperty;
 import com.lhiot.ims.healthygood.feign.customplan.CustomPlanSpecificationStandardFeign;
 import com.lhiot.ims.healthygood.feign.customplan.entity.CustomPlanSpecificationStandard;
 import com.lhiot.ims.healthygood.feign.customplan.model.CustomPlanSpecificationStandardParam;
+import com.lhiot.ims.rbac.aspect.LogCollection;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
@@ -36,7 +37,7 @@ public class CustomPlanSpecificationStandardApi {
         this.customPlanSpecificationStandardFeign = customPlanSpecificationStandardFeign;
     }
 
-
+    @LogCollection
     @PostMapping("/custom-plan-specification-standards")
     @ApiOperation(value = "添加定制计划规格基础数据")
     @ApiHideBodyProperty({"id"})
@@ -52,6 +53,7 @@ public class CustomPlanSpecificationStandardApi {
         return ResponseEntity.created(entity.getHeaders().getLocation()).body(Maps.of("id", id));
 }
 
+    @LogCollection
     @PutMapping("/custom-plan-specification-standards/{id}")
     @ApiOperation(value = "根据id更新定制计划规格基础数据")
     @ApiHideBodyProperty({"id"})
@@ -62,6 +64,7 @@ public class CustomPlanSpecificationStandardApi {
         return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(Tips.warn(entity.getBody().toString())) : ResponseEntity.ok(entity.getBody());
     }
 
+    @LogCollection
     @Sessions.Uncheck
     @DeleteMapping("/custom-plan-specification-standards/{ids}")
     @ApiOperation(value = "根据ids删除定制计划规格基础数据")

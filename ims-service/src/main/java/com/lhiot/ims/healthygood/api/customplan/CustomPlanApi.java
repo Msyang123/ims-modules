@@ -8,6 +8,7 @@ import com.lhiot.ims.healthygood.feign.customplan.CustomPlanFeign;
 import com.lhiot.ims.healthygood.feign.customplan.model.CustomPlanDetailResult;
 import com.lhiot.ims.healthygood.feign.customplan.model.CustomPlanParam;
 import com.lhiot.ims.healthygood.feign.customplan.model.CustomPlanResult;
+import com.lhiot.ims.rbac.aspect.LogCollection;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -32,6 +33,7 @@ public class CustomPlanApi {
         this.customPlanFeign = customPlanFeign;
     }
 
+    @LogCollection
     @ApiOperation("添加定制计划")
     @ApiImplicitParam(paramType = ApiParamType.BODY, name = "customPlanDetailResult", value = "定制计划", dataType = "CustomPlanDetailResult", required = true)
     @PostMapping("/custom-plans")
@@ -59,6 +61,7 @@ public class CustomPlanApi {
         return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok(entity.getBody());
     }
 
+    @LogCollection
     @ApiOperation("修改定制计划")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = ApiParamType.PATH, name = "id", value = "定制计划id", dataType = "Long", required = true),
@@ -72,6 +75,7 @@ public class CustomPlanApi {
         return !entity.getStatusCode().isError() ? ResponseEntity.ok().build() : ResponseEntity.badRequest().body(Tips.warn("修改信息失败!"));
     }
 
+    @LogCollection
     @ApiOperation("修改定制计划商品")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = ApiParamType.PATH, name = "id", value = "定制计划id", dataType = "Long", required = true),
@@ -85,6 +89,7 @@ public class CustomPlanApi {
         return !entity.getStatusCode().isError() ? ResponseEntity.ok().build() : ResponseEntity.badRequest().body(entity.getBody());
     }
 
+    @LogCollection
     @ApiOperation("根据ids删除定制计划")
     @ApiImplicitParam(paramType = ApiParamType.PATH, name = "ids", value = "多个定制计划id以英文逗号分隔", dataType = "String", required = true)
     @DeleteMapping("/custom-plans/{ids}")

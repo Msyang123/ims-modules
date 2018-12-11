@@ -10,6 +10,7 @@ import com.lhiot.ims.datacenter.feign.ProductCategoryFeign;
 import com.lhiot.ims.datacenter.feign.entity.ProductCategory;
 import com.lhiot.ims.datacenter.feign.model.ProductCategoryParam;
 import com.lhiot.ims.datacenter.service.ProductCategoryService;
+import com.lhiot.ims.rbac.aspect.LogCollection;
 import com.lhiot.ims.rbac.domain.MenuDisplay;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -41,6 +42,7 @@ public class ProductCategoryApi {
         this.productCategoryService = productCategoryService;
     }
 
+    @LogCollection
     @ApiOperation("添加商品分类")
     @PostMapping("/")
     @ApiHideBodyProperty({"id", "createAt"})
@@ -57,6 +59,7 @@ public class ProductCategoryApi {
         return id > 0 ? ResponseEntity.created(entity.getHeaders().getLocation()).body(Maps.of("id", id)) : ResponseEntity.badRequest().body(Tips.warn(entity.getBody().toString()));
     }
 
+    @LogCollection
     @ApiOperation("修改商品分类")
     @ApiImplicitParam(paramType = ApiParamType.PATH, name = "id", value = "商品分类Id", dataType = "Long", required = true)
     @PutMapping("/{id}")
@@ -79,7 +82,7 @@ public class ProductCategoryApi {
         return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(Tips.warn(entity.getBody().toString())) : ResponseEntity.ok(entity.getBody());
     }
 
-
+    @LogCollection
     @ApiOperation("根据Ids删除商品分类")
     @ApiImplicitParam(paramType = ApiParamType.PATH, name = "ids", value = "多个商品分类Id以英文逗号分隔", dataType = "String", required = true)
     @DeleteMapping("/{ids}")

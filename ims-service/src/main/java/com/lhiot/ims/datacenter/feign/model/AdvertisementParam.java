@@ -23,8 +23,7 @@ public class AdvertisementParam {
     private String advertiseName;
     @ApiModelProperty(notes = "广告类别（IMAGE- 图片广告 TEXT -文字广告）", dataType = "AdvertiseType")
     private AdvertiseType advertiseType;
-    @ApiModelProperty(notes = "广告关联类别（PRODUCT_DETAILS- 商品详情 STORE_LIVE_TELECAST- 门店直播 MORE_AMUSEMENT- 多娱\n" +
-            "EXTERNAL_LINKS- 外部链接）", dataType = "RelationType")
+    @ApiModelProperty(notes = "广告关联类别（PRODUCT_DETAILS- 商品详情 PRODUCT_SECTION-商品版块 CUSTOM_PLAN-定制计划 CUSTOM_PLAN_SECTION-定制版块 ARTICLE_DETAILS-文章详情 STORE_LIVE_TELECAST- 门店直播 MORE_AMUSEMENT- 多娱 EXTERNAL_LINKS- 外部链接）", dataType = "RelationType")
     private RelationType relationType;
     @ApiModelProperty(notes = "广告状态（ON- 开启 OFF-关闭）", dataType = "AdvertiseStatus")
     private OnOff advertiseStatus;

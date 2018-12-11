@@ -33,6 +33,7 @@ public class ImsOperationApi {
     }
 
 
+    @LogCollection
     @PostMapping("/")
     @ApiOperation(value = "添加的操作")
     @ApiImplicitParam(paramType = "body", name = "imsOperation", value = "要添加的操作", required = true, dataType = "ImsOperation")
@@ -42,6 +43,7 @@ public class ImsOperationApi {
         return ResponseEntity.ok(imsOperationService.create(imsOperation));
     }
 
+    @LogCollection
     @DeleteMapping("/{ids}")
     @ApiOperation(value = "根据ids删除功能操作")
     @ApiImplicitParam(paramType = "path", name = "ids", value = "要删除功能操作的ids,逗号分割", required = true, dataType = "String")
@@ -58,7 +60,7 @@ public class ImsOperationApi {
 
         return ResponseEntity.ok(imsOperationService.selectById(id));
     }
-    
+
     @PostMapping("/pages")
     @ApiOperation(value = "查询功能操作分页列表")
     @ApiImplicitParam(paramType = "body", name = "imsOperation", value = "功能操作分页参数", required = true, dataType = "ImsOperation")
