@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 /**
  * @author hufan created in 2018/12/11 10:33
  **/
-@FeignClient(value = "basic-user-service-v1-0-hufan")
+@FeignClient(value = "basic-user-service-v1-0")
 @Component
 public interface UserFeign {
 

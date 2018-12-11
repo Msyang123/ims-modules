@@ -11,6 +11,7 @@ import lombok.Data;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.Objects;
 
 /**
  * @author xiaojian  created in  2018/11/16 11:20
@@ -65,16 +66,4 @@ public class ProductShelfParam {
     private Integer rows;
     @ApiModelProperty(notes = "当前页", dataType = "Integer")
     private Integer page;
-
-    @ApiModelProperty(hidden = true)
-    private Integer startRow;
-
-    @JsonIgnore
-    public Integer getStartRow() {
-        if (this.rows != null && this.rows > 0) {
-            return (this.page != null && this.page > 0 ? this.page - 1 : 0) * this.rows;
-        }
-        return null;
-    }
-
 }
