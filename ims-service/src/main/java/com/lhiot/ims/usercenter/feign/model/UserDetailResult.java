@@ -1,7 +1,11 @@
 package com.lhiot.ims.usercenter.feign.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+import com.lhiot.dc.dictionary.HasEntries;
+import com.lhiot.ims.datacenter.feign.type.ApplicationType;
+import com.lhiot.ims.datacenter.util.DictionaryCodes;
 import com.lhiot.ims.usercenter.feign.type.LockStatus;
 import com.lhiot.ims.usercenter.feign.type.SwitchStatus;
 import io.swagger.annotations.ApiModel;
@@ -47,6 +51,7 @@ public class UserDetailResult {
     @ApiModelProperty(notes = "备注", dataType = "String")
     private String description;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     @ApiModelProperty(notes = "注册时间", dataType = "Date")
     private Date registerAt;
 
@@ -65,11 +70,12 @@ public class UserDetailResult {
     @ApiModelProperty(notes = "t_base_user的id", dataType = "Long")
     private Long baseUserId;
 
-    @ApiModelProperty(notes = "是否锁定0未锁定1锁定", dataType = "LockStatus")
+    @ApiModelProperty(notes = "是否锁定 UNLOCKED-未锁定,LOCK-锁定", dataType = "LockStatus")
     private LockStatus locked;
 
-    @ApiModelProperty(notes = "应用类型", dataType = "Apply")
-    private String applicationType;
+    @ApiModelProperty(notes = "应用类型", dataType = "ApplicationType")
+    @HasEntries(from = DictionaryCodes.APPLICATION_TYPE, message = "没有找到此应用类型")
+    private ApplicationType applicationType;
 
     @ApiModelProperty(notes = "免密支付权限", dataType = "SwitchStatus")
     private SwitchStatus paymentPermissions;
