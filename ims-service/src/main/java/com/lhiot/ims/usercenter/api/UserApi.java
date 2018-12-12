@@ -2,11 +2,14 @@ package com.lhiot.ims.usercenter.api;
 
 import com.leon.microx.web.result.Pages;
 import com.leon.microx.web.swagger.ApiParamType;
+import com.lhiot.ims.rbac.aspect.LogCollection;
 import com.lhiot.ims.usercenter.feign.UserFeign;
 import com.lhiot.ims.usercenter.feign.model.QuerySearch;
 import com.lhiot.ims.usercenter.feign.model.UserDetailResult;
+import com.lhiot.ims.usercenter.feign.type.LockStatus;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,13 +44,17 @@ public class UserApi {
         return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body("调用基础用户失败") : ResponseEntity.ok(entity.getBody());
     }
 
-    @ApiOperation("解除基础用户锁定")
-    @ApiImplicitParam(paramType = ApiParamType.PATH, name = "userId", value = "业务用户Id", dataType = "Long", required = true)
-    @PutMapping("/user/{userId}/unlocked")
-    public ResponseEntity unlock(@PathVariable("userId") Long userId) {
-        log.debug("解除基础用户锁定\t param{}", userId);
+    @LogCollection
+    @ApiOperation("修改用户锁状态")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = ApiParamType.PATH, name = "userId", value = "业务用户Id", dataType = "Long", required = true),
+            @ApiImplicitParam(paramType = ApiParamType.QUERY, name = "lockStatus", value = "锁状态", dataTypeClass = LockStatus.class, required = true)
+    })
+    @PutMapping("/{userId}/locked-status")
+    public ResponseEntity unlock(@PathVariable("userId") Long userId, @RequestParam("lockStatus") LockStatus lockStatus) {
+        log.debug("修改用户锁状态\t userId{},param{}", userId, lockStatus);
 
-        ResponseEntity entity = userFeign.unlock(userId);
-        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body("解锁失败") : ResponseEntity.ok().build();
+        ResponseEntity entity = userFeign.unlock(userId, lockStatus);
+        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok().build();
     }
 }

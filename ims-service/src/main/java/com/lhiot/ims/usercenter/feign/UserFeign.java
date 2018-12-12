@@ -3,13 +3,11 @@ package com.lhiot.ims.usercenter.feign;
 import com.leon.microx.web.result.Pages;
 import com.lhiot.ims.usercenter.feign.model.QuerySearch;
 import com.lhiot.ims.usercenter.feign.model.UserDetailResult;
+import com.lhiot.ims.usercenter.feign.type.LockStatus;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author hufan created in 2018/12/11 10:33
@@ -32,7 +30,7 @@ public interface UserFeign {
          * @param userId
          * @return
          */
-        @PutMapping("/users/{userId}/unlocked")
-        ResponseEntity unlock(@PathVariable("userId") Long userId);
+        @PutMapping("/users/{userId}/locked-status")
+        ResponseEntity unlock(@PathVariable("userId") Long userId,@RequestParam("lockStatus") LockStatus lockStatus);
 
 }
