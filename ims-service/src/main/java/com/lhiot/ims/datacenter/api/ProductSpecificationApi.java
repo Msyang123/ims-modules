@@ -2,6 +2,7 @@ package com.lhiot.ims.datacenter.api;
 
 import com.leon.microx.util.Maps;
 import com.leon.microx.web.result.Tips;
+import com.leon.microx.web.result.Tuple;
 import com.leon.microx.web.swagger.ApiHideBodyProperty;
 import com.leon.microx.web.swagger.ApiParamType;
 import com.lhiot.ims.datacenter.feign.ProductSpecificationFegin;
@@ -93,11 +94,7 @@ public class ProductSpecificationApi {
         log.debug("查询商品规格信息列表\t param:{}", param);
 
         Tips tips = productSpecificationService.pages(param);
-        if (tips.err()) {
-            return ResponseEntity.badRequest().body(tips.getMessage());
-        }
-        List<ProductSpecification> productSpecificationList = (List<ProductSpecification>) tips.getData();
-        return ResponseEntity.ok(productSpecificationList);
+        return tips.err() ?  ResponseEntity.badRequest().body(tips.getMessage()) : ResponseEntity.ok(tips.getData());
     }
 
     @ApiOperation(value = "查询所有基础规格单位列表", response = String.class, responseContainer = "List")
@@ -106,6 +103,6 @@ public class ProductSpecificationApi {
         log.debug("查询所有基础规格单位");
 
         Tips tips = productSpecificationService.getUnits();
-        return tips.err() ? ResponseEntity.badRequest().body(tips.getMessage()) : ResponseEntity.ok(tips.getData());
+        return tips.err() ? ResponseEntity.badRequest().body(tips.getMessage()) : ResponseEntity.ok(Tuple.of(tips.getData()));
     }
 }

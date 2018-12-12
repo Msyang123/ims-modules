@@ -63,22 +63,22 @@ public class ProductSpecificationService {
         productSpecificationList = productSpecificationList.stream().filter(productSpecification -> Objects.nonNull(productSpecification.getProduct())).collect(Collectors.toList());
         if (!productSpecificationList.isEmpty() && productSpecificationList.size() > 0) {
             productSpecificationList.forEach(productSpecification -> {
-                    String specificationInfo = productSpecification.getProduct().getName() + " " + productSpecification.getWeight() + productSpecification.getPackagingUnit() + "[" + productSpecification.getBarcode() + "]";
-                    productSpecification.setSpecificationInfo(specificationInfo);
-                    List<ProductAttachment> attachmentList = productSpecification.getProduct().getAttachments();
-                    if (!attachmentList.isEmpty() && attachmentList.size() > 0) {
-                        List<ProductAttachment> mainImgList = attachmentList.stream().filter(productAttachment -> Objects.equals(AttachmentType.MAIN_IMG, productAttachment.getAttachmentType())).collect(Collectors.toList());
-                        if (!mainImgList.isEmpty() && mainImgList.size() >0) {
-                            String productImage = mainImgList.get(0).getUrl();
-                            productSpecification.getProduct().setProductImage(productImage);
-                        }
+                String specificationInfo = productSpecification.getProduct().getName() + " " + productSpecification.getWeight() + productSpecification.getPackagingUnit() + "[" + productSpecification.getBarcode() + "]";
+                productSpecification.setSpecificationInfo(specificationInfo);
+                List<ProductAttachment> attachmentList = productSpecification.getProduct().getAttachments();
+                if (!attachmentList.isEmpty() && attachmentList.size() > 0) {
+                    List<ProductAttachment> mainImgList = attachmentList.stream().filter(productAttachment -> Objects.equals(AttachmentType.MAIN_IMG, productAttachment.getAttachmentType())).collect(Collectors.toList());
+                    if (!mainImgList.isEmpty() && mainImgList.size() > 0) {
+                        String productImage = mainImgList.get(0).getUrl();
+                        productSpecification.getProduct().setProductImage(productImage);
                     }
+                }
 
 
             });
         }
         Tips tips = new Tips();
-        tips.setData(productSpecificationList);
+        tips.setData(Pages.of(pages.getTotal(), productSpecificationList));
         return tips;
     }
 }
