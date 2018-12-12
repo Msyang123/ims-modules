@@ -27,7 +27,6 @@ public class UiPositionResult {
     @ApiModelProperty(notes = "描述", dataType = "String")
     private String description;
     @ApiModelProperty(notes = "应用类型", dataType = "String")
-    @HasEntries(from = DictionaryCodes.APPLICATION_TYPE, message = "没有找到此应用类型")
     private String applicationType;
 
     @ApiModelProperty(notes = "关联的板块信息", dataType = "List")

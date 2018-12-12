@@ -19,7 +19,7 @@ import java.util.Date;
 @Data
 @ApiModel
 public class ProductShelf {
-    @ApiModelProperty(notes = "主键Id", dataType = "Long", readOnly = true)
+    @ApiModelProperty(notes = "主键Id", dataType = "Long")
     private Long id;
     @NotNull(message = "上架名称不能为空")
     @ApiModelProperty(notes = "上架名称", dataType = "String")
@@ -46,8 +46,7 @@ public class ProductShelf {
     private String description;
     @ApiModelProperty(notes = "排序字段", dataType = "Integer")
     private Integer sorting;
-    @ApiModelProperty(notes = "应用类型", dataType = "String", readOnly = true)
-    @HasEntries(from = DictionaryCodes.APPLICATION_TYPE, message = "没有找到此应用类型")
+    @ApiModelProperty(notes = "应用类型", dataType = "ApplicationType", readOnly = true)
     private ApplicationType applicationType;
 
     @ApiModelProperty(notes = "规格对象", dataType = "ProductSpecification", readOnly = true)

@@ -103,6 +103,6 @@ public class ProductSpecificationApi {
         log.debug("查询所有基础规格单位");
 
         Tips tips = productSpecificationService.getUnits();
-        return tips.err() ? ResponseEntity.badRequest().body(tips.getMessage()) : ResponseEntity.ok(Tuple.of(tips.getData()));
+        return tips.err() ? ResponseEntity.badRequest().body(tips.getMessage()) : ResponseEntity.ok(tips.getData());
     }
 }
