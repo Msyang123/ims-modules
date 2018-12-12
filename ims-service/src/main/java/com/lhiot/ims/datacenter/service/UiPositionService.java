@@ -104,12 +104,12 @@ public class UiPositionService {
 
     }
 
-    public Tips search(UiPositionParam uiPositionParam) {
-        Tips tips = new Tips();
+    public Tips<Pages<UiPositionResult>> search(UiPositionParam uiPositionParam) {
+        Tips<Pages<UiPositionResult>> tips = new Tips();
         List<UiPositionResult> result = new ArrayList<>();
 
         // 查询鲜果师的所有位置板块
-        uiPositionParam.setApplicationType(ApplicationType.HEALTH_GOOD);
+//        uiPositionParam.setApplicationType(ApplicationType.HEALTH_GOOD);
         ResponseEntity entity = uiPositionFeign.pages(uiPositionParam);
         if (entity.getStatusCode().isError()) {
             return Tips.warn(entity.getBody().toString());
@@ -136,7 +136,7 @@ public class UiPositionService {
                 item.setProductSections(productSectionList);
             });
         }
-        tips.setData(result);
+        tips.setData(Pages.of(pages.getTotal(),result));
         return tips;
     }
 

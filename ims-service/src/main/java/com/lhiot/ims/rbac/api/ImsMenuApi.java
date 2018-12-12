@@ -3,6 +3,7 @@ package com.lhiot.ims.rbac.api;
 import com.leon.microx.web.result.Pages;
 import com.leon.microx.web.result.Tuple;
 import com.leon.microx.web.session.Sessions;
+import com.lhiot.ims.datacenter.feign.type.ApplicationType;
 import com.lhiot.ims.rbac.aspect.LogCollection;
 import com.lhiot.ims.rbac.domain.ImsMenu;
 import com.lhiot.ims.rbac.domain.MenuDisplay;
@@ -133,7 +134,19 @@ public class ImsMenuApi {
         log.debug("查询菜单列表(系统)");
         //通过session获取用户id
         Long id = (Long) user.getUser().get("id");
-        return ResponseEntity.ok(Tuple.of(imsMenuService.listImsSystems(id)));
+        List<ImsMenu> imsMenus = imsMenuService.listImsSystems(id);
+        imsMenus.forEach(imsMenu -> {
+            if (Objects.isNull(imsMenu.getPId())){
+                switch (imsMenu.getName()) {
+                    case "后台管理系统":
+                        imsMenu.setApplicationType(ApplicationType.HEALTH_GOOD);
+                        break;
+                    default:
+                        break;
+                }
+            }
+        });
+        return ResponseEntity.ok(Tuple.of(imsMenus));
     }
 
 }

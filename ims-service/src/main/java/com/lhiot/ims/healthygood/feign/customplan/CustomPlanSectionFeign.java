@@ -43,7 +43,6 @@ public interface CustomPlanSectionFeign {
      * @param flag
      * @return
      */
-    @Sessions.Uncheck
     @GetMapping("/custom-plan-sections/{id}")
     ResponseEntity<CustomPlanSectionResultAdmin> findById(@PathVariable("id") Long id, @RequestParam(value = "flag", required = false) boolean flag);
 

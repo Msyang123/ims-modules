@@ -2,9 +2,11 @@ package com.lhiot.ims.datacenter.feign.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.lhiot.dc.dictionary.HasEntries;
 import com.lhiot.ims.datacenter.feign.type.ApplicationType;
 import com.lhiot.ims.datacenter.feign.type.PositionType;
 import com.lhiot.ims.datacenter.type.YesOrNo;
+import com.lhiot.ims.datacenter.util.DictionaryCodes;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -20,7 +22,8 @@ public class UiPositionParam {
     private Long id;
     @ApiModelProperty(notes = "类别:PRODUCT-商品，ADVERTISEMENT-广告，ARTICLE-文章", dataType = "PositionType")
     private PositionType positionType;
-    @ApiModelProperty(notes = "应用类型", dataType = "String", readOnly = true)
+    @ApiModelProperty(notes = "应用类型", dataType = "String")
+    @HasEntries(from = DictionaryCodes.APPLICATION_TYPE, message = "没有找到此应用类型")
     private ApplicationType applicationType;
     @ApiModelProperty(notes = "位置编码", dataType = "String")
     private String codes;

@@ -74,7 +74,7 @@ public class ActivityProductApi {
         log.debug("批量删除新品尝鲜活动商品\t param:{}", ids);
 
         ResponseEntity entity = activityProductFeign.batchDelete(ids);
-        return !entity.getStatusCode().isError() ? ResponseEntity.noContent().build() : ResponseEntity.badRequest().body(Tips.warn(entity.getBody().toString()));
+        return !entity.getStatusCode().isError() ? ResponseEntity.noContent().build() : ResponseEntity.badRequest().body(entity.getBody());
     }
 
     @ApiOperation(value = "根据条件分页查询新品尝鲜活动商品信息列表", response = ActivityProductResult.class, responseContainer = "Set")

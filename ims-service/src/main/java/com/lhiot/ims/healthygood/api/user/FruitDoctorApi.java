@@ -110,7 +110,7 @@ public class FruitDoctorApi {
 
         if (Objects.equals(SettlementStatus.SUCCESS, settlementApplication.getSettlementStatus())) {
             ResponseEntity entity = fruitDoctorSettlementFeign.updateSettlement(id, settlementApplication);
-            return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(Tips.warn(entity.getBody().toString())) : ResponseEntity.ok().build();
+            return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok().build();
         }
         return ResponseEntity.badRequest().body(Tips.warn("结算状态不正确！"));
     }

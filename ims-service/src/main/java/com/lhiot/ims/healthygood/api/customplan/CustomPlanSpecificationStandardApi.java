@@ -46,7 +46,7 @@ public class CustomPlanSpecificationStandardApi {
 
         ResponseEntity entity = customPlanSpecificationStandardFeign.create(customPlanSpecificationStandard);
         if (entity.getStatusCode().isError()) {
-            return ResponseEntity.badRequest().body(Tips.warn(entity.getBody().toString()));
+            return ResponseEntity.badRequest().body(entity.getBody());
         }
         String location = entity.getHeaders().getLocation().toString();
         Long id = Long.valueOf(location.substring(location.lastIndexOf('/') + 1));
@@ -61,7 +61,7 @@ public class CustomPlanSpecificationStandardApi {
         log.debug("根据id更新定制计划规格基础数据\t id:{} param:{}",id,customPlanSpecificationStandard);
 
         ResponseEntity entity = customPlanSpecificationStandardFeign.update(id, customPlanSpecificationStandard);
-        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(Tips.warn(entity.getBody().toString())) : ResponseEntity.ok(entity.getBody());
+        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok(entity.getBody());
     }
 
     @LogCollection
@@ -83,7 +83,7 @@ public class CustomPlanSpecificationStandardApi {
         log.debug("根据id查询定制计划规格基础数据\t param:{}",id);
 
         ResponseEntity<CustomPlanSpecificationStandard> entity = customPlanSpecificationStandardFeign.findById(id);
-        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(Tips.warn(entity.getBody().toString())) : ResponseEntity.ok(entity.getBody());
+        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok(entity.getBody());
     }
 
     @ApiOperation(value = "查询定制计划规格基础数据分页列表",response = CustomPlanSpecificationStandard.class, responseContainer = "Set")
@@ -92,7 +92,7 @@ public class CustomPlanSpecificationStandardApi {
         log.debug("查询定制计划规格基础数据分页列表\t param:{}",customPlanSpecificationStandardParam);
 
         ResponseEntity<Pages<CustomPlanSpecificationStandard>> entity = customPlanSpecificationStandardFeign.search(customPlanSpecificationStandardParam);
-        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(Tips.warn(entity.getBody().toString())) : ResponseEntity.ok(entity.getBody());
+        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok(entity.getBody());
     }
 
     @ApiOperation(value = "查询定制计划规格基础数据列表",response = CustomPlanSpecificationStandard.class, responseContainer = "List")
@@ -101,6 +101,6 @@ public class CustomPlanSpecificationStandardApi {
         log.debug("查询定制计划规格基础数据列表\t param:{}");
 
         ResponseEntity<List<CustomPlanSpecificationStandard>> entity = customPlanSpecificationStandardFeign.findList();
-        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(Tips.warn(entity.getBody().toString())) : ResponseEntity.ok(Tuple.of(entity.getBody()));
+        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok(Tuple.of(entity.getBody()));
     }
 }

@@ -45,7 +45,7 @@ public class ProductShelfApi {
         log.debug("添加商品上架\t param:{}", productShelf);
 
         Tips tips = productShelfService.create(productShelf);
-        return tips.err() ? ResponseEntity.badRequest().body(Tips.warn(tips.getMessage())) : ResponseEntity.created(URI.create("/product-shelves/" + tips.getMessage())).body(Maps.of("id", tips.getMessage()));
+        return tips.err() ? ResponseEntity.badRequest().body(tips.getMessage()) : ResponseEntity.created(URI.create("/product-shelves/" + tips.getMessage())).body(Maps.of("id", tips.getMessage()));
     }
 
     @LogCollection
@@ -57,7 +57,7 @@ public class ProductShelfApi {
         log.debug("根据id修改商品上架\t id:{} param:{}", id, productShelf);
 
         Tips tips = productShelfService.update(id, productShelf);
-        return tips.err() ? ResponseEntity.badRequest().body(Tips.warn(tips.getMessage())) : ResponseEntity.ok(tips.getMessage());
+        return tips.err() ? ResponseEntity.badRequest().body(tips.getMessage()) : ResponseEntity.ok(tips.getMessage());
     }
 
     @ApiOperation(value = "根据Id查找商品上架", response = ProductShelf.class)
@@ -67,11 +67,7 @@ public class ProductShelfApi {
         log.debug("根据Id查找商品上架\t id:{}", id);
 
         Tips tips = productShelfService.findById(id);
-        if (tips.err()) {
-            return ResponseEntity.badRequest().body(Tips.warn(tips.getMessage()));
-        }
-        ProductShelf productShelf = (ProductShelf) tips.getData();
-        return ResponseEntity.ok(productShelf);
+        return tips.err() ?  ResponseEntity.badRequest().body(tips.getMessage()): ResponseEntity.ok(tips.getData());
     }
 
     @LogCollection
@@ -91,7 +87,7 @@ public class ProductShelfApi {
         log.debug("查询商品上架信息列表\t param:{}", param);
 
         Tips tips = productShelfService.pages(param);
-        return tips.err() ? ResponseEntity.badRequest().body(Tips.warn(tips.getMessage())) : ResponseEntity.ok(tips.getData());
+        return tips.err() ? ResponseEntity.badRequest().body(tips.getMessage()) : ResponseEntity.ok(tips.getData());
     }
 
 }

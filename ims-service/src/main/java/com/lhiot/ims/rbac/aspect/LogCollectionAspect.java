@@ -53,7 +53,7 @@ public class LogCollectionAspect {
 
 
             String content = "请求URL：" + request.getRequestURL() + " ==> 请求类型：" + request.getMethod() + " ==> 请求参数：" + joinPoint.getArgs()[0].toString() + " ==> 返回结果：" + result.getBody();
-            content = content.substring(0, 2047);
+            content = content.substring(0,2047);
             String ip = request.getRemoteAddr();
             String description = descriptionExpression(joinPoint);
             Sessions.User sessionUser = Arrays.stream(joinPoint.getArgs()).filter(para -> para instanceof Sessions.User).findFirst().map(para -> (Sessions.User) para).orElse(null);
@@ -62,8 +62,6 @@ public class LogCollectionAspect {
             if (Objects.nonNull(sessionUser)) {
                 userId = (long) sessionUser.getUser().get("id");
             }
-            // 写操作日志
-            // imsOperationLogService.create(Maps.of("content", content, "userId", userId, "ip", ip, "description", description));
             ImsOperationLog imsOperationLog = new ImsOperationLog();
             imsOperationLog.setContent(content);
             imsOperationLog.setUserId(userId);

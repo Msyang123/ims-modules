@@ -45,7 +45,7 @@ public class ProductSpecificationApi {
 
         ResponseEntity entity = productSpecificationFegin.create(productSpecification);
         if (entity.getStatusCode().isError()) {
-            return ResponseEntity.badRequest().body(Tips.warn(entity.getBody().toString()));
+            return ResponseEntity.badRequest().body(entity.getBody());
         }
         // 返回参数 例：<201 Created,{content-type=[application/json;charset=UTF-8], date=[Sat, 24 Nov 2018 06:37:59 GMT], location=[/product-sections/13], transfer-encoding=[chunked]}>
         String location = entity.getHeaders().getLocation().toString();
@@ -62,7 +62,7 @@ public class ProductSpecificationApi {
         log.debug("根据id修改商品规格\t id:{} param:{}", id, productSpecification);
 
         ResponseEntity entity = productSpecificationFegin.update(id, productSpecification);
-        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(Tips.warn(entity.getBody().toString())) : ResponseEntity.ok(entity.getBody());
+        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok(entity.getBody());
     }
 
     @ApiOperation(value = "根据Id查找商品规格", response = ProductSpecification.class)
@@ -72,7 +72,7 @@ public class ProductSpecificationApi {
         log.debug("根据Id查找商品规格\t id:{}", id);
 
         ResponseEntity<ProductSpecification> entity = productSpecificationFegin.findById(id);
-        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(Tips.warn(entity.getBody().toString())) : ResponseEntity.ok(entity.getBody());
+        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok(entity.getBody());
     }
 
     @LogCollection
@@ -106,6 +106,6 @@ public class ProductSpecificationApi {
         log.debug("查询所有基础规格单位");
 
         Tips tips = productSpecificationService.getUnits();
-        return tips.err() ? ResponseEntity.badRequest().body(Tips.warn(tips.getMessage())) : ResponseEntity.ok(tips.getData());
+        return tips.err() ? ResponseEntity.badRequest().body(tips.getMessage()) : ResponseEntity.ok(tips.getData());
     }
 }
