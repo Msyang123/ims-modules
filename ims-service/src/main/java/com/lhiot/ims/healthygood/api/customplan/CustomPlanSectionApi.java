@@ -4,9 +4,6 @@ import com.leon.microx.util.Maps;
 import com.leon.microx.web.result.Pages;
 import com.leon.microx.web.swagger.ApiHideBodyProperty;
 import com.leon.microx.web.swagger.ApiParamType;
-import com.leon.microx.web.swagger.reader.ApiReaderContext;
-import com.lhiot.ims.datacenter.feign.entity.ProductSection;
-import com.lhiot.ims.datacenter.feign.model.ProductSectionParam;
 import com.lhiot.ims.healthygood.feign.customplan.CustomPlanSectionFeign;
 import com.lhiot.ims.healthygood.feign.customplan.entity.CustomPlanSection;
 import com.lhiot.ims.healthygood.feign.customplan.model.CustomPlanSectionParam;
@@ -51,9 +48,9 @@ public class CustomPlanSectionApi {
         }
         String location = entity.getHeaders().getLocation().toString();
         Long id = Long.valueOf(location.substring(location.lastIndexOf('/') + 1));
-        return id > 0 ?
-                ResponseEntity.created(URI.create("/custom-plan-sections/" + id)).body(Maps.of("id", id)) :
-                ResponseEntity.badRequest().body(entity.getBody());
+        return id > 0
+                ? ResponseEntity.created(URI.create("/custom-plan-sections/" + id)).body(Maps.of("id", id))
+                : ResponseEntity.badRequest().body(entity.getBody());
     }
 
 
@@ -64,12 +61,12 @@ public class CustomPlanSectionApi {
             @ApiImplicitParam(paramType = ApiParamType.BODY, name = "customPlanSectionResultAdmin", value = "定制板块", dataType = "CustomPlanSectionResultAdmin", required = true)
     })
     @PutMapping("/custom-plan-sections/{id}")
-    @ApiHideBodyProperty({"customPlanList","relationSorts"})
-    public ResponseEntity update(@PathVariable("id") Long id,@Valid @RequestBody CustomPlanSectionResultAdmin customPlanSectionResultAdmin) {
+    @ApiHideBodyProperty({"customPlanList", "relationSorts"})
+    public ResponseEntity update(@PathVariable("id") Long id, @Valid @RequestBody CustomPlanSectionResultAdmin customPlanSectionResultAdmin) {
         log.debug("修改定制板块\t param:{}", customPlanSectionResultAdmin);
 
         ResponseEntity entity = customPlanSectionFeign.update(id, customPlanSectionResultAdmin);
-        return !entity.getStatusCode().isError() ? ResponseEntity.ok().build() : ResponseEntity.badRequest().body(entity.getBody());
+        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok().build();
     }
 
     @ApiOperation(value = "根据id查找单个定制板块", response = CustomPlanSectionResultAdmin.class)
@@ -82,7 +79,7 @@ public class CustomPlanSectionApi {
         log.debug("根据id查找单个定制板块\t param:{}", id, flag);
 
         ResponseEntity<CustomPlanSectionResultAdmin> entity = customPlanSectionFeign.findById(id, true);
-        return !entity.getStatusCode().isError() ? ResponseEntity.ok().body(entity.getBody()) : ResponseEntity.badRequest().body(entity.getBody());
+        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok().body(entity.getBody());
     }
 
     @LogCollection
@@ -103,7 +100,7 @@ public class CustomPlanSectionApi {
         log.debug("根据条件分页查询定制板块信息列表\t param:{}", param);
 
         ResponseEntity<Pages<CustomPlanSection>> entity = customPlanSectionFeign.search(param);
-        return !entity.getStatusCode().isError() ? ResponseEntity.ok(entity.getBody()) : ResponseEntity.badRequest().body(entity.getBody());
+        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok(entity.getBody());
     }
 
     @ApiOperation(value = "查询去重的定制板块集合", response = String.class, responseContainer = "List")

@@ -6,19 +6,14 @@ import com.lhiot.dc.dictionary.DictionaryClient;
 import com.lhiot.dc.dictionary.module.Dictionary;
 import com.lhiot.ims.datacenter.feign.ProductFegin;
 import com.lhiot.ims.datacenter.feign.ProductSpecificationFegin;
-import com.lhiot.ims.datacenter.feign.entity.Product;
 import com.lhiot.ims.datacenter.feign.entity.ProductAttachment;
 import com.lhiot.ims.datacenter.feign.entity.ProductSpecification;
 import com.lhiot.ims.datacenter.feign.model.ProductSpecificationParam;
-import com.lhiot.ims.datacenter.feign.model.ProductSpecificationResult;
 import com.lhiot.ims.datacenter.feign.type.AttachmentType;
-import org.springframework.beans.BeanUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -68,22 +63,22 @@ public class ProductSpecificationService {
         productSpecificationList = productSpecificationList.stream().filter(productSpecification -> Objects.nonNull(productSpecification.getProduct())).collect(Collectors.toList());
         if (!productSpecificationList.isEmpty() && productSpecificationList.size() > 0) {
             productSpecificationList.forEach(productSpecification -> {
-                    String specificationInfo = productSpecification.getProduct().getName() + " " + productSpecification.getWeight() + productSpecification.getPackagingUnit() + "[" + productSpecification.getBarcode() + "]";
-                    productSpecification.setSpecificationInfo(specificationInfo);
-                    List<ProductAttachment> attachmentList = productSpecification.getProduct().getAttachments();
-                    if (!attachmentList.isEmpty() && attachmentList.size() > 0) {
-                        List<ProductAttachment> mainImgList = attachmentList.stream().filter(productAttachment -> Objects.equals(AttachmentType.MAIN_IMG, productAttachment.getAttachmentType())).collect(Collectors.toList());
-                        if (!mainImgList.isEmpty() && mainImgList.size() >0) {
-                            String productImage = mainImgList.get(0).getUrl();
-                            productSpecification.getProduct().setProductImage(productImage);
-                        }
+                String specificationInfo = productSpecification.getProduct().getName() + " " + productSpecification.getWeight() + productSpecification.getPackagingUnit() + "[" + productSpecification.getBarcode() + "]";
+                productSpecification.setSpecificationInfo(specificationInfo);
+                List<ProductAttachment> attachmentList = productSpecification.getProduct().getAttachments();
+                if (!attachmentList.isEmpty() && attachmentList.size() > 0) {
+                    List<ProductAttachment> mainImgList = attachmentList.stream().filter(productAttachment -> Objects.equals(AttachmentType.MAIN_IMG, productAttachment.getAttachmentType())).collect(Collectors.toList());
+                    if (!mainImgList.isEmpty() && mainImgList.size() > 0) {
+                        String productImage = mainImgList.get(0).getUrl();
+                        productSpecification.getProduct().setProductImage(productImage);
                     }
+                }
 
 
             });
         }
         Tips tips = new Tips();
-        tips.setData(productSpecificationList);
+        tips.setData(Pages.of(pages.getTotal(), productSpecificationList));
         return tips;
     }
 }

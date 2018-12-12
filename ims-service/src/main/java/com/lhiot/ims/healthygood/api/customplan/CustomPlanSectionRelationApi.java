@@ -40,6 +40,6 @@ public class CustomPlanSectionRelationApi {
         log.debug("批量修改定制版块与定制计划关系\t param:{}", sectionId, planIds, sorts);
 
         ResponseEntity entity = customPlanSectionRelationFeign.updateBatch(sectionId, planIds, sorts);
-        return !entity.getStatusCode().isError() ? ResponseEntity.ok().build() : ResponseEntity.badRequest().body(entity.getBody());
+        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok().build();
     }
 }

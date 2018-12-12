@@ -1,7 +1,6 @@
 package com.lhiot.ims.healthygood.api.user;
 
 import com.leon.microx.web.result.Pages;
-import com.leon.microx.web.result.Tips;
 import com.leon.microx.web.session.Sessions;
 import com.leon.microx.web.swagger.ApiParamType;
 import com.lhiot.ims.healthygood.feign.user.FruitDoctorFeign;
@@ -60,7 +59,7 @@ public class FruitDoctorApi {
         log.debug("修改鲜果师成员信息\t id:{},param:{}", id, fruitDoctor);
 
         ResponseEntity entity = fruitDoctorFeign.updateById(id, fruitDoctor);
-        return !entity.getStatusCode().isError() ? ResponseEntity.ok().build() : ResponseEntity.badRequest().body(Tips.warn("修改鲜果师成员信息失败!"));
+        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body("修改鲜果师成员信息失败!") : ResponseEntity.ok().build();
     }
 
     @PostMapping("/fruit-doctors/pages")
@@ -80,23 +79,23 @@ public class FruitDoctorApi {
             @ApiImplicitParam(paramType = "body", name = "registerApplication", value = "要更新的鲜果师申请记录", required = true, dataType = "RegisterApplication")
     })
     @PutMapping("/fruit-doctors/qualifications/{id}")
-    public ResponseEntity update(@PathVariable("id") Long id, @RequestBody RegisterApplication registerApplication,Sessions.User user){
-        log.debug("根据id更新鲜果师申请记录\t id:{} param:{}", id,registerApplication);
+    public ResponseEntity update(@PathVariable("id") Long id, @RequestBody RegisterApplication registerApplication, Sessions.User user) {
+        log.debug("根据id更新鲜果师申请记录\t id:{} param:{}", id, registerApplication);
 
         registerApplication.setAuditAt(Date.from(Instant.now()));
         registerApplication.setAuditUser(user.getUser().get("name").toString());
         ResponseEntity entity = fruitDoctorQualificationFeign.update(id, registerApplication);
-        return  !entity.getStatusCode().isError() ? ResponseEntity.ok().build() : ResponseEntity.badRequest().body("修改鲜果师申请记录失败");
+        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body("修改鲜果师申请记录失败") : ResponseEntity.ok().build();
     }
 
     @ApiOperation(value = "根据条件分页查询鲜果师申请记录列表", response = RegisterApplication.class, responseContainer = "Set")
-    @ApiImplicitParam(paramType = ApiParamType.BODY, name = "registerApplication",value = "鲜果师申请信息",  dataType = "RegisterApplication",required = true)
+    @ApiImplicitParam(paramType = ApiParamType.BODY, name = "registerApplication", value = "鲜果师申请信息", dataType = "RegisterApplication", required = true)
     @PostMapping("/fruit-doctors/qualifications/pages")
     public ResponseEntity search(@RequestBody RegisterApplication registerApplication) {
         log.debug("根据条件分页查询鲜果师申请记录列表\t param:{}", registerApplication);
 
         ResponseEntity<Pages<RegisterApplication>> entity = fruitDoctorQualificationFeign.search(registerApplication);
-        return !entity.getStatusCode().isError() ? ResponseEntity.ok(entity.getBody()) : ResponseEntity.badRequest().body(entity.getBody());
+        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok(entity.getBody());
     }
 
     @ApiOperation(value = "结算申请修改")
@@ -110,9 +109,9 @@ public class FruitDoctorApi {
 
         if (Objects.equals(SettlementStatus.SUCCESS, settlementApplication.getSettlementStatus())) {
             ResponseEntity entity = fruitDoctorSettlementFeign.updateSettlement(id, settlementApplication);
-            return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(Tips.warn(entity.getBody().toString())) : ResponseEntity.ok().build();
+            return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok().build();
         }
-        return ResponseEntity.badRequest().body(Tips.warn("结算状态不正确！"));
+        return ResponseEntity.badRequest().body("结算状态不正确！");
     }
 
     @ApiOperation(value = "结算申请分页查询")
@@ -121,7 +120,7 @@ public class FruitDoctorApi {
     public ResponseEntity search(@RequestBody SettlementApplication settlementApplication) {
         log.debug("结算申请分页查询\t param:{}", settlementApplication);
 
-        Pages<SettlementApplication> pages = fruitDoctorSettlementFeign.search(settlementApplication);
-        return ResponseEntity.ok(pages);
+        ResponseEntity<Pages<SettlementApplication>> entity = fruitDoctorSettlementFeign.search(settlementApplication);
+        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok(entity.getBody());
     }
 }

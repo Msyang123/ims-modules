@@ -73,9 +73,8 @@ public class UserDetailResult {
     @ApiModelProperty(notes = "是否锁定 UNLOCKED-未锁定,LOCK-锁定", dataType = "LockStatus")
     private LockStatus locked;
 
-    @ApiModelProperty(notes = "应用类型", dataType = "ApplicationType")
-    @HasEntries(from = DictionaryCodes.APPLICATION_TYPE, message = "没有找到此应用类型")
-    private ApplicationType applicationType;
+    @ApiModelProperty(notes = "应用类型", dataType = "String")
+    private String applicationType;
 
     @ApiModelProperty(notes = "免密支付权限", dataType = "SwitchStatus")
     private SwitchStatus paymentPermissions;

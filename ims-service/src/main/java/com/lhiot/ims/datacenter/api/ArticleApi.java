@@ -38,7 +38,7 @@ public class ArticleApi {
 
         ResponseEntity entity = articleFeign.create(article);
         if (entity.getStatusCode().isError()) {
-            return ResponseEntity.badRequest().body(Tips.warn(entity.getBody().toString()));
+            return ResponseEntity.badRequest().body(entity.getBody());
         }
         String location = entity.getHeaders().getLocation().toString();
         Long id = Long.valueOf(location.substring(location.lastIndexOf('/') + 1));
@@ -57,7 +57,7 @@ public class ArticleApi {
         log.debug("修改文章\t id:{} param:{}", id, article);
 
         ResponseEntity entity = articleFeign.update(id, article);
-        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(Tips.warn(entity.getBody().toString())) : ResponseEntity.ok().build();
+        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok().build();
 
     }
 
@@ -71,7 +71,7 @@ public class ArticleApi {
         log.debug("根据Id查找商品规格\t id:{}", id);
 
         ResponseEntity<Article> entity = articleFeign.single(id, false);
-        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(Tips.warn(entity.getBody().toString())) : ResponseEntity.ok(entity.getBody());
+        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok(entity.getBody());
 
     }
 
@@ -97,6 +97,6 @@ public class ArticleApi {
         log.debug("查询商品规格信息列表\t param:{}", param);
 
         ResponseEntity<Pages<Article>> entity = articleFeign.search(param);
-        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(Tips.warn(entity.getBody().toString())) : ResponseEntity.ok(entity.getBody());
+        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok(entity.getBody());
     }
 }

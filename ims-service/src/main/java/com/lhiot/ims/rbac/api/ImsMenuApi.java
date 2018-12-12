@@ -3,6 +3,7 @@ package com.lhiot.ims.rbac.api;
 import com.leon.microx.web.result.Pages;
 import com.leon.microx.web.result.Tuple;
 import com.leon.microx.web.session.Sessions;
+import com.lhiot.ims.datacenter.feign.type.ApplicationType;
 import com.lhiot.ims.rbac.aspect.LogCollection;
 import com.lhiot.ims.rbac.domain.ImsMenu;
 import com.lhiot.ims.rbac.domain.MenuDisplay;
@@ -121,7 +122,7 @@ public class ImsMenuApi {
         log.debug("查询菜单列表\t param:");
         //通过session获取用户id
         Long id = (Long) user.getUser().get("id");
-        List<MenuDisplay> menuDisplayList = Objects.requireNonNull(imsMenuService.listImsMenus(pid,id)).stream()
+        List<MenuDisplay> menuDisplayList = Objects.requireNonNull(imsMenuService.listImsMenus(pid, id)).stream()
                 .map(MenuDisplay::new)
                 .collect(Collectors.toList());
         return ResponseEntity.ok(Tuple.of(menuDisplayList));
@@ -133,7 +134,32 @@ public class ImsMenuApi {
         log.debug("查询菜单列表(系统)");
         //通过session获取用户id
         Long id = (Long) user.getUser().get("id");
-        return ResponseEntity.ok(Tuple.of(imsMenuService.listImsSystems(id)));
+        List<ImsMenu> imsMenus = imsMenuService.listImsSystems(id);
+        imsMenus.forEach(imsMenu -> {
+            if (Objects.isNull(imsMenu.getPId())) {
+                switch (imsMenu.getCode()) {
+                    case "health_good":
+                        imsMenu.setApplicationType(ApplicationType.HEALTH_GOOD);
+                        break;
+                    case "app":
+                        imsMenu.setApplicationType(ApplicationType.APP);
+                        break;
+                    case "wechat_mall":
+                        imsMenu.setApplicationType(ApplicationType.WECHAT_MALL);
+                        break;
+                    case "wechat_small_shop":
+                        imsMenu.setApplicationType(ApplicationType.WECHAT_SMALL_SHOP);
+                        break;
+                    case "wxsmall_shop":
+                        imsMenu.setApplicationType(ApplicationType.WXSMALL_SHOP);
+                        break;
+                    default:
+                        imsMenu.setApplicationType(null);
+                        break;
+                }
+            }
+        });
+        return ResponseEntity.ok(Tuple.of(imsMenus));
     }
 
 }

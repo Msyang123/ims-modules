@@ -37,6 +37,5 @@ public class QuerySearch {
     private Integer startRow;
 
     @ApiModelProperty(notes = "应用类型", dataType = "String")
-    @HasEntries(from = DictionaryCodes.APPLICATION_TYPE, message = "没有找到此应用类型")
     private String applicationType;
 }

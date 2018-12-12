@@ -33,7 +33,6 @@ public class UiPositionDetail {
     @ApiModelProperty(notes = "描述", dataType = "String")
     private String description;
     @ApiModelProperty(notes = "应用类型", dataType = "String")
-    @HasEntries(from = DictionaryCodes.APPLICATION_TYPE, message = "没有找到此应用类型")
     private String applicationType;
 
     /**

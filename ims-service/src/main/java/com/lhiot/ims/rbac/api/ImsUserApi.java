@@ -142,7 +142,6 @@ public class ImsUserApi {
         return ResponseEntity.noContent().build();
     }
 
-    @LogCollection
     @GetMapping("/sessions")
     @ApiOperation("获取登录用户信息")
     public ResponseEntity userInfo(Sessions.User user) {

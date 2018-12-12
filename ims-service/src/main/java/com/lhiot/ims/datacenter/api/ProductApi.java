@@ -20,7 +20,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
-import java.util.Objects;
 
 /**
  * @author hufan created in 2018/11/21 16:56
@@ -48,7 +47,7 @@ public class ProductApi {
         log.debug("添加商品\t param:{}", productResult);
 
         Tips tips = productService.create(productResult);
-        return !tips.err() ? ResponseEntity.created(URI.create("/products/" + tips.getMessage())).body(Maps.of("id", tips.getMessage())) : ResponseEntity.badRequest().body(Tips.warn("添加失败"));
+        return !tips.err() ? ResponseEntity.created(URI.create("/products/" + tips.getMessage())).body(Maps.of("id", tips.getMessage())) : ResponseEntity.badRequest().body("添加商品失败");
     }
 
     @LogCollection
@@ -60,7 +59,7 @@ public class ProductApi {
         log.debug("根据id修改商品\t id:{} param:{}", id, productResult);
 
         Tips tips = productService.update(id, productResult);
-        return tips.err() ? ResponseEntity.badRequest().body(Tips.warn(tips.getMessage())) : ResponseEntity.ok(Tips.info(tips.getMessage()));
+        return tips.err() ? ResponseEntity.badRequest().body(tips.getMessage()) : ResponseEntity.ok(tips.getMessage());
     }
 
     @ApiOperation(value = "根据Id查找商品", response = ProductResult.class)
@@ -70,7 +69,7 @@ public class ProductApi {
         log.debug("根据Id查找商品\t id:{}", id);
 
         Tips tips = productService.findProductById(id);
-        return tips.err() ? ResponseEntity.badRequest().body(Tips.warn(tips.getMessage())) : ResponseEntity.ok(tips.getData());
+        return tips.err() ? ResponseEntity.badRequest().body(tips.getMessage()) : ResponseEntity.ok(tips.getData());
     }
 
     @LogCollection
@@ -91,6 +90,6 @@ public class ProductApi {
         log.debug("查询商品信息列表\t param:{}", param);
 
         ResponseEntity<Pages<Product>> entity = productFegin.pages(param);
-        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(Tips.warn(entity.getBody().toString())) : ResponseEntity.ok(entity.getBody());
+        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok(entity.getBody());
     }
 }

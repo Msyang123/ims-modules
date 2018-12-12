@@ -50,4 +50,6 @@ public class Advertisement {
 
     @ApiModelProperty(name = "有效期", dataType = "String", readOnly = true)
     private String validityPeriod;
+    @ApiModelProperty(notes = "广告关联显示文字（链接目标）", dataType = "String")
+    private String advertiseRelationText;
 }

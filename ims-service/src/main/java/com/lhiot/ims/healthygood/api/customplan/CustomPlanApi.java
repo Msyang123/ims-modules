@@ -2,7 +2,6 @@ package com.lhiot.ims.healthygood.api.customplan;
 
 import com.leon.microx.util.Maps;
 import com.leon.microx.web.result.Pages;
-import com.leon.microx.web.result.Tips;
 import com.leon.microx.web.swagger.ApiParamType;
 import com.lhiot.ims.healthygood.feign.customplan.CustomPlanFeign;
 import com.lhiot.ims.healthygood.feign.customplan.model.CustomPlanDetailResult;
@@ -72,7 +71,7 @@ public class CustomPlanApi {
         log.debug("修改定制计划\t param:{}", customPlanDetailResult);
 
         ResponseEntity entity = customPlanFeign.update(id, customPlanDetailResult);
-        return !entity.getStatusCode().isError() ? ResponseEntity.ok().build() : ResponseEntity.badRequest().body(Tips.warn("修改信息失败!"));
+        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body("修改定制计划失败!") : ResponseEntity.ok().build();
     }
 
     @LogCollection
@@ -86,7 +85,7 @@ public class CustomPlanApi {
         log.debug("修改定制计划\t param:{}", customPlanDetailResult);
 
         ResponseEntity entity = customPlanFeign.updateProduct(id, customPlanDetailResult);
-        return !entity.getStatusCode().isError() ? ResponseEntity.ok().build() : ResponseEntity.badRequest().body(entity.getBody());
+        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok().build();
     }
 
     @LogCollection
@@ -97,7 +96,7 @@ public class CustomPlanApi {
         log.debug("批量删除定制计划\t param:{}", ids);
 
         ResponseEntity entity = customPlanFeign.batchDelete(ids);
-        return !entity.getStatusCode().isError() ? ResponseEntity.noContent().build() : ResponseEntity.badRequest().body(entity.getBody());
+        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.noContent().build();
     }
 
     @ApiOperation(value = "根据条件分页查询定制计划信息列表", response = CustomPlanResult.class, responseContainer = "Set")

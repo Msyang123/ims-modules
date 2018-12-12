@@ -52,7 +52,7 @@ public class ProductSectionApi {
         log.debug("添加商品版块\t param:{}", productSection);
 
         Tips tips = productSectionService.create(productSection);
-        return !tips.err() ? ResponseEntity.created(URI.create("/product-sections/" + tips.getMessage())).body(Maps.of("id", tips.getMessage())) : ResponseEntity.badRequest().body(Tips.warn("添加失败"));
+        return !tips.err() ? ResponseEntity.created(URI.create("/product-sections/" + tips.getMessage())).body(Maps.of("id", tips.getMessage())) : ResponseEntity.badRequest().body("添加失败");
     }
 
     @LogCollection
@@ -64,7 +64,7 @@ public class ProductSectionApi {
         log.debug("根据id修改商品版块\t id:{} param:{}", id, productSection);
 
         ResponseEntity entity = productSectionFegin.update(id, productSection);
-        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(Tips.warn(entity.getBody().toString())) : ResponseEntity.ok(entity.getBody());
+        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok(entity.getBody());
     }
 
     @ApiOperation(value = "根据Id查找商品版块", response = ProductSection.class)
@@ -74,7 +74,7 @@ public class ProductSectionApi {
         log.debug("根据Id查找商品版块\t id:{}", id);
 
         ResponseEntity<ProductSection> entity = productSectionFegin.findById(id, true, null, true);
-        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(Tips.warn(entity.getBody().toString())) : ResponseEntity.ok(entity.getBody());
+        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok(entity.getBody());
     }
 
     @LogCollection
@@ -85,7 +85,7 @@ public class ProductSectionApi {
         log.debug("根据商品Ids删除商品版块\t param:{}", ids);
 
         ResponseEntity entity = productSectionFegin.batchDelete(ids);
-        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(Tips.warn(entity.getBody().toString())) : ResponseEntity.noContent().build();
+        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.noContent().build();
     }
 
     @ApiOperation(value = "根据条件分页查询商品版块信息列表", response = ProductSection.class, responseContainer = "Set")
@@ -95,7 +95,7 @@ public class ProductSectionApi {
         log.debug("查询商品版块信息列表\t param:{}", param);
 
         ResponseEntity<Pages<ProductSection>> entity = productSectionFegin.pages(param);
-        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(Tips.warn(entity.getBody().toString())) : ResponseEntity.ok(entity.getBody());
+        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok(entity.getBody());
     }
 
     @LogCollection
@@ -106,7 +106,7 @@ public class ProductSectionApi {
         log.debug("根据关联id删除商品和板块关联\t param:{}", relationId);
 
         ResponseEntity entity = productSectionRelationFegin.delete(relationId);
-        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(Tips.warn(entity.getBody().toString())) : ResponseEntity.noContent().build();
+        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.noContent().build();
     }
 
     @ApiOperation("根据板块id和商品ids修改商品和板块关联")
@@ -119,7 +119,7 @@ public class ProductSectionApi {
         log.debug("根据板块id和商品ids修改商品和板块关联\t param:{}", sectionId, productIds);
 
         Tips tips = productSectionService.updateBatch(sectionId, productIds);
-        return tips.err() ? ResponseEntity.badRequest().body(Tips.warn(tips.getMessage())) : ResponseEntity.ok().body(tips.getMessage());
+        return tips.err() ? ResponseEntity.badRequest().body(tips.getMessage()) : ResponseEntity.ok().body(tips.getMessage());
     }
 
     @ApiOperation(value = "查询去重的商品板块集合", response = String.class, responseContainer = "List")
@@ -130,7 +130,7 @@ public class ProductSectionApi {
         ProductSectionParam productSectionParam = new ProductSectionParam();
         ResponseEntity<Pages<ProductSection>> entity = productSectionFegin.pages(productSectionParam);
         if (entity.getStatusCode().isError()) {
-            return ResponseEntity.badRequest().body(Tips.warn(entity.getBody().toString()));
+            return ResponseEntity.badRequest().body(entity.getBody());
         }
         List<ProductSection> productSectionList = entity.getBody().getArray();
         List<String> sectionNameList = productSectionList.stream().map(ProductSection::getSectionName).distinct().collect(Collectors.toList());

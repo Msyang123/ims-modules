@@ -47,9 +47,9 @@ public class ActivityProductApi {
         }
         String location = entity.getHeaders().getLocation().toString();
         Long id = Long.valueOf(location.substring(location.lastIndexOf('/') + 1));
-        return id > 0 ?
-                ResponseEntity.created(URI.create("/activity-products/" + id)).body(Maps.of("id", id)) :
-                ResponseEntity.badRequest().body(entity.getBody());
+        return id > 0
+                ? ResponseEntity.created(URI.create("/activity-products/" + id)).body(Maps.of("id", id))
+                : ResponseEntity.badRequest().body(entity.getBody());
     }
 
     @LogCollection
@@ -63,7 +63,7 @@ public class ActivityProductApi {
         log.debug("修改新品尝鲜活动商品\t param:{}", activityProduct);
 
         ResponseEntity entity = activityProductFeign.update(id, activityProduct);
-        return !entity.getStatusCode().isError() ? ResponseEntity.ok().build() : ResponseEntity.badRequest().body(Tips.warn("修改信息失败!"));
+        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body("修改新品尝鲜活动商品失败!") : ResponseEntity.ok().build();
     }
 
     @LogCollection
@@ -74,7 +74,7 @@ public class ActivityProductApi {
         log.debug("批量删除新品尝鲜活动商品\t param:{}", ids);
 
         ResponseEntity entity = activityProductFeign.batchDelete(ids);
-        return !entity.getStatusCode().isError() ? ResponseEntity.noContent().build() : ResponseEntity.badRequest().body(Tips.warn(entity.getBody().toString()));
+        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.noContent().build();
     }
 
     @ApiOperation(value = "根据条件分页查询新品尝鲜活动商品信息列表", response = ActivityProductResult.class, responseContainer = "Set")

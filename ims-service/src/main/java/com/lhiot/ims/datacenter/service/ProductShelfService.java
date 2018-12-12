@@ -67,7 +67,7 @@ public class ProductShelfService {
     public Tips findById(Long id) {
         ResponseEntity entity = productShelfFegin.findById(id, true);
         if (entity.getStatusCode().isError()) {
-            Tips.warn(entity.getBody().toString());
+            return Tips.warn(entity.getBody().toString());
         }
         ProductShelf productShelf = (ProductShelf) entity.getBody();
         ProductSpecification productSpecification = productShelf.getProductSpecification();
@@ -100,7 +100,7 @@ public class ProductShelfService {
         param.setApplicationType(ApplicationType.HEALTH_GOOD);
         ResponseEntity entity = productShelfFegin.pages(param);
         if (entity.getStatusCode().isError()) {
-            Tips.warn(entity.getBody().toString());
+            return Tips.warn(entity.getBody().toString());
         }
         Pages<ProductShelf> pages = (Pages<ProductShelf>) entity.getBody();
         List<ProductShelf> productShelfList = pages.getArray();

@@ -34,5 +34,5 @@ public interface FruitDoctorSettlementFeign {
      * @return
      */
     @PostMapping("/fruit-doctors/settlement/pages")
-    Pages<SettlementApplication> search(@RequestBody SettlementApplication settlementApplication);
+    ResponseEntity<Pages<SettlementApplication>> search(@RequestBody SettlementApplication settlementApplication);
 }

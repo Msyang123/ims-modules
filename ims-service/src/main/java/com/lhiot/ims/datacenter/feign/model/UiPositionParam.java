@@ -1,6 +1,5 @@
 package com.lhiot.ims.datacenter.feign.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.lhiot.ims.datacenter.feign.type.ApplicationType;
 import com.lhiot.ims.datacenter.feign.type.PositionType;
@@ -20,8 +19,8 @@ public class UiPositionParam {
     private Long id;
     @ApiModelProperty(notes = "类别:PRODUCT-商品，ADVERTISEMENT-广告，ARTICLE-文章", dataType = "PositionType")
     private PositionType positionType;
-    @ApiModelProperty(notes = "应用类型", dataType = "String", readOnly = true)
-    private ApplicationType applicationType;
+    @ApiModelProperty(notes = "应用类型", dataType = "String")
+    private String applicationType;
     @ApiModelProperty(notes = "位置编码", dataType = "String")
     private String codes;
     @ApiModelProperty(notes = "描述", dataType = "String")
