@@ -55,14 +55,14 @@ public class ProductShelf {
 
     @ApiModelProperty(notes = "商品名称", dataType = "String", readOnly = true)
     private String productName;
-    @ApiModelProperty(notes = "上架规格", dataType = "String", readOnly = true)
+    @ApiModelProperty(notes = "上架规格(1*1份)", dataType = "String", readOnly = true)
     private String shelfSpecification;
     @ApiModelProperty(notes = "规格条码", dataType = "String", readOnly = true)
     private String barcode;
     @ApiModelProperty(notes = "板块ids", dataType = "String")
     private String sectionIds;
 
-    @ApiModelProperty(notes = "规格信息", dataType = "String", readOnly = true)
+    @ApiModelProperty(notes = "规格信息（排毒养颜套餐  1盒  [00815]）", dataType = "String", readOnly = true)
     private String specificationInfo;
 
 //    /**

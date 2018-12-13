@@ -48,7 +48,14 @@ public class OrderApi {
     @GetMapping("/orders/{orderCode}")
     public ResponseEntity orderDetail(@PathVariable("orderCode") String orderCode, @RequestParam("needProductList") boolean needProductList,
                                       @RequestParam("needOrderFlowList") boolean needOrderFlowList) {
+        log.debug("根据订单code查询订单详情\t param:{}", orderCode, needProductList, needOrderFlowList);
+
         ResponseEntity<OrderDetailResult> entity = orderFeign.orderDetail(orderCode, needProductList, needOrderFlowList);
+        if(entity.getStatusCode().isError()){
+            return ResponseEntity.badRequest().body(entity.getBody());
+        }
+        OrderDetailResult orderDetailResult = entity.getBody();
+        // TODO 用户信息、配送信息、上架规格完善
         return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok(entity.getBody());
     }
 }
