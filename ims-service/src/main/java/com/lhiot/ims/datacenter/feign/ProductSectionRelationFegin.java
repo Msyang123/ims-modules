@@ -36,6 +36,6 @@ public interface ProductSectionRelationFegin {
      * 多个商品上架Id以英文逗号分隔
      */
     @DeleteMapping(value = "/product-section-relations/batches")
-    ResponseEntity deleteBatch(@RequestParam("sectionId") Long sectionId, @RequestParam("shelfIds") String shelfIds);
+    ResponseEntity deleteBatch(@RequestParam("sectionId") Long sectionId, @RequestParam(value = "shelfIds", required = false) String shelfIds);
 
 }

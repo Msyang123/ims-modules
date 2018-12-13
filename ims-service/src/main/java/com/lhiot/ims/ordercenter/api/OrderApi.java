@@ -72,7 +72,9 @@ public class OrderApi {
         }
         // 配送信息 TODO
 
+
         // 上架规格完善 TODO
+
         return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok(entity.getBody());
     }
 }

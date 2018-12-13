@@ -15,8 +15,8 @@ import com.lhiot.ims.datacenter.feign.model.AdvertisementParam;
 import com.lhiot.ims.datacenter.feign.type.RelationType;
 import com.lhiot.ims.healthygood.feign.customplan.CustomPlanFeign;
 import com.lhiot.ims.healthygood.feign.customplan.CustomPlanSectionFeign;
+import com.lhiot.ims.healthygood.feign.customplan.entity.CustomPlanSection;
 import com.lhiot.ims.healthygood.feign.customplan.model.CustomPlanDetailResult;
-import com.lhiot.ims.healthygood.feign.customplan.model.CustomPlanSectionResultAdmin;
 import com.lhiot.ims.rbac.aspect.LogCollection;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -129,7 +129,7 @@ public class AdvertisementApi {
                 advertisement.setAdvertiseRelationText(productSectionEntity.getBody().getSectionName());
                 break;
             case CUSTOM_PLAN_SECTION:
-                ResponseEntity<CustomPlanSectionResultAdmin> customPlanSectionEntity = customPlanSectionFeign.findById(Long.valueOf(advertisement.getAdvertiseRelation()), false);
+                ResponseEntity<CustomPlanSection> customPlanSectionEntity = customPlanSectionFeign.findById(Long.valueOf(advertisement.getAdvertiseRelation()), false);
                 if (customPlanSectionEntity.getStatusCode().isError()) {
                     return ResponseEntity.badRequest().body(customPlanSectionEntity.getBody());
                 }

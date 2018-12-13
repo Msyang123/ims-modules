@@ -81,7 +81,7 @@ public class CustomPlan{
     /**
      *定制计划排序
      */
-    @JsonProperty("sort")
-    @ApiModelProperty(value = "定制计划排序", dataType = "Long")
-    private Long sort;
+    @JsonProperty("relationSort")
+    @ApiModelProperty(value = "定制计划关联排序", dataType = "Long")
+    private Long relationSort;
 }
