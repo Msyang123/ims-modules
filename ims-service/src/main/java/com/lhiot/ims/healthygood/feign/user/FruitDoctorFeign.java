@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 /**
  * @author hufan created in 2018/12/6 20:06
  **/
-@FeignClient(value = "healthy-good-service-v2-0")
+@FeignClient(value = "healthy-good-service-v2-0-hufan")
 @Component
 public interface FruitDoctorFeign {
     /**

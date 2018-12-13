@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 /**
  * @author hufan created in 2018/12/6 12:19
  **/
-@FeignClient(value = "healthy-good-service-v2-0")
+@FeignClient(value = "healthy-good-service-v2-0-hufan")
 @Component
 public interface FruitDoctorQualificationFeign {
 

@@ -80,7 +80,7 @@ public class CustomPlanApi {
             @ApiImplicitParam(paramType = ApiParamType.PATH, name = "id", value = "定制计划id", dataType = "Long", required = true),
             @ApiImplicitParam(paramType = ApiParamType.BODY, name = "customPlanDetailResult", value = "定制计划商品", dataType = "CustomPlanDetailResult", required = true)
     })
-    @PutMapping("/custom-plan-product/{id}")
+    @PutMapping("/custom-plan-products/{id}")
     public ResponseEntity updateProduct(@PathVariable("id") Long id, @RequestBody CustomPlanDetailResult customPlanDetailResult) {
         log.debug("修改定制计划\t param:{}", customPlanDetailResult);
 

@@ -5,6 +5,8 @@ import com.leon.microx.web.swagger.ApiParamType;
 import com.lhiot.ims.ordercenter.feign.OrderFeign;
 import com.lhiot.ims.ordercenter.feign.model.BaseOrderParam;
 import com.lhiot.ims.ordercenter.feign.model.OrderDetailResult;
+import com.lhiot.ims.usercenter.feign.UserFeign;
+import com.lhiot.ims.usercenter.feign.model.UserDetailResult;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -12,6 +14,8 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Objects;
 
 /**
  * @author hufan created in 2018/12/11 19:46
@@ -21,9 +25,11 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 public class OrderApi {
     private final OrderFeign orderFeign;
+    private final UserFeign userFeign;
 
-    public OrderApi(OrderFeign orderFeign) {
+    public OrderApi(OrderFeign orderFeign, UserFeign userFeign) {
         this.orderFeign = orderFeign;
+        this.userFeign = userFeign;
     }
 
 
@@ -55,7 +61,18 @@ public class OrderApi {
             return ResponseEntity.badRequest().body(entity.getBody());
         }
         OrderDetailResult orderDetailResult = entity.getBody();
-        // TODO 用户信息、配送信息、上架规格完善
+        Long userId = orderDetailResult.getUserId();
+        // 用户信息
+        if (Objects.nonNull(userId)) {
+            ResponseEntity<UserDetailResult> userEntity = userFeign.findById(userId);
+            if (Objects.isNull(userEntity.getBody()) || userEntity.getStatusCode().isError()) {
+                return ResponseEntity.badRequest().body(userEntity.getBody());
+            }
+            orderDetailResult.setPhone(userEntity.getBody().getPhone());
+        }
+        // 配送信息 TODO
+
+        // 上架规格完善 TODO
         return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok(entity.getBody());
     }
 }

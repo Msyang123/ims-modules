@@ -16,21 +16,30 @@ import org.springframework.web.bind.annotation.*;
 @Component
 public interface UserFeign {
 
-        /**
-         * 后台管理分页查询用户列表
-         *
-         * @param querySearch
-         * @return
-         */
-        @PostMapping("/users/query/search")
-        ResponseEntity<Pages<UserDetailResult>> query(@RequestBody QuerySearch querySearch);
-        /**
-         * 解除用户锁定
-         *
-         * @param userId
-         * @return
-         */
-        @PutMapping("/users/{userId}/locked-status")
-        ResponseEntity unlock(@PathVariable("userId") Long userId,@RequestParam("lockStatus") LockStatus lockStatus);
+    /**
+     * 后台管理分页查询用户列表
+     *
+     * @param querySearch
+     * @return
+     */
+    @PostMapping("/users/query/search")
+    ResponseEntity<Pages<UserDetailResult>> query(@RequestBody QuerySearch querySearch);
 
+    /**
+     * 解除用户锁定
+     *
+     * @param userId
+     * @return
+     */
+    @PutMapping("/users/{userId}/locked-status")
+    ResponseEntity unlock(@PathVariable("userId") Long userId, @RequestParam("lockStatus") LockStatus lockStatus);
+
+    /**
+     * 根据用户ID查询用户信息
+     *
+     * @param userId
+     * @return
+     */
+    @GetMapping("/{id}")
+    ResponseEntity<UserDetailResult> findById(@PathVariable("id") Long userId);
 }

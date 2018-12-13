@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
  * @author hufan created in 2018/12/1 15:12
  **/
 @Component
-@FeignClient(value = "healthy-good-service-v2-0")
+@FeignClient(value = "healthy-good-service-v2-0-hufan")
 public interface CustomPlanSectionRelationFeign {
 
     /**
@@ -34,6 +34,16 @@ public interface CustomPlanSectionRelationFeign {
     @PostMapping("/custom-plan-section-relations")
     ResponseEntity create(@RequestBody CustomPlanSectionRelation customPlanSectionRelation);
 
+    /**
+     * customPlanSectionRelation
+     *
+     * @param sectionId
+     * @param planIds
+     * @param sorts
+     * @return
+     */
+    @PostMapping("/product-section-relations/batches")
+    ResponseEntity createBatch(@RequestParam("sectionId") Long sectionId, @RequestParam("planIds") String planIds, @RequestParam("sorts") String sorts);
 
     /**
      * 根据关联Id删除定制版块与定制计划架关系
@@ -43,5 +53,16 @@ public interface CustomPlanSectionRelationFeign {
      */
     @DeleteMapping("/custom-plan-section-relations/{id}")
     ResponseEntity delete(@PathVariable("id") Long relationId);
+
+
+    /**
+     * 批量删除定制版块与定制计划的关系
+     *
+     * @param sectionId
+     * @param planIds
+     * @return
+     */
+    @DeleteMapping(value = "/custom-plan-section-relations/batches")
+    ResponseEntity deleteBatch(@RequestParam("sectionId") Long sectionId, @RequestParam("planIds") String planIds);
 }
 

@@ -98,6 +98,7 @@ public class ProductSectionApi {
         return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok(entity.getBody());
     }
 
+    @Deprecated
     @LogCollection
     @ApiOperation("根据关联id删除商品和板块关联")
     @ApiImplicitParam(paramType = ApiParamType.PATH, name = "relationId", value = "商品板块关联id", dataType = "Long", required = true)
@@ -109,6 +110,19 @@ public class ProductSectionApi {
         return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.noContent().build();
     }
 
+    @ApiOperation("批量删除版块与商品上架关系")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = ApiParamType.QUERY, name = "sectionId", value = "商品版块Id", dataType = "Long", required = true),
+            @ApiImplicitParam(paramType = ApiParamType.QUERY, name = "shelfIds", value = "多个商品上架Id以英文逗号分隔,为空则删除此版块所有上架关系", dataType = "String")
+    })
+    @DeleteMapping("/product-sections/relation/batches")
+    public ResponseEntity deleteBatch(@RequestParam("sectionId") Long sectionId, @RequestParam(value = "shelfIds", required = false) String shelfIds) {
+        log.debug("批量删除版块与商品上架关系\t sectionId:{},shelfIds:{} ", sectionId, shelfIds);
+
+        ResponseEntity entity = productSectionRelationFegin.deleteBatch(sectionId, shelfIds);
+        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.noContent().build();
+    }
+
     @LogCollection
     @ApiOperation("新增商品和板块的关联")
     @PostMapping("/product-sections/relation")
@@ -116,9 +130,10 @@ public class ProductSectionApi {
         log.debug("根据关联id删除商品和板块关联\t param:{}", productSectionRelation);
 
         ResponseEntity entity = productSectionRelationFegin.create(productSectionRelation);
-        String location = entity.getHeaders().getLocation().toString();
+        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok().build();
+       /* String location = entity.getHeaders().getLocation().toString();
         Long relationId = Long.valueOf(location.substring(location.lastIndexOf('/') + 1));
-        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.created(URI.create("/product-sections/relation/" + relationId)).body(Maps.of("id", relationId));
+        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.created(URI.create("/product-sections/relation/" + relationId)).body(Maps.of("id", relationId));*/
     }
 
     @Deprecated

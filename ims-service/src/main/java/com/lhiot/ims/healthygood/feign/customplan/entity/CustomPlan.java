@@ -77,4 +77,11 @@ public class CustomPlan{
     @JsonProperty("createUser")
     @ApiModelProperty(value = "创建人", dataType = "String")
     private String createUser;
+
+    /**
+     *定制计划排序
+     */
+    @JsonProperty("sort")
+    @ApiModelProperty(value = "定制计划排序", dataType = "Long")
+    private Long sort;
 }
