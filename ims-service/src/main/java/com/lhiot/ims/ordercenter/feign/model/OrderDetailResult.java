@@ -1,10 +1,12 @@
 package com.lhiot.ims.ordercenter.feign.model;
 
+import com.lhiot.ims.ordercenter.feign.entity.DeliverNote;
 import com.lhiot.ims.ordercenter.feign.entity.OrderFlow;
 import com.lhiot.ims.ordercenter.feign.entity.OrderProduct;
 import com.lhiot.ims.ordercenter.feign.entity.OrderStore;
 import com.lhiot.ims.ordercenter.feign.type.AllowRefund;
 import com.lhiot.ims.ordercenter.feign.type.OrderStatus;
+import com.lhiot.ims.ordercenter.feign.type.OrderType;
 import com.lhiot.ims.ordercenter.feign.type.ReceivingWay;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -25,9 +27,12 @@ public class OrderDetailResult {
     private String code;
     @ApiModelProperty(notes = "用户Id", dataType = "Long")
     private Long userId;
-    @ApiModelProperty(notes = "应用类型", dataType = "ApplicationTypeEnum")
+    @ApiModelProperty(notes = "用户手机号", dataType = "String")
+    private String phone;
+    @ApiModelProperty(notes = "应用类型", dataType = "String")
     private String applicationType;
-    private String orderType;
+    @ApiModelProperty(notes = "订单类型：NORMAL-普通订单,CUSTOM-定制订单,TEAM_BUY-团购订单", dataType = "OrderType")
+    private OrderType orderType;
     @ApiModelProperty(notes = "提货方式", dataType = "String")
     private ReceivingWay receivingWay;
     @ApiModelProperty(notes = "订单总金额", dataType = "Integer")
@@ -70,4 +75,10 @@ public class OrderDetailResult {
     private OrderStore orderStore;
     @ApiModelProperty(notes = "订单状态流水列表", dataType = "List")
     private List<OrderFlow> orderFlowList;
+
+    @ApiModelProperty(notes = "上架规格(1*1份)", dataType = "String")
+    private String shelfSpecification;
+    @ApiModelProperty(notes = "配送信息", dataType = "DeliverNote")
+    private DeliverNote deliverNote;
+
 }

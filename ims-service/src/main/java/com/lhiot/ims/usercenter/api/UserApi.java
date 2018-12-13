@@ -33,7 +33,7 @@ public class UserApi {
     }
 
     @ApiOperation("后台管理分页查询用户列表")
-    @PostMapping("/user/query/search")
+    @PostMapping("/users/pages")
     public ResponseEntity query(@RequestBody QuerySearch querySearch) {
         log.debug("后台管理分页查询用户列表\t param{}", querySearch);
 
@@ -50,7 +50,7 @@ public class UserApi {
             @ApiImplicitParam(paramType = ApiParamType.PATH, name = "userId", value = "业务用户Id", dataType = "Long", required = true),
             @ApiImplicitParam(paramType = ApiParamType.QUERY, name = "lockStatus", value = "锁状态", dataTypeClass = LockStatus.class, required = true)
     })
-    @PutMapping("/{userId}/locked-status")
+    @PutMapping("/users/{userId}/locked-status")
     public ResponseEntity unlock(@PathVariable("userId") Long userId, @RequestParam("lockStatus") LockStatus lockStatus) {
         log.debug("修改用户锁状态\t userId{},param{}", userId, lockStatus);
 

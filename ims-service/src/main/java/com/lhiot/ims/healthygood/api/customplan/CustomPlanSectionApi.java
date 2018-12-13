@@ -5,9 +5,10 @@ import com.leon.microx.web.result.Pages;
 import com.leon.microx.web.swagger.ApiHideBodyProperty;
 import com.leon.microx.web.swagger.ApiParamType;
 import com.lhiot.ims.healthygood.feign.customplan.CustomPlanSectionFeign;
+import com.lhiot.ims.healthygood.feign.customplan.CustomPlanSectionRelationFeign;
 import com.lhiot.ims.healthygood.feign.customplan.entity.CustomPlanSection;
+import com.lhiot.ims.healthygood.feign.customplan.entity.CustomPlanSectionRelation;
 import com.lhiot.ims.healthygood.feign.customplan.model.CustomPlanSectionParam;
-import com.lhiot.ims.healthygood.feign.customplan.model.CustomPlanSectionResultAdmin;
 import com.lhiot.ims.rbac.aspect.LogCollection;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -30,19 +31,21 @@ import java.util.stream.Collectors;
 @RestController
 public class CustomPlanSectionApi {
     private final CustomPlanSectionFeign customPlanSectionFeign;
+    private final CustomPlanSectionRelationFeign customPlanSectionRelationFeign;
 
-    public CustomPlanSectionApi(CustomPlanSectionFeign customPlanSectionFeign) {
+    public CustomPlanSectionApi(CustomPlanSectionFeign customPlanSectionFeign, CustomPlanSectionRelationFeign customPlanSectionRelationFeign) {
         this.customPlanSectionFeign = customPlanSectionFeign;
+        this.customPlanSectionRelationFeign = customPlanSectionRelationFeign;
     }
 
     @LogCollection
     @ApiOperation("添加定制板块")
-    @ApiImplicitParam(paramType = ApiParamType.BODY, name = "customPlanSectionResultAdmin", value = "定制计划板块", dataType = "CustomPlanSectionResultAdmin", required = true)
+    @ApiImplicitParam(paramType = ApiParamType.BODY, name = "customPlanSection", value = "定制计划板块", dataType = "CustomPlanSection", required = true)
     @PostMapping("/custom-plan-sections")
-    public ResponseEntity create(@Valid @RequestBody CustomPlanSectionResultAdmin customPlanSectionResultAdmin) {
-        log.debug("添加定制板块\t param:{}", customPlanSectionResultAdmin);
+    public ResponseEntity create(@Valid @RequestBody CustomPlanSection customPlanSection) {
+        log.debug("添加定制板块\t param:{}", customPlanSection);
 
-        ResponseEntity entity = customPlanSectionFeign.create(customPlanSectionResultAdmin);
+        ResponseEntity entity = customPlanSectionFeign.create(customPlanSection);
         if (entity.getStatusCode().isError()) {
             return ResponseEntity.badRequest().body(entity.getBody());
         }
@@ -58,18 +61,18 @@ public class CustomPlanSectionApi {
     @ApiOperation("修改定制板块")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = ApiParamType.PATH, name = "id", value = "定制板块id", dataType = "Long", required = true),
-            @ApiImplicitParam(paramType = ApiParamType.BODY, name = "customPlanSectionResultAdmin", value = "定制板块", dataType = "CustomPlanSectionResultAdmin", required = true)
+            @ApiImplicitParam(paramType = ApiParamType.BODY, name = "customPlanSection", value = "定制板块", dataType = "CustomPlanSection", required = true)
     })
     @PutMapping("/custom-plan-sections/{id}")
     @ApiHideBodyProperty({"customPlanList", "relationSorts"})
-    public ResponseEntity update(@PathVariable("id") Long id, @Valid @RequestBody CustomPlanSectionResultAdmin customPlanSectionResultAdmin) {
-        log.debug("修改定制板块\t param:{}", customPlanSectionResultAdmin);
+    public ResponseEntity update(@PathVariable("id") Long id, @Valid @RequestBody CustomPlanSection customPlanSection) {
+        log.debug("修改定制板块\t param:{}", customPlanSection);
 
-        ResponseEntity entity = customPlanSectionFeign.update(id, customPlanSectionResultAdmin);
+        ResponseEntity entity = customPlanSectionFeign.update(id, customPlanSection);
         return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok().build();
     }
 
-    @ApiOperation(value = "根据id查找单个定制板块", response = CustomPlanSectionResultAdmin.class)
+    @ApiOperation(value = "根据id查找单个定制板块", response = CustomPlanSection.class)
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = ApiParamType.PATH, name = "id", value = "定制板块id", dataType = "Long", required = true),
             @ApiImplicitParam(paramType = ApiParamType.QUERY, name = "flag", value = "是否查询关联定制计划信息", dataType = "Boolean")
@@ -78,7 +81,7 @@ public class CustomPlanSectionApi {
     public ResponseEntity findById(@PathVariable("id") Long id, @RequestParam(value = "flag", required = false) boolean flag) {
         log.debug("根据id查找单个定制板块\t param:{}", id, flag);
 
-        ResponseEntity<CustomPlanSectionResultAdmin> entity = customPlanSectionFeign.findById(id, true);
+        ResponseEntity<CustomPlanSection> entity = customPlanSectionFeign.findById(id, true);
         return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok().body(entity.getBody());
     }
 
@@ -116,5 +119,62 @@ public class CustomPlanSectionApi {
         List<CustomPlanSection> customPlanSectionList = entity.getBody().getArray();
         List<String> sectionNameList = customPlanSectionList.stream().map(CustomPlanSection::getSectionName).distinct().collect(Collectors.toList());
         return ResponseEntity.ok(sectionNameList);
+    }
+
+    @Deprecated
+    @LogCollection
+    @ApiOperation("批量修改定制版块与定制计划关系")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = ApiParamType.QUERY, name = "sectionId", value = "定制版块Id", dataType = "Long", required = true),
+            @ApiImplicitParam(paramType = ApiParamType.QUERY, name = "planIds", value = "多个定制计划Id以英文逗号分隔", dataType = "String"),
+            @ApiImplicitParam(paramType = ApiParamType.QUERY, name = "sorts", value = "多个排序以英文逗号分隔", dataType = "String")
+    })
+    @PutMapping("/custom-plan-sections/relation/batches")
+    public ResponseEntity updateBatch(@RequestParam("sectionId") Long sectionId, @RequestParam(value = "planIds", required = false) String planIds, @RequestParam(value = "sorts", required = false) String sorts) {
+        log.debug("批量修改定制版块与定制计划关系\t param:{}", sectionId, planIds, sorts);
+
+        ResponseEntity entity = customPlanSectionRelationFeign.updateBatch(sectionId, planIds, sorts);
+        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok().build();
+    }
+
+    @LogCollection
+    @ApiOperation("添加定制版块与定制计划关系")
+    @PostMapping("/custom-plan-sections/relation")
+    @ApiHideBodyProperty("id")
+    public ResponseEntity create(@RequestBody CustomPlanSectionRelation customPlanSectionRelation) {
+        log.debug("批量修改定制版块与定制计划关系\t param:{}", customPlanSectionRelation);
+
+        ResponseEntity entity = customPlanSectionRelationFeign.create(customPlanSectionRelation);
+        String location = entity.getHeaders().getLocation().toString();
+        Long relationId = Long.valueOf(location.substring(location.lastIndexOf('/') + 1));
+
+        return entity.getStatusCode().isError()
+                ? ResponseEntity.badRequest().body("添加商品与版块关系记录失败！")
+                : ResponseEntity.created(URI.create("/custom-plan-section-relations/" + relationId)).body(Maps.of("id", relationId));
+    }
+
+    @Deprecated
+    @LogCollection
+    @ApiOperation("根据关联Id删除定制版块与定制计划架关系")
+    @ApiImplicitParam(paramType = ApiParamType.PATH, name = "id", value = "关系Id", dataType = "Long", required = true)
+    @DeleteMapping("/custom-plan-sections/relation/{id}")
+    public ResponseEntity delete(@PathVariable("id") Long relationId) {
+        log.debug("根据关联Id删除定制版块与定制计划架关系\t relationId: {}", relationId);
+
+        ResponseEntity entity = customPlanSectionRelationFeign.delete(relationId);
+        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body("删除定制版块与定制计划架关系失败！") : ResponseEntity.noContent().build();
+    }
+
+    @ApiOperation("批量删除定制版块与定制计划架关系")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = ApiParamType.QUERY, name = "sectionId", value = "定制版块Id", dataType = "Long", required = true),
+            @ApiImplicitParam(paramType = ApiParamType.QUERY, name = "planIds", value = "多个定制计划Id以英文逗号分隔,为空则删除此版块所有上架关系", dataType = "String")
+    })
+    @DeleteMapping("/custom-plan-sections/relation/batches")
+    public ResponseEntity deleteBatch(@RequestParam("sectionId") Long sectionId, @RequestParam(value = "planIds", required = false) String planIds) {
+        log.debug("批量删除版块与商品上架关系\t sectionId:{},shelfIds:{} ", sectionId, planIds);
+
+        ResponseEntity entity = customPlanSectionRelationFeign.deleteBatch(sectionId, planIds);
+        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.noContent().build();
     }
 }

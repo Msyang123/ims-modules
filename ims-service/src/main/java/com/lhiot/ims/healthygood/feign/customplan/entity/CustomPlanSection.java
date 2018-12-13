@@ -11,6 +11,7 @@ import lombok.ToString;
 
 import javax.validation.constraints.NotNull;
 import java.util.Date;
+import java.util.List;
 
 /**
 * Description:定制计划板块实体类
@@ -22,60 +23,31 @@ import java.util.Date;
 @ApiModel
 @NoArgsConstructor
 public class CustomPlanSection{
-
-    /**
-    *
-    */
-    @JsonProperty("id")
-    @ApiModelProperty(value = "主键id", dataType = "Long", readOnly = true)
+    @ApiModelProperty(value = "主键id", dataType = "Long")
     private Long id;
 
-    /**
-    *
-    */
-    @ApiModelProperty(value = "", dataType = "String")
+    @ApiModelProperty(value = "板块图片", dataType = "String")
     private String sectionImage;
 
-    /**
-    *
-    */
-    @JsonProperty("url")
-    @ApiModelProperty(value = "", dataType = "String")
+    @ApiModelProperty(value = "板块链接url", dataType = "String")
     private String url;
 
-    /**
-    *
-    */
-    @JsonProperty("sectionName")
-    @ApiModelProperty(value = "", dataType = "String")
+    @ApiModelProperty(value = "板块名称", dataType = "String")
     private String sectionName;
 
-    /**
-    *
-    */
-    @JsonProperty("sectionCode")
-    @ApiModelProperty(value = "", dataType = "String")
+    @ApiModelProperty(value = "板块编码", dataType = "String")
     private String sectionCode;
 
-    /**
-    *
-    */
-    @JsonProperty("sort")
-    @ApiModelProperty(value = "", dataType = "Integer")
+    @ApiModelProperty(value = "排序", dataType = "Integer")
     private Integer sort;
 
-    /**
-    *
-    */
-    @JsonProperty("createAt")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
-    @ApiModelProperty(value = "", dataType = "Date", readOnly = true)
+    @ApiModelProperty(value = "创建时间", dataType = "Date", readOnly = true)
     private Date createAt;
 
 
     @JsonProperty("customPlanList")
-    @ApiModelProperty(value = "定制计划集合", dataType = "Pages")
-    @NotNull
-    private Pages<CustomPlan> customPlanList;
+    @ApiModelProperty(value = "定制计划集合", dataType = "List")
+    private List<CustomPlan> customPlanList;
 
 }
