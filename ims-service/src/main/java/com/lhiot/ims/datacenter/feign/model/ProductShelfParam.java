@@ -1,5 +1,6 @@
 package com.lhiot.ims.datacenter.feign.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.leon.microx.predefine.OnOff;
 import com.lhiot.ims.datacenter.feign.type.ApplicationType;
 import com.lhiot.ims.datacenter.feign.type.ShelfType;
@@ -40,6 +41,7 @@ public class ProductShelfParam {
     private OnOff shelfStatus;
     @ApiModelProperty(notes = "上架类型：NORMAL-普通商品,GIFT-赠品", dataType = "ShelfType")
     private ShelfType shelfType;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     @ApiModelProperty(notes = "创建时间", dataType = "Date", readOnly = true)
     private Date createAt;
     @ApiModelProperty(notes = "描述", dataType = "String", readOnly = true)

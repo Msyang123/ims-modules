@@ -1,7 +1,6 @@
 package com.lhiot.ims.usercenter.feign.model;
 
-import com.lhiot.dc.dictionary.HasEntries;
-import com.lhiot.ims.datacenter.util.DictionaryCodes;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -21,9 +20,11 @@ public class QuerySearch {
     @ApiModelProperty(notes = "用户昵称", dataType = "String")
     private String nickname;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     @ApiModelProperty(notes = "创建时间启", dataType = "Date")
     private Date createAtStart;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     @ApiModelProperty(notes = "创建时间止", dataType = "Date")
     private Date createAtEnd;
 
@@ -32,9 +33,6 @@ public class QuerySearch {
 
     @ApiModelProperty(notes = "当前页", dataType = "Integer")
     private Integer page;
-
-    @ApiModelProperty(hidden = true)
-    private Integer startRow;
 
     @ApiModelProperty(notes = "应用类型", dataType = "String")
     private String applicationType;

@@ -32,14 +32,12 @@ public class UserApi {
         this.userFeign = userFeign;
     }
 
-    @ApiOperation("后台管理分页查询用户列表")
+    @ApiOperation(value = "后台管理分页查询用户列表", response = UserDetailResult.class, responseContainer = "Set")
+    @ApiImplicitParam(paramType = ApiParamType.BODY, name = "querySearch", value = "查询条件", dataType = "QuerySearch")
     @PostMapping("/users/pages")
     public ResponseEntity query(@RequestBody QuerySearch querySearch) {
         log.debug("后台管理分页查询用户列表\t param{}", querySearch);
 
-        if (Objects.nonNull(querySearch.getRows()) && Objects.nonNull(querySearch.getPage())) {
-            querySearch.setStartRow((querySearch.getPage() - 1) * querySearch.getRows());
-        }
         ResponseEntity<Pages<UserDetailResult>> entity = userFeign.query(querySearch);
         return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body("调用基础用户失败") : ResponseEntity.ok(entity.getBody());
     }

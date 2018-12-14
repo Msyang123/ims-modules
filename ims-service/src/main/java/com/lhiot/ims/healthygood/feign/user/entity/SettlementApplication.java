@@ -1,7 +1,6 @@
 package com.lhiot.ims.healthygood.feign.user.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.lhiot.ims.healthygood.feign.user.type.SettlementStatus;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -23,71 +22,41 @@ import java.util.Date;
 @NoArgsConstructor
 public class SettlementApplication {
 
-    /**
-     * id
-     */
-    @JsonProperty("id")
     @ApiModelProperty(value = "id", dataType = "Long")
     private Long id;
 
-    /**
-     * 申请人（鲜果师编号）
-     */
-    @JsonProperty("doctorId")
     @ApiModelProperty(value = "申请人（鲜果师编号）", dataType = "Long")
     private Long doctorId;
 
-    /**
-     * 申请时间
-     */
-    @JsonProperty("createAt")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     @ApiModelProperty(value = "申请时间", dataType = "Date")
     private java.util.Date createAt;
 
-    /**
-     * 申请提取金额
-     */
-    @JsonProperty("amount")
     @ApiModelProperty(value = "申请提取金额", dataType = "Integer")
     private Integer amount;
 
-    /**
-     * 结算状态(UNSETTLED-未处理  SUCCESS-已成功  EXPIRED-已过期)
-     */
-    @JsonProperty("settlementStatus")
     @ApiModelProperty(value = "结算状态(UNSETTLED-未处理  SUCCESS-已成功  EXPIRED-已过期)", dataType = "SettlementStatus")
     private SettlementStatus settlementStatus;
 
-    /**
-     * 处理时间
-     */
-    @JsonProperty("dealAt")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     @ApiModelProperty(value = "处理时间", dataType = "Date")
     private java.util.Date dealAt;
 
-    /**
-     *起始创建时间
-     */
-    @JsonProperty("beginCreateAt")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     @ApiModelProperty(notes = "起始创建时间(用于搜索)", dataType = "Date")
     private Date beginCreateAt;
 
-    /**
-     *截止创建时间
-     */
-    @JsonProperty("endCreateAt")
+
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     @ApiModelProperty(notes = "截止创建时间(用于搜索)", dataType = "Date")
     private Date endCreateAt;
 
-    /**
-     * 申请人（鲜果师编号）
-     */
-    @JsonProperty("realName")
     @ApiModelProperty(value = "申请人（鲜果师名称）", dataType = "String")
     private String realName;
 
     @ApiModelProperty(notes = "每页查询条数(为空或0不分页查所有)", dataType = "Integer")
     private Integer rows;
+
     @ApiModelProperty(notes = "当前页", dataType = "Integer")
     private Integer page;
 }

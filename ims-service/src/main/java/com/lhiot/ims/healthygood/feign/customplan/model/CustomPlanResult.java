@@ -21,21 +21,27 @@ public class CustomPlanResult {
      */
     @ApiModelProperty(value = "主键Id", dataType = "Long", readOnly = true)
     private Long id;
+
+    @NotNull(message = "定制计划名称不能为空")
     @ApiModelProperty(value = "定制计划名称", dataType = "String")
-    @NotNull
     private String name;
+
     @ApiModelProperty(value = "描述", dataType = "String")
     private String description;
+
     @ApiModelProperty(value = "banner图片", dataType = "String")
     private String image;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
+
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     @ApiModelProperty(value = "创建时间", dataType = "Date", readOnly = true)
     private java.util.Date createAt;
+
+    @NotNull(message = "到期规则不能为空")
     @ApiModelProperty(value = "到期规则", dataType = "String")
-    @NotNull
     private String overRule;
+
+    @NotNull(message = "定制计划状态不能为空")
     @ApiModelProperty(value = "定制计划状态 有效-VALID 无效-INVALID", dataType = "ValidOrInvalid")
-    @NotNull
     private ValidOrInvalid status;
 
     /**

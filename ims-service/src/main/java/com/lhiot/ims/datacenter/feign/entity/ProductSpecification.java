@@ -1,5 +1,6 @@
 package com.lhiot.ims.datacenter.feign.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.leon.microx.predefine.Use;
 import com.lhiot.dc.dictionary.HasEntries;
 import com.lhiot.ims.datacenter.feign.type.InventorySpecification;
@@ -38,6 +39,7 @@ public class ProductSpecification {
     private InventorySpecification inventorySpecification;
     @ApiModelProperty(notes = "是否可用：ENABLE-可用，DISABLE-不可用", dataType = "Use")
     private Use availableStatus;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     @ApiModelProperty(notes = "创建时间", dataType = "Date", readOnly = true)
     private Date createAt;
 

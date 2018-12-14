@@ -1,5 +1,6 @@
 package com.lhiot.ims.datacenter.feign.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.lhiot.ims.datacenter.feign.entity.ProductSpecification;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -28,6 +29,7 @@ public class ProductResult {
     private String benefit;
     @ApiModelProperty(notes = "商品描述", dataType = "String")
     private String description;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     @ApiModelProperty(notes = "创建时间", dataType = "Date", readOnly = true)
     private Date createAt;
 
