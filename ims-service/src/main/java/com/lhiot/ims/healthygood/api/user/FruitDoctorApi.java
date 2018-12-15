@@ -9,7 +9,6 @@ import com.lhiot.ims.healthygood.feign.user.FruitDoctorSettlementFeign;
 import com.lhiot.ims.healthygood.feign.user.entity.FruitDoctor;
 import com.lhiot.ims.healthygood.feign.user.entity.RegisterApplication;
 import com.lhiot.ims.healthygood.feign.user.entity.SettlementApplication;
-import com.lhiot.ims.healthygood.feign.user.type.SettlementStatus;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -20,7 +19,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.sql.Date;
 import java.time.Instant;
-import java.util.Objects;
 
 /**
  * @author hufan created in 2018/12/6 20:13
@@ -39,34 +37,34 @@ public class FruitDoctorApi {
         this.fruitDoctorSettlementFeign = fruitDoctorSettlementFeign;
     }
 
-    @ApiOperation(value = "查询鲜果师成员详情", response = FruitDoctor.class)
+    @ApiOperation(value = "查询鲜果师管理详情", response = FruitDoctor.class)
     @ApiImplicitParam(paramType = ApiParamType.PATH, name = "id", value = "鲜果师id", dataType = "Long", required = true)
     @GetMapping("/fruit-doctors/{id}")
     public ResponseEntity findById(@PathVariable("id") Long id) {
-        log.debug("查询鲜果师成员详情\t id:{}", id);
+        log.debug("查询鲜果师管理详情\t id:{}", id);
 
         ResponseEntity<FruitDoctor> entity = fruitDoctorFeign.findById(id);
         return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok(entity.getBody());
     }
 
-    @ApiOperation(value = "修改鲜果师成员信息")
+    @ApiOperation(value = "修改鲜果师管理信息")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = ApiParamType.PATH, name = "id", value = "鲜果师id", dataType = "Long", required = true),
             @ApiImplicitParam(paramType = ApiParamType.BODY, name = "fruitDoctor", value = "要修改鲜果师成员信息", dataType = "FruitDoctor", required = true)
     })
     @PutMapping("/fruit-doctors/{id}")
     public ResponseEntity updateById(@PathVariable("id") Long id, @RequestBody FruitDoctor fruitDoctor) {
-        log.debug("修改鲜果师成员信息\t id:{},param:{}", id, fruitDoctor);
+        log.debug("修改鲜果师管理信息\t id:{},param:{}", id, fruitDoctor);
 
         ResponseEntity entity = fruitDoctorFeign.updateById(id, fruitDoctor);
         return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body("修改鲜果师成员信息失败!") : ResponseEntity.ok().build();
     }
 
     @PostMapping("/fruit-doctors/pages")
-    @ApiOperation(value = "查询鲜果师成员分页列表", response = FruitDoctor.class, responseContainer = "Set")
+    @ApiOperation(value = "查询鲜果师管理分页列表", response = FruitDoctor.class, responseContainer = "Set")
     @ApiImplicitParam(paramType = ApiParamType.BODY, name = "fruitDoctor", value = "要查询的鲜果师信息", dataType = "FruitDoctor", required = true)
     public ResponseEntity search(@RequestBody FruitDoctor fruitDoctor) {
-        log.debug("查询鲜果师成员分页列表\t param:{}", fruitDoctor);
+        log.debug("查询鲜果师管理分页列表\t param:{}", fruitDoctor);
 
         ResponseEntity<Pages<FruitDoctor>> entity = fruitDoctorFeign.search(fruitDoctor);
         return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok(entity.getBody());
@@ -105,13 +103,10 @@ public class FruitDoctorApi {
     })
     @PutMapping("/fruit-doctors/settlement/{id}")
     public ResponseEntity updateSettlement(@PathVariable("id") Long id, @RequestBody SettlementApplication settlementApplication) {
-        log.debug("结算申请修改-已结算\t id:{},param:{}", id, settlementApplication);
+        log.debug("结算申请修改\t id:{},param:{}", id, settlementApplication);
 
-        if (Objects.equals(SettlementStatus.SUCCESS, settlementApplication.getSettlementStatus())) {
-            ResponseEntity entity = fruitDoctorSettlementFeign.updateSettlement(id, settlementApplication);
-            return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok().build();
-        }
-        return ResponseEntity.badRequest().body("结算状态不正确！");
+        ResponseEntity entity = fruitDoctorSettlementFeign.updateSettlement(id, settlementApplication);
+        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok().build();
     }
 
     @ApiOperation(value = "结算申请分页查询")

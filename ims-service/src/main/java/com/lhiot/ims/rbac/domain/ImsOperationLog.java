@@ -3,6 +3,8 @@ package com.lhiot.ims.rbac.domain;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -47,6 +49,7 @@ public class ImsOperationLog {
     *用户id
     */
     @JsonProperty("userId")
+    @JsonSerialize(using = ToStringSerializer.class)
     @ApiModelProperty(value = "用户id", dataType = "Long")
     private Long userId;
 

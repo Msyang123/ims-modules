@@ -16,8 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Objects;
-
 /**
  * @author hufan created in 2018/12/11 10:39
  **/
@@ -33,7 +31,7 @@ public class UserApi {
     }
 
     @ApiOperation(value = "后台管理分页查询用户列表", response = UserDetailResult.class, responseContainer = "Set")
-    @ApiImplicitParam(paramType = ApiParamType.BODY, name = "querySearch", value = "查询条件", dataType = "QuerySearch")
+    @ApiImplicitParam(paramType = ApiParamType.BODY, name = "querySearch", value = "查询入参", dataType = "QuerySearch", required = true)
     @PostMapping("/users/pages")
     public ResponseEntity query(@RequestBody QuerySearch querySearch) {
         log.debug("后台管理分页查询用户列表\t param{}", querySearch);

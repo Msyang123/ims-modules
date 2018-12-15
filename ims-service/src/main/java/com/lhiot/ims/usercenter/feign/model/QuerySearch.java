@@ -1,6 +1,8 @@
 package com.lhiot.ims.usercenter.feign.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -11,6 +13,7 @@ import java.util.Date;
  */
 @Data
 public class QuerySearch {
+    @JsonSerialize(using = ToStringSerializer.class)
     @ApiModelProperty(notes = "用户id", dataType = "Long")
     private Long userId;
 

@@ -1,6 +1,8 @@
 package com.lhiot.ims.healthygood.feign.user.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.lhiot.ims.healthygood.feign.user.type.AuditStatus;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -62,6 +64,7 @@ public class RegisterApplication {
     @ApiModelProperty(value = "审核人", dataType = "String")
     private String auditUser;
 
+    @JsonSerialize(using = ToStringSerializer.class)
     @ApiModelProperty(value = "用户id", dataType = "Long")
     private Long userId;
 

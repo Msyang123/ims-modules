@@ -64,6 +64,7 @@ public class UserDetailResult {
     @ApiModelProperty(notes = "同一个微信开放平台多个应用唯一识别unionId", dataType = "String")
     private String unionId;
 
+    @JsonSerialize(using = ToStringSerializer.class)
     @ApiModelProperty(notes = "t_base_user的id", dataType = "Long")
     private Long baseUserId;
 

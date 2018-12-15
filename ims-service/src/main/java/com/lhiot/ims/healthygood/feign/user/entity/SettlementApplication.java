@@ -46,13 +46,24 @@ public class SettlementApplication {
     @ApiModelProperty(notes = "起始创建时间(用于搜索)", dataType = "Date")
     private Date beginCreateAt;
 
-
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     @ApiModelProperty(notes = "截止创建时间(用于搜索)", dataType = "Date")
     private Date endCreateAt;
 
     @ApiModelProperty(value = "申请人（鲜果师名称）", dataType = "String")
     private String realName;
+
+    @ApiModelProperty(value = "申请人（鲜果师手机号）", dataType = "String")
+    private String phone;
+
+    @ApiModelProperty(value = "银行卡卡号", dataType = "String")
+    private String cardNo;
+
+    @ApiModelProperty(value = "开户行", dataType = "String")
+    private String bankDeposit;
+
+    @ApiModelProperty(value = "持卡人姓名", dataType = "String")
+    private String cardUsername;
 
     @ApiModelProperty(notes = "每页查询条数(为空或0不分页查所有)", dataType = "Integer")
     private Integer rows;

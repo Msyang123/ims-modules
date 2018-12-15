@@ -1,6 +1,8 @@
 package com.lhiot.ims.ordercenter.feign.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.lhiot.ims.ordercenter.feign.entity.DeliverNote;
 import com.lhiot.ims.ordercenter.feign.entity.OrderFlow;
 import com.lhiot.ims.ordercenter.feign.entity.OrderProduct;
@@ -29,6 +31,7 @@ public class OrderDetailResult {
     private String code;
 
     @ApiModelProperty(notes = "用户Id", dataType = "Long")
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long userId;
 
     @ApiModelProperty(notes = "用户手机号", dataType = "String")
