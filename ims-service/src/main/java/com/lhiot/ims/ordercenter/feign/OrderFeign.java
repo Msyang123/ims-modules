@@ -45,5 +45,5 @@ public interface OrderFeign {
      * @return
      */
     @PutMapping("/orders/{orderCode}/store")
-    ResponseEntity modifyStoreInOrder(@PathVariable("orderCode") String orderCode, @RequestParam Long storeId, @RequestParam String operationUser);
+    ResponseEntity modifyStoreInOrder(@PathVariable("orderCode") String orderCode, @RequestParam("storeId") Long storeId, @RequestParam("operationUser") String operationUser);
 }

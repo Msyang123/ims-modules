@@ -1,10 +1,7 @@
 package com.lhiot.ims.ordercenter.api;
 
-import com.leon.microx.probe.annotation.Sniffer;
-import com.leon.microx.probe.event.ProbeEvent;
 import com.leon.microx.util.StringUtils;
 import com.leon.microx.web.result.Pages;
-import com.leon.microx.web.result.Tips;
 import com.leon.microx.web.session.Sessions;
 import com.leon.microx.web.swagger.ApiParamType;
 import com.lhiot.ims.datacenter.feign.ProductShelfFegin;
@@ -24,6 +21,7 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -43,6 +41,7 @@ public class OrderApi {
     private final DeliveryFeign deliveryFeign;
     private final ProductShelfFegin productShelfFegin;
 
+    @Autowired
     public OrderApi(OrderFeign orderFeign, UserFeign userFeign, DeliveryFeign deliveryFeign, ProductShelfFegin productShelfFegin) {
         this.orderFeign = orderFeign;
         this.userFeign = userFeign;
@@ -126,7 +125,7 @@ public class OrderApi {
             @ApiImplicitParam(paramType = ApiParamType.QUERY, name = "storeId", value = "调货目标门店id", dataType = "Long", required = true)
     })
     @PutMapping("/orders/{orderCode}/store")
-    public ResponseEntity modifyStoreInOrder(@PathVariable("orderCode") String orderCode, @RequestParam Long storeId, Sessions.User user) {
+    public ResponseEntity modifyStoreInOrder(@PathVariable("orderCode") String orderCode, @RequestParam("storeId") Long storeId, Sessions.User user) {
         log.debug("海鼎订单调货\t param:{}", orderCode);
 
         String operationUser = user.getUser().get("name").toString();
