@@ -3,9 +3,6 @@ package com.lhiot.ims.usercenter.feign.model;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
-import com.lhiot.dc.dictionary.HasEntries;
-import com.lhiot.ims.datacenter.feign.type.ApplicationType;
-import com.lhiot.ims.datacenter.util.DictionaryCodes;
 import com.lhiot.ims.usercenter.feign.type.LockStatus;
 import com.lhiot.ims.usercenter.feign.type.SwitchStatus;
 import io.swagger.annotations.ApiModel;
@@ -24,7 +21,7 @@ public class UserDetailResult {
     @ApiModelProperty(notes = "生日", dataType = "String")
     private String birthday;
 
-    @ApiModelProperty(notes = "性别:man(男),women(女),privary(保密)", dataType = "String")
+    @ApiModelProperty(notes = "性别:MAN(男),WOMAN(女),UNKNOWN(保密)", dataType = "String")
     private String sex;
 
     @ApiModelProperty(notes = "手机号", dataType = "String")
@@ -67,6 +64,7 @@ public class UserDetailResult {
     @ApiModelProperty(notes = "同一个微信开放平台多个应用唯一识别unionId", dataType = "String")
     private String unionId;
 
+    @JsonSerialize(using = ToStringSerializer.class)
     @ApiModelProperty(notes = "t_base_user的id", dataType = "Long")
     private Long baseUserId;
 
@@ -76,6 +74,6 @@ public class UserDetailResult {
     @ApiModelProperty(notes = "应用类型", dataType = "String")
     private String applicationType;
 
-    @ApiModelProperty(notes = "免密支付权限", dataType = "SwitchStatus")
+    @ApiModelProperty(notes = "免密支付权限 OPEN-打开,CLOSE-关闭", dataType = "SwitchStatus")
     private SwitchStatus paymentPermissions;
 }

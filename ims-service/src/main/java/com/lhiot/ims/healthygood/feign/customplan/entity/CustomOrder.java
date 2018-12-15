@@ -1,7 +1,8 @@
 package com.lhiot.ims.healthygood.feign.customplan.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.lhiot.ims.healthygood.feign.customplan.type.CustomOrderBuyType;
 import com.lhiot.ims.healthygood.feign.customplan.type.CustomOrderStatus;
 import io.swagger.annotations.ApiModel;
@@ -26,15 +27,16 @@ public class CustomOrder {
     private String customOrderCode;
 
     @ApiModelProperty(hidden = true)
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long userId;
 
-    @ApiModelProperty(notes = "WAIT_PAYMENT待付款、INVALID已失效、PAUSE_DELIVERY暂停配送、CUSTOMING定制中、FINISHED已结束", dataType = "CustomOrderStatus", hidden = true)
+    @ApiModelProperty(notes = "定制订单状态 WAIT_PAYMENT待付款、INVALID已失效、PAUSE_DELIVERY暂停配送、CUSTOMING定制中、FINISHED已结束", dataType = "CustomOrderStatus", hidden = true)
     private CustomOrderStatus status;
 
     @ApiModelProperty(value = "剩余配送次数", dataType = "Integer", hidden = true)
     private Integer remainingQty;
 
-    @ApiModelProperty(notes = "MANUAL-手动，AUTO-自动", dataType = "CustomOrderBuyType")
+    @ApiModelProperty(notes = "定制订单配送方式 MANUAL-手动，AUTO-自动", dataType = "CustomOrderBuyType")
     private CustomOrderBuyType deliveryType;
 
     @ApiModelProperty(value = "配送总次数-周期数", dataType = "Integer", hidden = true)

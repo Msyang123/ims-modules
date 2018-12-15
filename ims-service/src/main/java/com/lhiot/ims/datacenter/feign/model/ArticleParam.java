@@ -1,5 +1,6 @@
 package com.lhiot.ims.datacenter.feign.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.lhiot.ims.datacenter.feign.type.ArticleStatus;
 import com.lhiot.ims.datacenter.feign.type.ArticleType;
@@ -29,8 +30,10 @@ public class ArticleParam {
     private String title;
     @ApiModelProperty(notes = "关键字", dataType = "String")
     private String keywords;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     @ApiModelProperty(notes = "起始创建时间", dataType = "Date")
     private Date beginCreateAt;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     @ApiModelProperty(notes = "截止创建时间", dataType = "Date")
     private Date endCreateAt;
     @ApiModelProperty(notes = "每页查询条数(为空或0不分页查所有)", dataType = "Integer")

@@ -1,5 +1,6 @@
 package com.lhiot.ims.datacenter.feign.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -27,6 +28,7 @@ public class ProductSection {
     private String sectionImg;
     @ApiModelProperty(notes = "排序字段", dataType = "Integer")
     private Integer sorting;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     @ApiModelProperty(notes = "创建时间", dataType = "Date", readOnly = true)
     private Date createAt;
     @ApiModelProperty(notes = "父ID", dataType = "Long")

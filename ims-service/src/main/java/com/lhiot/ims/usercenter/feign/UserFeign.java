@@ -40,6 +40,6 @@ public interface UserFeign {
      * @param userId
      * @return
      */
-    @GetMapping("/{id}")
+    @GetMapping("/users/{id}")
     ResponseEntity<UserDetailResult> findById(@PathVariable("id") Long userId);
 }

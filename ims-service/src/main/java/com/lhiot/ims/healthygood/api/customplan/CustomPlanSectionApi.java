@@ -121,22 +121,6 @@ public class CustomPlanSectionApi {
         return ResponseEntity.ok(sectionNameList);
     }
 
-    @Deprecated
-    @LogCollection
-    @ApiOperation("批量修改定制版块与定制计划关系")
-    @ApiImplicitParams({
-            @ApiImplicitParam(paramType = ApiParamType.QUERY, name = "sectionId", value = "定制版块Id", dataType = "Long", required = true),
-            @ApiImplicitParam(paramType = ApiParamType.QUERY, name = "planIds", value = "多个定制计划Id以英文逗号分隔", dataType = "String"),
-            @ApiImplicitParam(paramType = ApiParamType.QUERY, name = "sorts", value = "多个排序以英文逗号分隔", dataType = "String")
-    })
-    @PutMapping("/custom-plan-sections/relation/batches")
-    public ResponseEntity updateBatch(@RequestParam("sectionId") Long sectionId, @RequestParam(value = "planIds", required = false) String planIds, @RequestParam(value = "sorts", required = false) String sorts) {
-        log.debug("批量修改定制版块与定制计划关系\t param:{}", sectionId, planIds, sorts);
-
-        ResponseEntity entity = customPlanSectionRelationFeign.updateBatch(sectionId, planIds, sorts);
-        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok().build();
-    }
-
     @LogCollection
     @ApiOperation("添加定制版块与定制计划关系")
     @PostMapping("/custom-plan-sections/relation")
@@ -151,18 +135,6 @@ public class CustomPlanSectionApi {
         return entity.getStatusCode().isError()
                 ? ResponseEntity.badRequest().body("添加商品与版块关系记录失败！")
                 : ResponseEntity.created(URI.create("/custom-plan-section-relations/" + relationId)).body(Maps.of("id", relationId));
-    }
-
-    @Deprecated
-    @LogCollection
-    @ApiOperation("根据关联Id删除定制版块与定制计划架关系")
-    @ApiImplicitParam(paramType = ApiParamType.PATH, name = "id", value = "关系Id", dataType = "Long", required = true)
-    @DeleteMapping("/custom-plan-sections/relation/{id}")
-    public ResponseEntity delete(@PathVariable("id") Long relationId) {
-        log.debug("根据关联Id删除定制版块与定制计划架关系\t relationId: {}", relationId);
-
-        ResponseEntity entity = customPlanSectionRelationFeign.delete(relationId);
-        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body("删除定制版块与定制计划架关系失败！") : ResponseEntity.noContent().build();
     }
 
     @ApiOperation("批量删除定制版块与定制计划架关系")
