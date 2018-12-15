@@ -50,14 +50,14 @@ public class FruitDoctorApi {
     @ApiOperation(value = "修改鲜果师管理信息")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = ApiParamType.PATH, name = "id", value = "鲜果师id", dataType = "Long", required = true),
-            @ApiImplicitParam(paramType = ApiParamType.BODY, name = "fruitDoctor", value = "要修改鲜果师成员信息", dataType = "FruitDoctor", required = true)
+            @ApiImplicitParam(paramType = ApiParamType.BODY, name = "fruitDoctor", value = "要修改鲜果师管理信息", dataType = "FruitDoctor", required = true)
     })
     @PutMapping("/fruit-doctors/{id}")
     public ResponseEntity updateById(@PathVariable("id") Long id, @RequestBody FruitDoctor fruitDoctor) {
         log.debug("修改鲜果师管理信息\t id:{},param:{}", id, fruitDoctor);
 
         ResponseEntity entity = fruitDoctorFeign.updateById(id, fruitDoctor);
-        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body("修改鲜果师成员信息失败!") : ResponseEntity.ok().build();
+        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body("修改鲜果师管理信息失败!") : ResponseEntity.ok().build();
     }
 
     @PostMapping("/fruit-doctors/pages")

@@ -1,8 +1,16 @@
 package com.lhiot.ims.ordercenter.api;
 
+import com.leon.microx.util.StringUtils;
 import com.leon.microx.web.result.Pages;
 import com.leon.microx.web.swagger.ApiParamType;
+import com.lhiot.ims.datacenter.feign.ProductShelfFegin;
+import com.lhiot.ims.datacenter.feign.entity.ProductShelf;
+import com.lhiot.ims.datacenter.feign.entity.ProductSpecification;
+import com.lhiot.ims.datacenter.feign.model.ProductShelfParam;
+import com.lhiot.ims.ordercenter.feign.DeliveryFeign;
 import com.lhiot.ims.ordercenter.feign.OrderFeign;
+import com.lhiot.ims.ordercenter.feign.entity.DeliverNote;
+import com.lhiot.ims.ordercenter.feign.entity.OrderProduct;
 import com.lhiot.ims.ordercenter.feign.model.BaseOrderParam;
 import com.lhiot.ims.ordercenter.feign.model.OrderDetailResult;
 import com.lhiot.ims.usercenter.feign.UserFeign;
@@ -15,7 +23,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * @author hufan created in 2018/12/11 19:46
@@ -26,10 +36,14 @@ import java.util.Objects;
 public class OrderApi {
     private final OrderFeign orderFeign;
     private final UserFeign userFeign;
+    private final DeliveryFeign deliveryFeign;
+    private final ProductShelfFegin productShelfFegin;
 
-    public OrderApi(OrderFeign orderFeign, UserFeign userFeign) {
+    public OrderApi(OrderFeign orderFeign, UserFeign userFeign, DeliveryFeign deliveryFeign, ProductShelfFegin productShelfFegin) {
         this.orderFeign = orderFeign;
         this.userFeign = userFeign;
+        this.deliveryFeign = deliveryFeign;
+        this.productShelfFegin = productShelfFegin;
     }
 
 
@@ -46,18 +60,13 @@ public class OrderApi {
     }
 
     @ApiOperation(value = "根据订单code查询订单详情", response = OrderDetailResult.class)
-    @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "path", name = "orderCode", dataType = "String", required = true, value = "订单code"),
-            @ApiImplicitParam(paramType = "query", name = "needProductList", dataType = "boolean", required = true, value = "是否需要加载商品信息"),
-            @ApiImplicitParam(paramType = "query", name = "needOrderFlowList", dataType = "boolean", required = true, value = "是否需要加载订单操作流水信息")
-    })
+    @ApiImplicitParam(paramType = "path", name = "orderCode", dataType = "String", required = true, value = "订单code")
     @GetMapping("/orders/{orderCode}")
-    public ResponseEntity orderDetail(@PathVariable("orderCode") String orderCode, @RequestParam("needProductList") boolean needProductList,
-                                      @RequestParam("needOrderFlowList") boolean needOrderFlowList) {
-        log.debug("根据订单code查询订单详情\t param:{}", orderCode, needProductList, needOrderFlowList);
+    public ResponseEntity orderDetail(@PathVariable("orderCode") String orderCode) {
+        log.debug("根据订单code查询订单详情\t param:{}", orderCode);
 
-        ResponseEntity<OrderDetailResult> entity = orderFeign.orderDetail(orderCode, needProductList, needOrderFlowList);
-        if(entity.getStatusCode().isError()){
+        ResponseEntity<OrderDetailResult> entity = orderFeign.orderDetail(orderCode, true, false);
+        if (entity.getStatusCode().isError()) {
             return ResponseEntity.badRequest().body(entity.getBody());
         }
         OrderDetailResult orderDetailResult = entity.getBody();
@@ -65,16 +74,45 @@ public class OrderApi {
         // 用户信息
         if (Objects.nonNull(userId)) {
             ResponseEntity<UserDetailResult> userEntity = userFeign.findById(userId);
-            if (Objects.isNull(userEntity.getBody()) || userEntity.getStatusCode().isError()) {
+            if (userEntity.getStatusCode().isError()) {
                 return ResponseEntity.badRequest().body(userEntity.getBody());
+            } else if (Objects.nonNull(userEntity.getBody())) {
+                orderDetailResult.setPhone(userEntity.getBody().getPhone());
             }
-            orderDetailResult.setPhone(userEntity.getBody().getPhone());
         }
-        // 配送信息 TODO
-
-
-        // 上架规格完善 TODO
-
+        // 配送信息
+        String hdOrderCode = orderDetailResult.getHdOrderCode();
+        ResponseEntity<DeliverNote> deliverNoteEntity = deliveryFeign.localDetail(hdOrderCode);
+        if (deliverNoteEntity.getStatusCode().isError()) {
+            return ResponseEntity.badRequest().body(deliverNoteEntity.getBody());
+        }
+        if (Objects.nonNull(deliverNoteEntity.getBody())) {
+            orderDetailResult.setDeliverNote(deliverNoteEntity.getBody());
+        }
+        // 上架规格完善
+        List<OrderProduct> orderProductList = orderDetailResult.getOrderProductList();
+        if (!orderProductList.isEmpty() || orderProductList.size() != 0) {
+            List<Long> shelfIdList = orderProductList.stream().filter(orderProduct -> Objects.nonNull(orderProduct.getShelfId())).map(OrderProduct::getShelfId).collect(Collectors.toList());
+            ProductShelfParam productShelfParam = new ProductShelfParam();
+            productShelfParam.setIds(StringUtils.collectionToDelimitedString(shelfIdList, ","));
+            productShelfParam.setIncludeProduct(true);
+            ResponseEntity<Pages<ProductShelf>> pages = productShelfFegin.pages(productShelfParam);
+            if (pages.getStatusCode().isError()) {
+                return ResponseEntity.badRequest().body(pages.getBody());
+            }
+            List<ProductShelf> productShelfList = pages.getBody().getArray();
+            if (!productShelfList.isEmpty() || productShelfList.size() != 0) {
+                orderProductList.forEach(orderProduct -> {
+                    productShelfList.forEach(productShelf -> {
+                        if (Objects.equals(orderProduct.getShelfId(), productShelf.getId())) {
+                            ProductSpecification productSpecification = productShelf.getProductSpecification();
+                            String shelfSpecification = productSpecification.getWeight() + "*" + productSpecification.getSpecificationQty() + productSpecification.getPackagingUnit();
+                            orderProduct.setShelfSpecification(shelfSpecification);
+                        }
+                    });
+                });
+            }
+        }
         return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok(entity.getBody());
     }
 }

@@ -110,9 +110,6 @@ public class OrderDetailResult {
     @ApiModelProperty(notes = "订单状态流水列表", dataType = "List")
     private List<OrderFlow> orderFlowList;
 
-    @ApiModelProperty(notes = "上架规格(1*1份)", dataType = "String")
-    private String shelfSpecification;
-
     @ApiModelProperty(notes = "配送信息", dataType = "DeliverNote")
     private DeliverNote deliverNote;
 

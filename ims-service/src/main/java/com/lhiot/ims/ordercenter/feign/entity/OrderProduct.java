@@ -51,4 +51,7 @@ public class OrderProduct {
 
     @ApiModelProperty(notes = "是否退货 REFUND-退货, NOT_REFUND-未退货", dataType = "RefundStatus")
     private RefundStatus refundStatus;
+
+    @ApiModelProperty(notes = "上架规格(1*1份)", dataType = "String")
+    private String shelfSpecification;
 }
