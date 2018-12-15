@@ -1,7 +1,11 @@
 package com.lhiot.ims.ordercenter.api;
 
+import com.leon.microx.probe.annotation.Sniffer;
+import com.leon.microx.probe.event.ProbeEvent;
 import com.leon.microx.util.StringUtils;
 import com.leon.microx.web.result.Pages;
+import com.leon.microx.web.result.Tips;
+import com.leon.microx.web.session.Sessions;
 import com.leon.microx.web.swagger.ApiParamType;
 import com.lhiot.ims.datacenter.feign.ProductShelfFegin;
 import com.lhiot.ims.datacenter.feign.entity.ProductShelf;
@@ -113,6 +117,20 @@ public class OrderApi {
                 });
             }
         }
+        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok(entity.getBody());
+    }
+
+    @ApiOperation(value = "海鼎订单调货", response = ResponseEntity.class)
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = ApiParamType.PATH, name = "orderCode", value = "调货订单编码", dataType = "String", required = true),
+            @ApiImplicitParam(paramType = ApiParamType.QUERY, name = "storeId", value = "调货目标门店id", dataType = "Long", required = true)
+    })
+    @PutMapping("/orders/{orderCode}/store")
+    public ResponseEntity modifyStoreInOrder(@PathVariable("orderCode") String orderCode, @RequestParam Long storeId, Sessions.User user) {
+        log.debug("海鼎订单调货\t param:{}", orderCode);
+
+        String operationUser = user.getUser().get("name").toString();
+        ResponseEntity entity = orderFeign.modifyStoreInOrder(orderCode, storeId, operationUser);
         return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok(entity.getBody());
     }
 }

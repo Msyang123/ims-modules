@@ -35,4 +35,15 @@ public interface OrderFeign {
     @GetMapping("/orders/{orderCode}")
     ResponseEntity<OrderDetailResult> orderDetail(@PathVariable("orderCode") String orderCode, @RequestParam("needProductList") boolean needProductList,
                                                   @RequestParam("needOrderFlowList") boolean needOrderFlowList);
+
+    /**
+     * 海鼎订单调货
+     *
+     * @param orderCode
+     * @param storeId
+     * @param operationUser
+     * @return
+     */
+    @PutMapping("/orders/{orderCode}/store")
+    ResponseEntity modifyStoreInOrder(@PathVariable("orderCode") String orderCode, @RequestParam Long storeId, @RequestParam String operationUser);
 }
