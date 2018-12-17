@@ -2,10 +2,9 @@ package com.lhiot.ims.datacenter.api;
 
 import com.leon.microx.util.Maps;
 import com.leon.microx.web.result.Tips;
-import com.leon.microx.web.result.Tuple;
 import com.leon.microx.web.swagger.ApiHideBodyProperty;
 import com.leon.microx.web.swagger.ApiParamType;
-import com.lhiot.ims.datacenter.feign.ProductSpecificationFegin;
+import com.lhiot.ims.datacenter.feign.ProductSpecificationFeign;
 import com.lhiot.ims.datacenter.feign.entity.ProductSpecification;
 import com.lhiot.ims.datacenter.feign.model.ProductSpecificationParam;
 import com.lhiot.ims.datacenter.service.ProductSpecificationService;
@@ -18,8 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 /**
  * @author hufan created in 2018/11/21 16:57
  **/
@@ -28,12 +25,12 @@ import java.util.List;
 @RestController
 @RequestMapping("/product-specifications")
 public class ProductSpecificationApi {
-    private final ProductSpecificationFegin productSpecificationFegin;
+    private final ProductSpecificationFeign productSpecificationFeign;
     private final ProductSpecificationService productSpecificationService;
 
     @Autowired
-    public ProductSpecificationApi(ProductSpecificationFegin productSpecificationFegin, ProductSpecificationService productSpecificationService) {
-        this.productSpecificationFegin = productSpecificationFegin;
+    public ProductSpecificationApi(ProductSpecificationFeign productSpecificationFeign, ProductSpecificationService productSpecificationService) {
+        this.productSpecificationFeign = productSpecificationFeign;
         this.productSpecificationService = productSpecificationService;
     }
 
@@ -44,7 +41,7 @@ public class ProductSpecificationApi {
     public ResponseEntity create(@RequestBody ProductSpecification productSpecification) {
         log.debug("添加商品规格\t param:{}", productSpecification);
 
-        ResponseEntity entity = productSpecificationFegin.create(productSpecification);
+        ResponseEntity entity = productSpecificationFeign.create(productSpecification);
         if (entity.getStatusCode().isError()) {
             return ResponseEntity.badRequest().body(entity.getBody());
         }
@@ -62,7 +59,7 @@ public class ProductSpecificationApi {
     public ResponseEntity update(@PathVariable("id") Long id, @RequestBody ProductSpecification productSpecification) {
         log.debug("根据id修改商品规格\t id:{} param:{}", id, productSpecification);
 
-        ResponseEntity entity = productSpecificationFegin.update(id, productSpecification);
+        ResponseEntity entity = productSpecificationFeign.update(id, productSpecification);
         return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok(entity.getBody());
     }
 
@@ -72,7 +69,7 @@ public class ProductSpecificationApi {
     public ResponseEntity findById(@PathVariable("id") Long id) {
         log.debug("根据Id查找商品规格\t id:{}", id);
 
-        ResponseEntity<ProductSpecification> entity = productSpecificationFegin.findById(id);
+        ResponseEntity<ProductSpecification> entity = productSpecificationFeign.findById(id);
         return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok(entity.getBody());
     }
 
@@ -83,7 +80,7 @@ public class ProductSpecificationApi {
     public ResponseEntity batchDelete(@PathVariable("ids") String ids) {
         log.debug("根据商品规格Ids删除商品规格\t param:{}", ids);
 
-        ResponseEntity entity = productSpecificationFegin.batchDelete(ids);
+        ResponseEntity entity = productSpecificationFeign.batchDelete(ids);
         return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.noContent().build();
     }
 

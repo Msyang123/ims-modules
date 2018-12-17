@@ -2,9 +2,9 @@ package com.lhiot.ims.datacenter.service;
 
 import com.leon.microx.web.result.Pages;
 import com.leon.microx.web.result.Tips;
-import com.lhiot.ims.datacenter.feign.ProductFegin;
-import com.lhiot.ims.datacenter.feign.ProductSectionRelationFegin;
-import com.lhiot.ims.datacenter.feign.ProductShelfFegin;
+import com.lhiot.ims.datacenter.feign.ProductFeign;
+import com.lhiot.ims.datacenter.feign.ProductSectionRelationFeign;
+import com.lhiot.ims.datacenter.feign.ProductShelfFeign;
 import com.lhiot.ims.datacenter.feign.entity.ProductAttachment;
 import com.lhiot.ims.datacenter.feign.entity.ProductShelf;
 import com.lhiot.ims.datacenter.feign.entity.ProductSpecification;
@@ -25,20 +25,20 @@ import java.util.stream.Collectors;
 @Service
 @Transactional
 public class ProductShelfService {
-    private final ProductShelfFegin productShelfFegin;
-    private final ProductSectionRelationFegin productSectionRelationFegin;
-    private final ProductFegin productFegin;
+    private final ProductShelfFeign productShelfFeign;
+    private final ProductSectionRelationFeign productSectionRelationFeign;
+    private final ProductFeign productFeign;
 
 
-    public ProductShelfService(ProductShelfFegin productShelfFegin, ProductSectionRelationFegin productSectionRelationFegin, ProductFegin productFegin) {
-        this.productShelfFegin = productShelfFegin;
-        this.productSectionRelationFegin = productSectionRelationFegin;
-        this.productFegin = productFegin;
+    public ProductShelfService(ProductShelfFeign productShelfFeign, ProductSectionRelationFeign productSectionRelationFeign, ProductFeign productFeign) {
+        this.productShelfFeign = productShelfFeign;
+        this.productSectionRelationFeign = productSectionRelationFeign;
+        this.productFeign = productFeign;
     }
 
     public Tips create(ProductShelf productShelf) {
         productShelf.setApplicationType(ApplicationType.HEALTH_GOOD);
-        ResponseEntity productShelfEntity = productShelfFegin.create(productShelf);
+        ResponseEntity productShelfEntity = productShelfFeign.create(productShelf);
         if (productShelfEntity.getStatusCode().isError()) {
             return Tips.warn(productShelfEntity.getBody().toString());
         }
@@ -48,7 +48,7 @@ public class ProductShelfService {
 
         // 添加上架id和上架板块的关联
         if (Objects.nonNull(productShelf.getSectionIds())) {
-            ResponseEntity entity = productSectionRelationFegin.createBatch(productShelfId, productShelf.getSectionIds());
+            ResponseEntity entity = productSectionRelationFeign.createBatch(productShelfId, productShelf.getSectionIds());
             if (entity.getStatusCode().isError()) {
                 return Tips.warn(entity.getBody().toString());
             }
@@ -57,7 +57,7 @@ public class ProductShelfService {
     }
 
     public Tips update(Long id, ProductShelf productShelf) {
-        ResponseEntity productShelfEntity = productShelfFegin.update(id, productShelf);
+        ResponseEntity productShelfEntity = productShelfFeign.update(id, productShelf);
         if (productShelfEntity.getStatusCode().isError()) {
             return Tips.warn(productShelfEntity.getBody().toString());
         }
@@ -65,7 +65,7 @@ public class ProductShelfService {
     }
 
     public Tips findById(Long id) {
-        ResponseEntity entity = productShelfFegin.findById(id, true);
+        ResponseEntity entity = productShelfFeign.findById(id, true);
         if (entity.getStatusCode().isError()) {
             return Tips.warn(entity.getBody().toString());
         }
@@ -98,7 +98,7 @@ public class ProductShelfService {
         Tips tips = new Tips();
         param.setIncludeProduct(true);
         param.setApplicationType(ApplicationType.HEALTH_GOOD);
-        ResponseEntity entity = productShelfFegin.pages(param);
+        ResponseEntity entity = productShelfFeign.pages(param);
         if (entity.getStatusCode().isError()) {
             return Tips.warn(entity.getBody().toString());
         }

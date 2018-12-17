@@ -58,7 +58,6 @@ public class ArticleApi {
 
         ResponseEntity entity = articleFeign.update(id, article);
         return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok().build();
-
     }
 
 
@@ -72,7 +71,6 @@ public class ArticleApi {
 
         ResponseEntity<Article> entity = articleFeign.single(id, false);
         return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok(entity.getBody());
-
     }
 
 

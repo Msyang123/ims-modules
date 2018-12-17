@@ -81,7 +81,7 @@ public class FruitDoctorApi {
         log.debug("根据id更新鲜果师申请记录\t id:{} param:{}", id, registerApplication);
 
         registerApplication.setAuditAt(Date.from(Instant.now()));
-        registerApplication.setAuditUser(user.getUser().get("name").toString());
+        registerApplication.setAuditUser((String) user.getUser().get("name"));
         ResponseEntity entity = fruitDoctorQualificationFeign.update(id, registerApplication);
         return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body("修改鲜果师申请记录失败") : ResponseEntity.ok().build();
     }

@@ -4,8 +4,8 @@ import com.leon.microx.web.result.Pages;
 import com.leon.microx.web.result.Tips;
 import com.lhiot.dc.dictionary.DictionaryClient;
 import com.lhiot.dc.dictionary.module.Dictionary;
-import com.lhiot.ims.datacenter.feign.ProductFegin;
-import com.lhiot.ims.datacenter.feign.ProductSpecificationFegin;
+import com.lhiot.ims.datacenter.feign.ProductFeign;
+import com.lhiot.ims.datacenter.feign.ProductSpecificationFeign;
 import com.lhiot.ims.datacenter.feign.entity.ProductAttachment;
 import com.lhiot.ims.datacenter.feign.entity.ProductSpecification;
 import com.lhiot.ims.datacenter.feign.model.ProductSpecificationParam;
@@ -27,13 +27,13 @@ import java.util.stream.Collectors;
 public class ProductSpecificationService {
 
     private DictionaryClient dictionaryClient;
-    private final ProductSpecificationFegin productSpecificationFegin;
-    private final ProductFegin productFegin;
+    private final ProductSpecificationFeign productSpecificationFeign;
+    private final ProductFeign productFeign;
 
-    public ProductSpecificationService(DictionaryClient dictionaryClient, ProductSpecificationFegin productSpecificationFegin, ProductFegin productFegin) {
+    public ProductSpecificationService(DictionaryClient dictionaryClient, ProductSpecificationFeign productSpecificationFeign, ProductFeign productFeign) {
         this.dictionaryClient = dictionaryClient;
-        this.productSpecificationFegin = productSpecificationFegin;
-        this.productFegin = productFegin;
+        this.productSpecificationFeign = productSpecificationFeign;
+        this.productFeign = productFeign;
     }
 
     /**
@@ -54,7 +54,7 @@ public class ProductSpecificationService {
     }
 
     public Tips pages(ProductSpecificationParam param) {
-        ResponseEntity entity = productSpecificationFegin.pages(param);
+        ResponseEntity entity = productSpecificationFeign.pages(param);
         if (entity.getStatusCode().isError()) {
             return Tips.warn(entity.getBody().toString());
         }

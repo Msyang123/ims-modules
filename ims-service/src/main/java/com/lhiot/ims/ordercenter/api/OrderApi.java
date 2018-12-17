@@ -4,7 +4,7 @@ import com.leon.microx.util.StringUtils;
 import com.leon.microx.web.result.Pages;
 import com.leon.microx.web.session.Sessions;
 import com.leon.microx.web.swagger.ApiParamType;
-import com.lhiot.ims.datacenter.feign.ProductShelfFegin;
+import com.lhiot.ims.datacenter.feign.ProductShelfFeign;
 import com.lhiot.ims.datacenter.feign.entity.ProductShelf;
 import com.lhiot.ims.datacenter.feign.entity.ProductSpecification;
 import com.lhiot.ims.datacenter.feign.model.ProductShelfParam;
@@ -39,14 +39,14 @@ public class OrderApi {
     private final OrderFeign orderFeign;
     private final UserFeign userFeign;
     private final DeliveryFeign deliveryFeign;
-    private final ProductShelfFegin productShelfFegin;
+    private final ProductShelfFeign productShelfFeign;
 
     @Autowired
-    public OrderApi(OrderFeign orderFeign, UserFeign userFeign, DeliveryFeign deliveryFeign, ProductShelfFegin productShelfFegin) {
+    public OrderApi(OrderFeign orderFeign, UserFeign userFeign, DeliveryFeign deliveryFeign, ProductShelfFeign productShelfFeign) {
         this.orderFeign = orderFeign;
         this.userFeign = userFeign;
         this.deliveryFeign = deliveryFeign;
-        this.productShelfFegin = productShelfFegin;
+        this.productShelfFeign = productShelfFeign;
     }
 
 
@@ -99,7 +99,7 @@ public class OrderApi {
             ProductShelfParam productShelfParam = new ProductShelfParam();
             productShelfParam.setIds(StringUtils.collectionToDelimitedString(shelfIdList, ","));
             productShelfParam.setIncludeProduct(true);
-            ResponseEntity<Pages<ProductShelf>> pages = productShelfFegin.pages(productShelfParam);
+            ResponseEntity<Pages<ProductShelf>> pages = productShelfFeign.pages(productShelfParam);
             if (pages.getStatusCode().isError()) {
                 return ResponseEntity.badRequest().body(pages.getBody());
             }
@@ -128,7 +128,7 @@ public class OrderApi {
     public ResponseEntity modifyStoreInOrder(@PathVariable("orderCode") String orderCode, @RequestParam("storeId") Long storeId, Sessions.User user) {
         log.debug("海鼎订单调货\t param:{}", orderCode);
 
-        String operationUser = user.getUser().get("name").toString();
+        String operationUser = (String) user.getUser().get("name");
         ResponseEntity entity = orderFeign.modifyStoreInOrder(orderCode, storeId, operationUser);
         return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok(entity.getBody());
     }

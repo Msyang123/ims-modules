@@ -5,7 +5,7 @@ import com.leon.microx.web.result.Pages;
 import com.leon.microx.web.result.Tips;
 import com.leon.microx.web.swagger.ApiHideBodyProperty;
 import com.leon.microx.web.swagger.ApiParamType;
-import com.lhiot.ims.datacenter.feign.ProductFegin;
+import com.lhiot.ims.datacenter.feign.ProductFeign;
 import com.lhiot.ims.datacenter.feign.entity.Product;
 import com.lhiot.ims.datacenter.feign.model.ProductParam;
 import com.lhiot.ims.datacenter.feign.model.ProductResult;
@@ -29,12 +29,12 @@ import java.net.URI;
 @RestController
 @RequestMapping("/products")
 public class ProductApi {
-    private final ProductFegin productFegin;
+    private final ProductFeign productFeign;
     private final ProductService productService;
 
     @Autowired
-    public ProductApi(ProductFegin productFegin, ProductService productService) {
-        this.productFegin = productFegin;
+    public ProductApi(ProductFeign productFeign, ProductService productService) {
+        this.productFeign = productFeign;
         this.productService = productService;
     }
 
@@ -79,7 +79,7 @@ public class ProductApi {
     public ResponseEntity batchDelete(@PathVariable("ids") String ids) {
         log.debug("根据商品Ids删除商品\t param:{}", ids);
 
-        ResponseEntity entity = productFegin.batchDelete(ids);
+        ResponseEntity entity = productFeign.batchDelete(ids);
         return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.noContent().build();
     }
 
@@ -89,7 +89,7 @@ public class ProductApi {
     public ResponseEntity search(@RequestBody ProductParam param) {
         log.debug("查询商品信息列表\t param:{}", param);
 
-        ResponseEntity<Pages<Product>> entity = productFegin.pages(param);
+        ResponseEntity<Pages<Product>> entity = productFeign.pages(param);
         return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok(entity.getBody());
     }
 }

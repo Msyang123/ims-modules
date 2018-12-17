@@ -4,14 +4,13 @@ import com.leon.microx.web.result.Pages;
 import com.leon.microx.web.result.Tips;
 import com.lhiot.ims.datacenter.feign.AdvertisementFeign;
 import com.lhiot.ims.datacenter.feign.ArticleFeign;
-import com.lhiot.ims.datacenter.feign.ProductSectionFegin;
+import com.lhiot.ims.datacenter.feign.ProductSectionFeign;
 import com.lhiot.ims.datacenter.feign.UiPositionFeign;
 import com.lhiot.ims.datacenter.feign.entity.Advertisement;
 import com.lhiot.ims.datacenter.feign.entity.Article;
 import com.lhiot.ims.datacenter.feign.entity.ProductSection;
 import com.lhiot.ims.datacenter.feign.entity.UiPosition;
 import com.lhiot.ims.datacenter.feign.model.*;
-import com.lhiot.ims.datacenter.feign.type.ApplicationType;
 import com.lhiot.ims.datacenter.feign.type.PositionType;
 import com.lhiot.ims.datacenter.type.YesOrNo;
 import org.springframework.beans.BeanUtils;
@@ -30,13 +29,13 @@ import java.util.Objects;
 @Transactional
 public class UiPositionService {
     private final UiPositionFeign uiPositionFeign;
-    private final ProductSectionFegin productSectionFegin;
+    private final ProductSectionFeign productSectionFeign;
     private final AdvertisementFeign advertisementFeign;
     private final ArticleFeign articleFeign;
 
-    public UiPositionService(UiPositionFeign uiPositionFeign, ProductSectionFegin productSectionFegin, AdvertisementFeign advertisementFeign, ArticleFeign articleFeign) {
+    public UiPositionService(UiPositionFeign uiPositionFeign, ProductSectionFeign productSectionFeign, AdvertisementFeign advertisementFeign, ArticleFeign articleFeign) {
         this.uiPositionFeign = uiPositionFeign;
-        this.productSectionFegin = productSectionFegin;
+        this.productSectionFeign = productSectionFeign;
         this.advertisementFeign = advertisementFeign;
         this.articleFeign = articleFeign;
     }
@@ -71,7 +70,7 @@ public class UiPositionService {
                 ProductSectionParam productSectionParam = new ProductSectionParam();
                 productSectionParam.setPositionIds(uiPositionId.toString());
                 productSectionParam.setIncludeShelves(true);
-                ResponseEntity productSectionEntity = productSectionFegin.pages(productSectionParam);
+                ResponseEntity productSectionEntity = productSectionFeign.pages(productSectionParam);
                 if (productSectionEntity.getStatusCode().isError()) {
                     return Tips.warn(productSectionEntity.getBody().toString());
                 }
@@ -126,7 +125,7 @@ public class UiPositionService {
             ProductSectionParam productSectionParam = new ProductSectionParam();
             result.forEach(item -> {
                 productSectionParam.setPositionIds(item.getId().toString());
-                ResponseEntity sectionEntity = productSectionFegin.pages(productSectionParam);
+                ResponseEntity sectionEntity = productSectionFeign.pages(productSectionParam);
                 if (sectionEntity.getStatusCode().isError()) {
 //                    return Tips.warn(sectionEntity.getBody().toString());
                     return;

@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
  **/
 @Component
 @FeignClient(value = "basic-data-service-v1-0")
-public interface ProductSectionRelationFegin {
+public interface ProductSectionRelationFeign {
     /**
      * 添加版块与商品上架关系
      */

@@ -47,9 +47,9 @@ public class ImsRoleApi {
     @ApiImplicitParam(paramType = "body", name = "imsRole", value = "要添加的角色", required = true, dataType = "ImsRole")
     public ResponseEntity<ImsRole> create(@RequestBody ImsRole imsRole,Sessions.User user) {
         log.debug("添加角色\t param:{}",imsRole);
-        imsRole.setCreateBy(user.getUser().get("name").toString());
-        imsRole.setCreateAt(new Timestamp(System.currentTimeMillis()));
 
+        imsRole.setCreateBy((String) user.getUser().get("name"));
+        imsRole.setCreateAt(new Timestamp(System.currentTimeMillis()));
         return ResponseEntity.ok(imsRoleService.create(imsRole));
     }
 

@@ -5,8 +5,8 @@ import com.leon.microx.web.result.Pages;
 import com.leon.microx.web.result.Tips;
 import com.leon.microx.web.swagger.ApiHideBodyProperty;
 import com.leon.microx.web.swagger.ApiParamType;
-import com.lhiot.ims.datacenter.feign.ProductSectionFegin;
-import com.lhiot.ims.datacenter.feign.ProductSectionRelationFegin;
+import com.lhiot.ims.datacenter.feign.ProductSectionFeign;
+import com.lhiot.ims.datacenter.feign.ProductSectionRelationFeign;
 import com.lhiot.ims.datacenter.feign.entity.ProductSection;
 import com.lhiot.ims.datacenter.feign.entity.ProductSectionRelation;
 import com.lhiot.ims.datacenter.feign.model.ProductSectionParam;
@@ -33,14 +33,14 @@ import java.util.stream.Collectors;
 @Slf4j
 @RestController
 public class ProductSectionApi {
-    private final ProductSectionFegin productSectionFegin;
-    private final ProductSectionRelationFegin productSectionRelationFegin;
+    private final ProductSectionFeign productSectionFeign;
+    private final ProductSectionRelationFeign productSectionRelationFeign;
     private final ProductSectionService productSectionService;
 
     @Autowired
-    public ProductSectionApi(ProductSectionFegin productSectionFegin, ProductSectionRelationFegin productSectionRelationFegin, ProductSectionService productSectionService) {
-        this.productSectionFegin = productSectionFegin;
-        this.productSectionRelationFegin = productSectionRelationFegin;
+    public ProductSectionApi(ProductSectionFeign productSectionFeign, ProductSectionRelationFeign productSectionRelationFeign, ProductSectionService productSectionService) {
+        this.productSectionFeign = productSectionFeign;
+        this.productSectionRelationFeign = productSectionRelationFeign;
         this.productSectionService = productSectionService;
     }
 
@@ -63,7 +63,7 @@ public class ProductSectionApi {
     public ResponseEntity update(@PathVariable("id") Long id, @Valid @RequestBody ProductSection productSection) {
         log.debug("根据id修改商品版块\t id:{} param:{}", id, productSection);
 
-        ResponseEntity entity = productSectionFegin.update(id, productSection);
+        ResponseEntity entity = productSectionFeign.update(id, productSection);
         return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok(entity.getBody());
     }
 
@@ -73,7 +73,7 @@ public class ProductSectionApi {
     public ResponseEntity findById(@PathVariable("id") Long id) {
         log.debug("根据Id查找商品版块\t id:{}", id);
 
-        ResponseEntity<ProductSection> entity = productSectionFegin.findById(id, true, null, true);
+        ResponseEntity<ProductSection> entity = productSectionFeign.findById(id, true, null, true);
         return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok(entity.getBody());
     }
 
@@ -84,7 +84,7 @@ public class ProductSectionApi {
     public ResponseEntity batchDelete(@PathVariable("ids") String ids) {
         log.debug("根据商品板块Ids删除商品版块\t param:{}", ids);
 
-        ResponseEntity entity = productSectionFegin.batchDelete(ids);
+        ResponseEntity entity = productSectionFeign.batchDelete(ids);
         return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.noContent().build();
     }
 
@@ -94,7 +94,7 @@ public class ProductSectionApi {
     public ResponseEntity search(@RequestBody ProductSectionParam param) {
         log.debug("查询商品版块信息列表\t param:{}", param);
 
-        ResponseEntity<Pages<ProductSection>> entity = productSectionFegin.pages(param);
+        ResponseEntity<Pages<ProductSection>> entity = productSectionFeign.pages(param);
         return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok(entity.getBody());
     }
 
@@ -107,7 +107,7 @@ public class ProductSectionApi {
     public ResponseEntity deleteRelation(@RequestParam("sectionId") Long sectionId, @RequestParam(value = "shelfIds", required = false) String shelfIds) {
         log.debug("批量删除版块与商品上架关系\t sectionId:{},shelfIds:{} ", sectionId, shelfIds);
 
-        ResponseEntity entity = productSectionRelationFegin.deleteBatch(sectionId, shelfIds);
+        ResponseEntity entity = productSectionRelationFeign.deleteBatch(sectionId, shelfIds);
         return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.noContent().build();
     }
 
@@ -117,7 +117,7 @@ public class ProductSectionApi {
     public ResponseEntity addRelation(@RequestBody ProductSectionRelation productSectionRelation) {
         log.debug("根据关联id删除商品和板块关联\t param:{}", productSectionRelation);
 
-        ResponseEntity entity = productSectionRelationFegin.create(productSectionRelation);
+        ResponseEntity entity = productSectionRelationFeign.create(productSectionRelation);
         return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok().build();
        /* String location = entity.getHeaders().getLocation().toString();
         Long relationId = Long.valueOf(location.substring(location.lastIndexOf('/') + 1));
@@ -130,7 +130,7 @@ public class ProductSectionApi {
         log.debug("查询去重的商品板块集合\t");
 
         ProductSectionParam productSectionParam = new ProductSectionParam();
-        ResponseEntity<Pages<ProductSection>> entity = productSectionFegin.pages(productSectionParam);
+        ResponseEntity<Pages<ProductSection>> entity = productSectionFeign.pages(productSectionParam);
         if (entity.getStatusCode().isError()) {
             return ResponseEntity.badRequest().body(entity.getBody());
         }

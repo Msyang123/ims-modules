@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
  **/
 @Component
 @FeignClient(value = "basic-data-service-v1-0")
-public interface ProductSpecificationFegin {
+public interface ProductSpecificationFeign {
     /**
      * 添加商品规格
      *

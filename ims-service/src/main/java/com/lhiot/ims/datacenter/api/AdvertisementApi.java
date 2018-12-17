@@ -5,8 +5,8 @@ import com.leon.microx.web.swagger.ApiHideBodyProperty;
 import com.leon.microx.web.swagger.ApiParamType;
 import com.lhiot.ims.datacenter.feign.AdvertisementFeign;
 import com.lhiot.ims.datacenter.feign.ArticleFeign;
-import com.lhiot.ims.datacenter.feign.ProductSectionFegin;
-import com.lhiot.ims.datacenter.feign.ProductShelfFegin;
+import com.lhiot.ims.datacenter.feign.ProductSectionFeign;
+import com.lhiot.ims.datacenter.feign.ProductShelfFeign;
 import com.lhiot.ims.datacenter.feign.entity.Advertisement;
 import com.lhiot.ims.datacenter.feign.entity.Article;
 import com.lhiot.ims.datacenter.feign.entity.ProductSection;
@@ -41,17 +41,17 @@ public class AdvertisementApi {
     private final AdvertisementFeign advertisementFeign;
     private final CustomPlanFeign customPlanFeign;
     private final ArticleFeign articleFeign;
-    private final ProductShelfFegin productShelfFegin;
-    private final ProductSectionFegin productSectionFegin;
+    private final ProductShelfFeign productShelfFeign;
+    private final ProductSectionFeign productSectionFeign;
     private final CustomPlanSectionFeign customPlanSectionFeign;
 
     @Autowired
-    public AdvertisementApi(AdvertisementFeign advertisementFeign, CustomPlanFeign customPlanFeign, ArticleFeign articleFeign, ProductShelfFegin productShelfFegin, ProductSectionFegin productSectionFegin, CustomPlanSectionFeign customPlanSectionFeign) {
+    public AdvertisementApi(AdvertisementFeign advertisementFeign, CustomPlanFeign customPlanFeign, ArticleFeign articleFeign, ProductShelfFeign productShelfFeign, ProductSectionFeign productSectionFeign, CustomPlanSectionFeign customPlanSectionFeign) {
         this.advertisementFeign = advertisementFeign;
         this.customPlanFeign = customPlanFeign;
         this.articleFeign = articleFeign;
-        this.productShelfFegin = productShelfFegin;
-        this.productSectionFegin = productSectionFegin;
+        this.productShelfFeign = productShelfFeign;
+        this.productSectionFeign = productSectionFeign;
         this.customPlanSectionFeign = customPlanSectionFeign;
     }
 
@@ -96,11 +96,12 @@ public class AdvertisementApi {
             case STORE_LIVE_TELECAST:
                 break;
             case CUSTOM_PLAN:
-                ResponseEntity<CustomPlanDetailResult> customPlanEntity = customPlanFeign.findById(Long.valueOf(advertisement.getAdvertiseRelation()));
+                ResponseEntity customPlanEntity = customPlanFeign.findById(Long.valueOf(advertisement.getAdvertiseRelation()));
                 if (customPlanEntity.getStatusCode().isError()) {
                     return ResponseEntity.badRequest().body(customPlanEntity.getBody());
                 }
-                advertisement.setAdvertiseRelationText(customPlanEntity.getBody().getName());
+                CustomPlanDetailResult customPlanDetailResult = (CustomPlanDetailResult) customPlanEntity.getBody();
+                advertisement.setAdvertiseRelationText(Objects.nonNull(customPlanDetailResult) ? customPlanDetailResult.getName() : null);
                 break;
             case EXTERNAL_LINKS:
                 advertisement.setAdvertiseRelationText(advertisement.getAdvertiseRelation());
@@ -108,32 +109,36 @@ public class AdvertisementApi {
             case MORE_AMUSEMENT:
                 break;
             case ARTICLE_DETAILS:
-                ResponseEntity<Article> articleEntity = articleFeign.single(Long.valueOf(advertisement.getAdvertiseRelation()), false);
+                ResponseEntity articleEntity = articleFeign.single(Long.valueOf(advertisement.getAdvertiseRelation()), false);
                 if (articleEntity.getStatusCode().isError()) {
                     return ResponseEntity.badRequest().body(articleEntity.getBody());
                 }
-                advertisement.setAdvertiseRelationText(articleEntity.getBody().getTitle());
+                Article article = (Article) articleEntity.getBody();
+                advertisement.setAdvertiseRelationText(Objects.nonNull(article) ? article.getTitle() : null);
                 break;
             case PRODUCT_DETAILS:
-                ResponseEntity<ProductShelf> productShelfEntity = productShelfFegin.findById(Long.valueOf(advertisement.getAdvertiseRelation()), false);
+                ResponseEntity productShelfEntity = productShelfFeign.findById(Long.valueOf(advertisement.getAdvertiseRelation()), false);
                 if (productShelfEntity.getStatusCode().isError()) {
                     return ResponseEntity.badRequest().body(productShelfEntity.getBody());
                 }
-                advertisement.setAdvertiseRelationText(productShelfEntity.getBody().getName());
+                ProductShelf productShelf = (ProductShelf) productShelfEntity.getBody();
+                advertisement.setAdvertiseRelationText(Objects.nonNull(productShelf) ? productShelf.getName() : null);
                 break;
             case PRODUCT_SECTION:
-                ResponseEntity<ProductSection> productSectionEntity = productSectionFegin.findById(Long.valueOf(advertisement.getAdvertiseRelation()), false, null, false);
+                ResponseEntity productSectionEntity = productSectionFeign.findById(Long.valueOf(advertisement.getAdvertiseRelation()), false, null, false);
                 if (productSectionEntity.getStatusCode().isError()) {
                     return ResponseEntity.badRequest().body(productSectionEntity.getBody());
                 }
-                advertisement.setAdvertiseRelationText(productSectionEntity.getBody().getSectionName());
+                ProductSection productSection = (ProductSection) productSectionEntity.getBody();
+                advertisement.setAdvertiseRelationText(Objects.nonNull(productSection) ? productSection.getSectionName() : null);
                 break;
             case CUSTOM_PLAN_SECTION:
-                ResponseEntity<CustomPlanSection> customPlanSectionEntity = customPlanSectionFeign.findById(Long.valueOf(advertisement.getAdvertiseRelation()), false);
+                ResponseEntity customPlanSectionEntity = customPlanSectionFeign.findById(Long.valueOf(advertisement.getAdvertiseRelation()), false);
                 if (customPlanSectionEntity.getStatusCode().isError()) {
                     return ResponseEntity.badRequest().body(customPlanSectionEntity.getBody());
                 }
-                advertisement.setAdvertiseRelationText(customPlanSectionEntity.getBody().getSectionName());
+                CustomPlanSection customPlanSection = (CustomPlanSection) customPlanSectionEntity.getBody();
+                advertisement.setAdvertiseRelationText(Objects.nonNull(customPlanSection) ? customPlanSection.getSectionName() : null);
                 break;
             default:
                 advertisement.setAdvertiseRelationText(advertisement.getAdvertiseRelation());
@@ -165,6 +170,7 @@ public class AdvertisementApi {
             if (Objects.isNull(advertisement.getBeginAt()) && Objects.isNull(advertisement.getEndAt())) {
                 advertisement.setValidityPeriod("永久有效");
             } else {
+                // FIXME 判空
                 String beginAt = new SimpleDateFormat("yyyy.MM.dd").format(advertisement.getBeginAt());
                 String endAt = new SimpleDateFormat("yyyy.MM.dd").format(advertisement.getEndAt());
                 advertisement.setValidityPeriod(beginAt + "-" + endAt);

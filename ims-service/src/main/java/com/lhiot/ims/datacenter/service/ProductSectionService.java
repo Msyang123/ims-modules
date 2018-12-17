@@ -1,8 +1,8 @@
 package com.lhiot.ims.datacenter.service;
 
 import com.leon.microx.web.result.Tips;
-import com.lhiot.ims.datacenter.feign.ProductSectionFegin;
-import com.lhiot.ims.datacenter.feign.ProductSectionRelationFegin;
+import com.lhiot.ims.datacenter.feign.ProductSectionFeign;
+import com.lhiot.ims.datacenter.feign.ProductSectionRelationFeign;
 import com.lhiot.ims.datacenter.feign.entity.ProductSection;
 import com.lhiot.ims.datacenter.feign.entity.ProductShelf;
 import org.apache.commons.lang.StringUtils;
@@ -20,12 +20,12 @@ import java.util.stream.Collectors;
 @Service
 @Transactional
 public class ProductSectionService {
-    private final ProductSectionFegin productSectionFegin;
-    private final ProductSectionRelationFegin productSectionRelationFegin;
+    private final ProductSectionFeign productSectionFeign;
+    private final ProductSectionRelationFeign productSectionRelationFeign;
 
-    public ProductSectionService(ProductSectionFegin productSectionFegin, ProductSectionRelationFegin productSectionRelationFegin) {
-        this.productSectionFegin = productSectionFegin;
-        this.productSectionRelationFegin = productSectionRelationFegin;
+    public ProductSectionService(ProductSectionFeign productSectionFeign, ProductSectionRelationFeign productSectionRelationFeign) {
+        this.productSectionFeign = productSectionFeign;
+        this.productSectionRelationFeign = productSectionRelationFeign;
     }
 
     /**
@@ -35,7 +35,7 @@ public class ProductSectionService {
      * @return
      */
     public Tips create(ProductSection productSection) {
-        ResponseEntity entity = productSectionFegin.create(productSection);
+        ResponseEntity entity = productSectionFeign.create(productSection);
         if (entity.getStatusCode().isError()) {
             return Tips.warn(entity.getBody().toString());
         }
@@ -46,19 +46,19 @@ public class ProductSectionService {
         if (Objects.nonNull(sectionId) && Objects.nonNull(productSection.getProductShelfList())) {
             List<Long> shelfIdList = productSection.getProductShelfList().stream().map(ProductShelf::getId).collect(Collectors.toList());
             String shelfIds = StringUtils.join(shelfIdList, ",");
-            productSectionRelationFegin.createBatch(sectionId, shelfIds);
+            productSectionRelationFeign.createBatch(sectionId, shelfIds);
         }
         return Tips.info(sectionId + "");
     }
 
     public Tips updateBatch(Long sectionId, String productIds) {
         // 1、先根据板块id查询所有关联的商品ids，上架ids为空删除所有
-        ResponseEntity deleteEntity = productSectionRelationFegin.deleteBatch(sectionId, null);
+        ResponseEntity deleteEntity = productSectionRelationFeign.deleteBatch(sectionId, null);
         if (deleteEntity.getStatusCode().isError()) {
             return Tips.warn(deleteEntity.getBody().toString());
         }
         // 2、批量添加
-        ResponseEntity addEntity = productSectionRelationFegin.createBatch(sectionId, productIds);
+        ResponseEntity addEntity = productSectionRelationFeign.createBatch(sectionId, productIds);
         if (addEntity.getStatusCode().isError()) {
             return Tips.warn(addEntity.getBody().toString());
         }
