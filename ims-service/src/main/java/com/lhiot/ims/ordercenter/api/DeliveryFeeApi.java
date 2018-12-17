@@ -1,6 +1,8 @@
 package com.lhiot.ims.ordercenter.api;
 
 import com.leon.microx.web.result.Pages;
+import com.leon.microx.web.session.Sessions;
+import com.leon.microx.web.swagger.ApiHideBodyProperty;
 import com.leon.microx.web.swagger.ApiParamType;
 import com.lhiot.ims.ordercenter.feign.DeliveryFeign;
 import com.lhiot.ims.ordercenter.feign.model.DeliverFeeRuleParam;
@@ -14,6 +16,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 /**
  * @author hufan created in 2018/12/15 19:35
@@ -32,9 +36,10 @@ public class DeliveryFeeApi {
     @ApiOperation("添加配送费计算规则")
     @ApiImplicitParam(paramType = ApiParamType.BODY, name = "deliverFeeRuleParam", value = "添加配送费规则入参", dataType = "DeliverFeeRuleParam", required = true)
     @PostMapping("/delivery-fee-rule")
-    public ResponseEntity createRule(@RequestBody DeliverFeeRuleParam deliverFeeRuleParam) {
+    public ResponseEntity createRule(@RequestBody @Valid DeliverFeeRuleParam deliverFeeRuleParam, Sessions.User user) {
         log.debug("添加配送费计算规则\t param:{}", deliverFeeRuleParam);
 
+        deliverFeeRuleParam.setCreateBy((String) user.getUser().get("name"));
         ResponseEntity entity = deliveryFeign.createRule(deliverFeeRuleParam);
         return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok(entity.getBody());
     }
@@ -45,7 +50,8 @@ public class DeliveryFeeApi {
             @ApiImplicitParam(paramType = ApiParamType.BODY, name = "deliverFeeRuleParam", value = "需要修改的配送费规则模板以及详细规则", dataType = "DeliverFeeRuleParam", required = true)
     })
     @PutMapping("/delivery-fee-rule/{id}")
-    public ResponseEntity updateRules(@PathVariable("id") Long ruleId, @RequestBody DeliverFeeRuleParam deliverFeeRuleParam) {
+    @ApiHideBodyProperty({"id","createBy","detailList"})
+    public ResponseEntity updateRules(@PathVariable("id") Long ruleId, @RequestBody @Valid DeliverFeeRuleParam deliverFeeRuleParam) {
         log.debug("修改配送费计算规则\t id:{} param:{}", ruleId, deliverFeeRuleParam);
 
         ResponseEntity entity = deliveryFeign.updateRules(ruleId, deliverFeeRuleParam);

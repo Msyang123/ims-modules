@@ -56,12 +56,8 @@ public class LogCollectionAspect {
             log.info(System.currentTimeMillis() + "|" + request.getRequestURL().toString() + "|" + request.getMethod() + "|" +
                     joinPoint.getSignature().getDeclaringTypeName() + "|" + Arrays.toString(joinPoint.getArgs()));
 
-
             String content = "请求URL：" + request.getRequestURL() + " ==> 请求类型：" + request.getMethod() + " ==> 请求参数：" + joinPoint.getArgs()[0].toString() + " ==> 返回结果：" + result.getBody();
-            if (content.length() > MAX_CONTENT_LENGTH) {
-                content = content.substring(0, 2047);
-            }
-            String ip = request.getRemoteAddr();
+            content = content.length() > MAX_CONTENT_LENGTH ?  content.substring(0, 2047) : content;
             Sessions.User sessionUser = Arrays.stream(joinPoint.getArgs()).filter(para -> para instanceof Sessions.User).findFirst().map(para -> (Sessions.User) para).orElse(null);
 
             long userId = 0L;
@@ -71,9 +67,8 @@ public class LogCollectionAspect {
             ImsOperationLog imsOperationLog = new ImsOperationLog();
             imsOperationLog.setContent(content);
             imsOperationLog.setUserId(userId);
-            imsOperationLog.setIp(ip);
-            String description = descriptionExpression(joinPoint);
-            imsOperationLog.setDescription(description);
+            imsOperationLog.setIp(request.getRemoteAddr());
+            imsOperationLog.setDescription(descriptionExpression(joinPoint));
             publisher.publishEvent(imsOperationLog);
         }
 
