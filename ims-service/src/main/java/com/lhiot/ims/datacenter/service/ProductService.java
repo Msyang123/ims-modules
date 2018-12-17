@@ -4,8 +4,8 @@ import com.leon.microx.predefine.Use;
 import com.leon.microx.util.StringUtils;
 import com.leon.microx.web.result.Pages;
 import com.leon.microx.web.result.Tips;
-import com.lhiot.ims.datacenter.feign.ProductFegin;
-import com.lhiot.ims.datacenter.feign.ProductSpecificationFegin;
+import com.lhiot.ims.datacenter.feign.ProductFeign;
+import com.lhiot.ims.datacenter.feign.ProductSpecificationFeign;
 import com.lhiot.ims.datacenter.feign.entity.Product;
 import com.lhiot.ims.datacenter.feign.entity.ProductAttachment;
 import com.lhiot.ims.datacenter.feign.entity.ProductSpecification;
@@ -17,26 +17,23 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 /**
  * @author hufan created in 2018/11/23 18:46
  **/
 @Service
-@Transactional
 public class ProductService {
-    private final ProductFegin productFegin;
-    private final ProductSpecificationFegin productSpecificationFegin;
+    private final ProductFeign productFeign;
+    private final ProductSpecificationFeign productSpecificationFeign;
 
     @Autowired
-    public ProductService(ProductFegin productFegin, ProductSpecificationFegin productSpecificationFegin) {
-        this.productFegin = productFegin;
-        this.productSpecificationFegin = productSpecificationFegin;
+    public ProductService(ProductFeign productFeign, ProductSpecificationFeign productSpecificationFeign) {
+        this.productFeign = productFeign;
+        this.productSpecificationFeign = productSpecificationFeign;
     }
 
     /**
@@ -51,9 +48,9 @@ public class ProductService {
         // 设置附件
         List<ProductAttachment> productAttachments = setAttachmentImages(productResult.getMainImg(), productResult.getSubImg(), productResult.getDetailImg(), productResult.getIcon());
         product.setAttachments(productAttachments);
-        ResponseEntity productEntity = productFegin.create(product);
+        ResponseEntity productEntity = productFeign.create(product);
         if (productEntity.getStatusCode().isError()) {
-            return Tips.warn(productEntity.getBody().toString());
+            return Tips.warn((String) productEntity.getBody());
         }
         // 返回参数 例：<201 Created,{content-type=[application/json;charset=UTF-8], date=[Sat, 24 Nov 2018 06:37:59 GMT], location=[/product-sections/13], transfer-encoding=[chunked]}>
         String location = productEntity.getHeaders().getLocation().toString();
@@ -69,9 +66,9 @@ public class ProductService {
             productSpecification.setAvailableStatus(Use.ENABLE);
             productSpecification.setProductId(productId);
             // TODO  productSpecification.setSpecificationQty(XXX);
-            ResponseEntity specificationEntity = productSpecificationFegin.create(productSpecification);
+            ResponseEntity specificationEntity = productSpecificationFeign.create(productSpecification);
             if (specificationEntity.getStatusCode().isError()) {
-                return Tips.warn(specificationEntity.getBody().toString());
+                return Tips.warn((String) specificationEntity.getBody());
             }
         }
         return Tips.info(productId + "");
@@ -90,18 +87,18 @@ public class ProductService {
         // 设置附件
         List<ProductAttachment> productAttachments = setAttachmentImages(productResult.getMainImg(), productResult.getSubImg(), productResult.getDetailImg(), productResult.getIcon());
         product.setAttachments(productAttachments);
-        ResponseEntity entity = productFegin.update(id, product);
+        ResponseEntity entity = productFeign.update(id, product);
         if (entity.getStatusCode().isError()) {
-            return Tips.warn(entity.getBody().toString());
+            return Tips.warn((String) entity.getBody());
         }
         if (Objects.isNull(productResult.getProductSpecification())) {
             return Tips.warn("商品基础条码不能为空");
         }
         // 修改商品基础规格
         ProductSpecification productSpecification = productResult.getProductSpecification();
-        ResponseEntity specificationEntity = productSpecificationFegin.update(productSpecification.getId(), productSpecification);
+        ResponseEntity specificationEntity = productSpecificationFeign.update(productSpecification.getId(), productSpecification);
         if (specificationEntity.getStatusCode().isError()) {
-            return Tips.warn(specificationEntity.getBody().toString());
+            return Tips.warn((String) specificationEntity.getBody());
         }
         return Tips.info("修改成功");
     }
@@ -115,9 +112,9 @@ public class ProductService {
     public Tips<ProductResult> findProductById(Long id) {
         Tips<ProductResult> tips = new Tips();
         ProductResult productResult = new ProductResult();
-        ResponseEntity productEntity = productFegin.findById(id);
+        ResponseEntity productEntity = productFeign.findById(id);
         if (productEntity.getStatusCode().isError()) {
-            return Tips.warn(productEntity.getBody().toString());
+            return Tips.warn((String) productEntity.getBody());
         }
         Product product = (Product) productEntity.getBody();
         if (Objects.nonNull(product)) {
@@ -155,9 +152,9 @@ public class ProductService {
             ProductSpecificationParam productSpecificationParam = new ProductSpecificationParam();
             productSpecificationParam.setInventorySpecification(InventorySpecification.YES);
             productSpecificationParam.setProductId(productResult.getId());
-            ResponseEntity productSpecificationEntity = productSpecificationFegin.pages(productSpecificationParam);
+            ResponseEntity productSpecificationEntity = productSpecificationFeign.pages(productSpecificationParam);
             if (productSpecificationEntity.getStatusCode().isError()) {
-                return Tips.warn(productSpecificationEntity.getBody().toString());
+                return Tips.warn((String) productSpecificationEntity.getBody());
             }
 
             Pages<ProductSpecification> pages = (Pages<ProductSpecification>) productSpecificationEntity.getBody();

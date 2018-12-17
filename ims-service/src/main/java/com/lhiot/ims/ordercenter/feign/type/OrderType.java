@@ -8,7 +8,8 @@ import lombok.Getter;
 public enum OrderType {
     NORMAL("普通订单"),
     CUSTOM("定制订单"),
-    TEAM_BUY("团购订单");
+    TEAM_BUY("团购订单"),
+    FREEGO("孚力购订单");
 
     @Getter
     private String description;

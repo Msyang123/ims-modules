@@ -11,6 +11,9 @@ import lombok.Data;
 
 import java.util.Date;
 
+/**
+ * @author hufan created in 2018/12/17 16:50
+ **/
 @Data
 @ApiModel
 public class UserDetailResult {

@@ -7,7 +7,6 @@ import com.lhiot.ims.datacenter.feign.entity.ProductCategory;
 import com.lhiot.ims.datacenter.feign.model.ProductCategoryParam;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -15,7 +14,6 @@ import java.util.List;
  * @author hufan created in 2018/11/26 9:09
  **/
 @Service
-@Transactional
 public class ProductCategoryService {
     private final ProductCategoryFeign productCategoryFeign;
 
@@ -31,7 +29,7 @@ public class ProductCategoryService {
         ProductCategoryParam productCategoryParam = new ProductCategoryParam();
         ResponseEntity entity = productCategoryFeign.pages(productCategoryParam);
         if (entity.getStatusCode().isError()) {
-            return Tips.warn(entity.getBody().toString());
+            return Tips.warn((String) entity.getBody());
         }
         Pages<ProductCategory> pages = (Pages<ProductCategory>) entity.getBody();
         List<ProductCategory> productCategory = pages.getArray();

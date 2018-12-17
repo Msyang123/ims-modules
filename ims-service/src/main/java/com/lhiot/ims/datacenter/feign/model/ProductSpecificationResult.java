@@ -3,7 +3,7 @@ package com.lhiot.ims.datacenter.feign.model;
 import com.leon.microx.predefine.Use;
 import com.lhiot.dc.dictionary.HasEntries;
 import com.lhiot.ims.datacenter.feign.type.InventorySpecification;
-import com.lhiot.ims.datacenter.util.DictionaryCodes;
+import com.lhiot.util.DictionaryCodes;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;

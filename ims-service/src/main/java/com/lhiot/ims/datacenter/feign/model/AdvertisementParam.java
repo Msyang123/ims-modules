@@ -17,8 +17,8 @@ import java.util.Date;
 @ApiModel
 @Data
 public class AdvertisementParam {
-    @ApiModelProperty(notes = "位置Id", dataType = "Long")
-    private Long positionId;
+    @ApiModelProperty(notes = "位置ID(多个以英文逗号分隔)", dataType = "String")
+    private String positionIds;
     @ApiModelProperty(notes = "广告名", dataType = "String")
     private String advertiseName;
     @ApiModelProperty(notes = "广告类别（IMAGE- 图片广告 TEXT -文字广告）", dataType = "AdvertiseType")

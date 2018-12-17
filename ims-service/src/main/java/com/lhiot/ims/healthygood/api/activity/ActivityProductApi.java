@@ -1,8 +1,5 @@
 package com.lhiot.ims.healthygood.api.activity;
 
-import com.leon.microx.util.Maps;
-import com.leon.microx.web.result.Pages;
-import com.leon.microx.web.result.Tips;
 import com.leon.microx.web.swagger.ApiHideBodyProperty;
 import com.leon.microx.web.swagger.ApiParamType;
 import com.lhiot.ims.healthygood.feign.activity.ActivityProductFeign;
@@ -10,6 +7,7 @@ import com.lhiot.ims.healthygood.feign.activity.entity.ActivityProduct;
 import com.lhiot.ims.healthygood.feign.activity.model.ActivityProductParam;
 import com.lhiot.ims.healthygood.feign.activity.model.ActivityProductResult;
 import com.lhiot.ims.rbac.aspect.LogCollection;
+import com.lhiot.util.FeginResponseTools;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -19,7 +17,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.net.URI;
 
 /**
  * @author hufan created in 2018/12/3 15:44
@@ -42,14 +39,7 @@ public class ActivityProductApi {
         log.debug("添加新品尝鲜活动商品\t param:{}", activityProduct);
 
         ResponseEntity entity = activityProductFeign.create(activityProduct);
-        if (entity.getStatusCode().isError()) {
-            return ResponseEntity.badRequest().body(entity.getBody());
-        }
-        String location = entity.getHeaders().getLocation().toString();
-        Long id = Long.valueOf(location.substring(location.lastIndexOf('/') + 1));
-        return id > 0
-                ? ResponseEntity.created(URI.create("/activity-products/" + id)).body(Maps.of("id", id))
-                : ResponseEntity.badRequest().body(entity.getBody());
+        return FeginResponseTools.convertCreateResponse(entity);
     }
 
     @LogCollection
@@ -63,7 +53,7 @@ public class ActivityProductApi {
         log.debug("修改新品尝鲜活动商品\t param:{}", activityProduct);
 
         ResponseEntity entity = activityProductFeign.update(id, activityProduct);
-        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body("修改新品尝鲜活动商品失败!") : ResponseEntity.ok().build();
+        return FeginResponseTools.convertUpdateResponse(entity);
     }
 
     @LogCollection
@@ -74,7 +64,7 @@ public class ActivityProductApi {
         log.debug("批量删除新品尝鲜活动商品\t param:{}", ids);
 
         ResponseEntity entity = activityProductFeign.batchDelete(ids);
-        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.noContent().build();
+        return FeginResponseTools.convertDeleteResponse(entity);
     }
 
     @ApiOperation(value = "根据条件分页查询新品尝鲜活动商品信息列表", response = ActivityProductResult.class, responseContainer = "Set")
@@ -82,7 +72,7 @@ public class ActivityProductApi {
     public ResponseEntity search(@RequestBody ActivityProductParam param) {
         log.debug("根据条件分页查询新品尝鲜活动商品信息列表\t param:{}", param);
 
-        ResponseEntity<Pages<ActivityProductResult>> entity = activityProductFeign.search(param);
-        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok(entity.getBody());
+        ResponseEntity entity = activityProductFeign.search(param);
+        return FeginResponseTools.convertNoramlResponse(entity);
     }
 }

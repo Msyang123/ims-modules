@@ -4,7 +4,6 @@ import com.leon.microx.util.Maps;
 import com.leon.microx.util.StringUtils;
 import com.leon.microx.util.auditing.MD5;
 import com.leon.microx.web.http.RemoteInvoker;
-import com.leon.microx.web.result.Pages;
 import com.leon.microx.web.session.Authority;
 import com.leon.microx.web.session.Sessions;
 import com.leon.microx.web.swagger.ApiParamType;
@@ -26,7 +25,7 @@ import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
 import java.net.URI;
-import java.sql.Timestamp;
+import java.sql.Date;
 import java.time.Instant;
 import java.util.List;
 import java.util.Objects;
@@ -150,27 +149,27 @@ public class ImsUserApi {
 
     @LogCollection
     @PostMapping("/")
-    @ApiOperation(value = "添加用户")
+    @ApiOperation(value = "添加用户", response = ImsUser.class)
     @ApiImplicitParam(paramType = ApiParamType.BODY, name = "imsUser", value = "要添加的用户", required = true, dataType = "ImsUser")
-    public ResponseEntity<ImsUser> create(@RequestBody ImsUser imsUser) {
+    public ResponseEntity create(@RequestBody ImsUser imsUser) {
         log.debug("添加用户\t param:{}", imsUser);
-        imsUser.setCreateAt(new Timestamp(System.currentTimeMillis()));
 
+        imsUser.setCreateAt(Date.from(Instant.now()));
         return ResponseEntity.ok(imsUserService.create(imsUser));
     }
 
 
     @LogCollection
     @PutMapping("/{id}")
-    @ApiOperation(value = "根据id更新用户")
+    @ApiOperation(value = "根据id更新用户", response = ImsUser.class)
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = ApiParamType.PATH, name = "id", value = "用户id", required = true, dataType = "Long"),
             @ApiImplicitParam(paramType = ApiParamType.BODY, name = "imsUser", value = "要更新的用户", required = true, dataType = "ImsUser")
     })
-    public ResponseEntity<ImsUser> update(@PathVariable("id") Long id, @RequestBody ImsUser imsUser) {
+    public ResponseEntity update(@PathVariable("id") Long id, @RequestBody ImsUser imsUser) {
         log.debug("根据id更新用户\t id:{} param:{}", id, imsUser);
-        imsUser.setId(id);
 
+        imsUser.setId(id);
         return ResponseEntity.ok(imsUserService.updateById(imsUser));
     }
 
@@ -181,43 +180,44 @@ public class ImsUserApi {
             @ApiImplicitParam(paramType = ApiParamType.PATH, name = "id", value = "用户id", required = true, dataType = "Long"),
             @ApiImplicitParam(paramType = ApiParamType.PATH, name = "roleIds", value = "要更新的用户角色ids", required = true, dataType = "String")
     })
-    public ResponseEntity<Integer> updateRelation(@PathVariable("id") Long id, @PathVariable("roleIds") String roleIds) {
+    public ResponseEntity updateRelation(@PathVariable("id") Long id, @PathVariable("roleIds") String roleIds) {
         log.debug("根据用户id更新用户关联角色信息\t id:{} param:{}", id, roleIds);
 
-        return ResponseEntity.ok(imsRelationUserRoleService.create(id, roleIds));
+        return imsRelationUserRoleService.create(id, roleIds) > 0 ? ResponseEntity.ok().build() : ResponseEntity.badRequest().body("根据用户id更新用户关联角色信息失败");
     }
 
     @LogCollection
     @DeleteMapping("/batch/{ids}")
     @ApiOperation(value = "根据ids删除用户")
     @ApiImplicitParam(paramType = ApiParamType.PATH, name = "ids", value = "要删除用户的ids,逗号分割", required = true, dataType = "String")
-    public ResponseEntity<Integer> deleteByIds(@PathVariable("ids") String ids) {
+    public ResponseEntity deleteByIds(@PathVariable("ids") String ids) {
         log.debug("根据ids删除用户\t param:{}", ids);
 
-        return ResponseEntity.ok(imsUserService.deleteByIds(ids));
+        return imsUserService.deleteByIds(ids) > 0 ? ResponseEntity.noContent().build() : ResponseEntity.badRequest().body("根据ids删除用户失败");
     }
 
-    @ApiOperation(value = "根据id查询用户", notes = "根据id查询用户")
+    @ApiOperation(value = "根据id查询用户", notes = "根据id查询用户", response = ImsUser.class)
     @ApiImplicitParam(paramType = ApiParamType.PATH, name = "id", value = "主键id", required = true, dataType = "Long")
     @GetMapping("/id/{id}")
-    public ResponseEntity<ImsUser> findImsUser(@PathVariable("id") Long id) {
+    public ResponseEntity findImsUser(@PathVariable("id") Long id) {
+        log.debug("根据id查询用户\t param:{}", id);
 
         return ResponseEntity.ok(imsUserService.selectById(id));
     }
 
     @PostMapping("/pages")
-    @ApiOperation(value = "查询用户分页列表")
+    @ApiOperation(value = "查询用户分页列表", response = ImsUser.class, responseContainer = "Set")
     @ApiImplicitParam(paramType = ApiParamType.BODY, name = "imsUser", value = "查询用户参数", required = true, dataType = "ImsUser")
-    public ResponseEntity<Pages<ImsUser>> pageQuery(@RequestBody ImsUser imsUser) {
+    public ResponseEntity pageQuery(@RequestBody ImsUser imsUser) {
         log.debug("查询用户分页列表\t param:{}", imsUser);
 
         return ResponseEntity.ok(imsUserService.pageList(imsUser));
     }
 
     @PostMapping("/relation/roles/{id}")
-    @ApiOperation(value = "查询用户id查询已关联的角色列表")
+    @ApiOperation(value = "查询用户id查询已关联的角色列表", response = ImsRole.class, responseContainer = "List")
     @ApiImplicitParam(paramType = ApiParamType.PATH, name = "id", value = "要查询的用户id", required = true, dataType = "Long")
-    public ResponseEntity<List<ImsRole>> getRelationRolesById(@PathVariable("id") Long id) {
+    public ResponseEntity getRelationRolesById(@PathVariable("id") Long id) {
         log.debug("查询用户id查询已关联的角色列表\t param:{}", id);
 
         return ResponseEntity.ok(imsUserService.getRelationRolesById(id));

@@ -3,6 +3,7 @@ package com.lhiot.ims.rbac.mapper;
 import com.lhiot.ims.rbac.domain.ImsRole;
 import com.lhiot.ims.rbac.domain.ImsUser;
 import org.apache.ibatis.annotations.Mapper;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Map;
@@ -13,6 +14,7 @@ import java.util.Map;
 * @date 2018/09/29
 */
 @Mapper
+@Repository
 public interface ImsUserMapper {
 
     /**

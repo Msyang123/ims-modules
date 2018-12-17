@@ -4,7 +4,7 @@ import com.leon.microx.util.StringUtils;
 import com.leon.microx.web.result.Pages;
 import com.leon.microx.web.session.Sessions;
 import com.leon.microx.web.swagger.ApiParamType;
-import com.lhiot.ims.datacenter.feign.ProductShelfFegin;
+import com.lhiot.ims.datacenter.feign.ProductShelfFeign;
 import com.lhiot.ims.datacenter.feign.entity.ProductShelf;
 import com.lhiot.ims.datacenter.feign.entity.ProductSpecification;
 import com.lhiot.ims.datacenter.feign.model.ProductShelfParam;
@@ -16,6 +16,7 @@ import com.lhiot.ims.ordercenter.feign.model.BaseOrderParam;
 import com.lhiot.ims.ordercenter.feign.model.OrderDetailResult;
 import com.lhiot.ims.usercenter.feign.UserFeign;
 import com.lhiot.ims.usercenter.feign.model.UserDetailResult;
+import com.lhiot.util.FeginResponseTools;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -39,16 +40,15 @@ public class OrderApi {
     private final OrderFeign orderFeign;
     private final UserFeign userFeign;
     private final DeliveryFeign deliveryFeign;
-    private final ProductShelfFegin productShelfFegin;
+    private final ProductShelfFeign productShelfFeign;
 
     @Autowired
-    public OrderApi(OrderFeign orderFeign, UserFeign userFeign, DeliveryFeign deliveryFeign, ProductShelfFegin productShelfFegin) {
+    public OrderApi(OrderFeign orderFeign, UserFeign userFeign, DeliveryFeign deliveryFeign, ProductShelfFeign productShelfFeign) {
         this.orderFeign = orderFeign;
         this.userFeign = userFeign;
         this.deliveryFeign = deliveryFeign;
-        this.productShelfFegin = productShelfFegin;
+        this.productShelfFeign = productShelfFeign;
     }
-
 
     @ApiOperation(value = "根据条件分页获取订单列表", response = OrderDetailResult.class, responseContainer = "Set")
     @ApiImplicitParams({
@@ -58,12 +58,12 @@ public class OrderApi {
     public ResponseEntity search(@RequestBody BaseOrderParam param) {
         log.debug("获取订单列表\t param:{}", param);
 
-        ResponseEntity<Pages<OrderDetailResult>> entity = orderFeign.search(param);
-        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok(entity.getBody());
+        ResponseEntity entity = orderFeign.search(param);
+        return FeginResponseTools.convertNoramlResponse(entity);
     }
 
     @ApiOperation(value = "根据订单code查询订单详情", response = OrderDetailResult.class)
-    @ApiImplicitParam(paramType = "path", name = "orderCode", dataType = "String", required = true, value = "订单code")
+    @ApiImplicitParam(paramType = ApiParamType.PATH, name = "orderCode", dataType = "String", required = true, value = "订单code")
     @GetMapping("/orders/{orderCode}")
     public ResponseEntity orderDetail(@PathVariable("orderCode") String orderCode) {
         log.debug("根据订单code查询订单详情\t param:{}", orderCode);
@@ -99,7 +99,7 @@ public class OrderApi {
             ProductShelfParam productShelfParam = new ProductShelfParam();
             productShelfParam.setIds(StringUtils.collectionToDelimitedString(shelfIdList, ","));
             productShelfParam.setIncludeProduct(true);
-            ResponseEntity<Pages<ProductShelf>> pages = productShelfFegin.pages(productShelfParam);
+            ResponseEntity<Pages<ProductShelf>> pages = productShelfFeign.pages(productShelfParam);
             if (pages.getStatusCode().isError()) {
                 return ResponseEntity.badRequest().body(pages.getBody());
             }
@@ -116,7 +116,7 @@ public class OrderApi {
                 });
             }
         }
-        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok(entity.getBody());
+        return ResponseEntity.ok(entity.getBody());
     }
 
     @ApiOperation(value = "海鼎订单调货", response = ResponseEntity.class)
@@ -128,8 +128,8 @@ public class OrderApi {
     public ResponseEntity modifyStoreInOrder(@PathVariable("orderCode") String orderCode, @RequestParam("storeId") Long storeId, Sessions.User user) {
         log.debug("海鼎订单调货\t param:{}", orderCode);
 
-        String operationUser = user.getUser().get("name").toString();
+        String operationUser = (String) user.getUser().get("name");
         ResponseEntity entity = orderFeign.modifyStoreInOrder(orderCode, storeId, operationUser);
-        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok(entity.getBody());
+        return FeginResponseTools.convertNoramlResponse(entity);
     }
 }

@@ -40,8 +40,8 @@ public class OrderDetailResult {
     @ApiModelProperty(notes = "应用类型", dataType = "String")
     private String applicationType;
 
-    @ApiModelProperty(notes = "订单类型：NORMAL-普通订单,CUSTOM-定制订单,TEAM_BUY-团购订单", dataType = "OrderType")
-    private OrderType orderType;
+    @ApiModelProperty(notes = "订单类型：NORMAL-普通订单,CUSTOM-定制订单,TEAM_BUY-团购订单, FREEGO-孚力购订单", dataType = "String")
+    private String orderType;
 
     @ApiModelProperty(notes = "提货方式 TO_THE_STORE-门店自提,TO_THE_HOME-送货上门", dataType = "ReceivingWay")
     private ReceivingWay receivingWay;
@@ -62,7 +62,7 @@ public class OrderDetailResult {
     @ApiModelProperty(notes = "海鼎备货时间", dataType = "Date")
     private Date hdStockAt;
 
-    @ApiModelProperty(notes = "订单状态 WAIT_PAYMENT-待支付-WAIT_SEND_OUT-待出库-SEND_OUTING,WAIT_DISPATCHING-待配送,DISPATCHING-配送中," +
+    @ApiModelProperty(notes = "订单状态 WAIT_PAYMENT-待支付,WAIT_SEND_OUT-待出库,SEND_OUTING-出库中,WAIT_DISPATCHING-待配送,DISPATCHING-配送中," +
             " RECEIVED-已收货,RETURNING-退货中,RETURN_FAILURE-退款失败,ALREADY_RETURN-退货完成,FAILURE-已失效,FINISHED-完成", dataType = "OrderStatus")
     private OrderStatus status;
 

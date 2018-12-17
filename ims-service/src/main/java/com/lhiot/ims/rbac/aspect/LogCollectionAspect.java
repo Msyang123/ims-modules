@@ -7,10 +7,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -41,24 +44,20 @@ public class LogCollectionAspect {
      * @param joinPoint
      */
     @AfterReturning(returning = "result", pointcut = "@annotation(logCollection)")
-    public void afterReturn(JoinPoint joinPoint, ResponseEntity result, LogCollection logCollection) throws Exception {
+    public void afterReturn(JoinPoint joinPoint, ResponseEntity result, LogCollection logCollection) {
         log.info("LogCollectionAspect");
 
         if (result.getStatusCode().equals(HttpStatus.OK) && result.hasBody()) {
             ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+            Objects.requireNonNull(attributes);
             HttpServletRequest request = attributes.getRequest();
 
             // 有格式的打印日志，收集日志信息到ES
             log.info(System.currentTimeMillis() + "|" + request.getRequestURL().toString() + "|" + request.getMethod() + "|" +
                     joinPoint.getSignature().getDeclaringTypeName() + "|" + Arrays.toString(joinPoint.getArgs()));
 
-
             String content = "请求URL：" + request.getRequestURL() + " ==> 请求类型：" + request.getMethod() + " ==> 请求参数：" + joinPoint.getArgs()[0].toString() + " ==> 返回结果：" + result.getBody();
-            if (content.length() > MAX_CONTENT_LENGTH-1) {
-                content = content.substring(0,2047);
-            }
-            String ip = request.getRemoteAddr();
-            String description = descriptionExpression(joinPoint);
+            content = content.length() > MAX_CONTENT_LENGTH ?  content.substring(0, 2047) : content;
             Sessions.User sessionUser = Arrays.stream(joinPoint.getArgs()).filter(para -> para instanceof Sessions.User).findFirst().map(para -> (Sessions.User) para).orElse(null);
 
             long userId = 0L;
@@ -68,8 +67,8 @@ public class LogCollectionAspect {
             ImsOperationLog imsOperationLog = new ImsOperationLog();
             imsOperationLog.setContent(content);
             imsOperationLog.setUserId(userId);
-            imsOperationLog.setIp(ip);
-            imsOperationLog.setDescription(description);
+            imsOperationLog.setIp(request.getRemoteAddr());
+            imsOperationLog.setDescription(descriptionExpression(joinPoint));
             publisher.publishEvent(imsOperationLog);
         }
 
@@ -80,30 +79,12 @@ public class LogCollectionAspect {
      *
      * @param joinPoint
      * @return
-     * @throws Exception
      */
-    public static String descriptionExpression(JoinPoint joinPoint) throws Exception {
-
-        String targetName = joinPoint.getTarget().getClass().getName();
-        String methodName = joinPoint.getSignature().getName();
-        Object[] arguments = joinPoint.getArgs();
-
-        Class targetClass = Class.forName(targetName);
-        Method[] method = targetClass.getMethods();
-        String methode = "";
-        for (Method m : method) {
-            if (m.getName().equals(methodName)) {
-                Class[] tmpCs = m.getParameterTypes();
-                if (tmpCs.length == arguments.length) {
-                    ApiOperation methodCache = m.getAnnotation(ApiOperation.class);
-                    if (methodCache != null) {
-                        methode = methodCache.value();
-                    }
-                    break;
-                }
-            }
-        }
-        return methode;
+    @Nullable
+    public static String descriptionExpression(JoinPoint joinPoint) {
+        Method currentMethod = ((MethodSignature) joinPoint.getSignature()).getMethod();
+        ApiOperation methodCache = AnnotationUtils.getAnnotation(currentMethod, ApiOperation.class);
+        return Objects.nonNull(methodCache) ? methodCache.value() : null;
     }
 
 }

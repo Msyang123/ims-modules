@@ -4,11 +4,12 @@ import com.leon.microx.util.Maps;
 import com.leon.microx.web.result.Tips;
 import com.leon.microx.web.swagger.ApiHideBodyProperty;
 import com.leon.microx.web.swagger.ApiParamType;
-import com.lhiot.ims.datacenter.feign.ProductShelfFegin;
+import com.lhiot.ims.datacenter.feign.ProductShelfFeign;
 import com.lhiot.ims.datacenter.feign.entity.ProductShelf;
 import com.lhiot.ims.datacenter.feign.model.ProductShelfParam;
 import com.lhiot.ims.datacenter.service.ProductShelfService;
 import com.lhiot.ims.rbac.aspect.LogCollection;
+import com.lhiot.util.FeginResponseTools;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
@@ -28,12 +29,12 @@ import java.net.URI;
 @RestController
 @RequestMapping("/product-shelves")
 public class ProductShelfApi {
-    private final ProductShelfFegin productShelfFegin;
+    private final ProductShelfFeign productShelfFeign;
     private final ProductShelfService productShelfService;
 
     @Autowired
-    public ProductShelfApi(ProductShelfFegin productShelfFegin, ProductShelfService productShelfService) {
-        this.productShelfFegin = productShelfFegin;
+    public ProductShelfApi(ProductShelfFeign productShelfFeign, ProductShelfService productShelfService) {
+        this.productShelfFeign = productShelfFeign;
         this.productShelfService = productShelfService;
     }
 
@@ -77,8 +78,8 @@ public class ProductShelfApi {
     public ResponseEntity batchDelete(@PathVariable("ids") String ids) {
         log.debug("根据商品上架Ids删除商品上架\t param:{}", ids);
 
-        ResponseEntity entity = productShelfFegin.batchDelete(ids);
-        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.noContent().build();
+        ResponseEntity entity = productShelfFeign.batchDelete(ids);
+        return FeginResponseTools.convertDeleteResponse(entity);
     }
 
     @ApiOperation(value = "根据条件分页查询商品上架信息列表", response = ProductShelf.class, responseContainer = "Set")

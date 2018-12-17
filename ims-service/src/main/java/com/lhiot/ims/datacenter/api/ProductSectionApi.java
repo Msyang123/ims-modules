@@ -3,15 +3,17 @@ package com.lhiot.ims.datacenter.api;
 import com.leon.microx.util.Maps;
 import com.leon.microx.web.result.Pages;
 import com.leon.microx.web.result.Tips;
+import com.leon.microx.web.result.Tuple;
 import com.leon.microx.web.swagger.ApiHideBodyProperty;
 import com.leon.microx.web.swagger.ApiParamType;
-import com.lhiot.ims.datacenter.feign.ProductSectionFegin;
-import com.lhiot.ims.datacenter.feign.ProductSectionRelationFegin;
+import com.lhiot.ims.datacenter.feign.ProductSectionFeign;
+import com.lhiot.ims.datacenter.feign.ProductSectionRelationFeign;
 import com.lhiot.ims.datacenter.feign.entity.ProductSection;
 import com.lhiot.ims.datacenter.feign.entity.ProductSectionRelation;
 import com.lhiot.ims.datacenter.feign.model.ProductSectionParam;
 import com.lhiot.ims.datacenter.service.ProductSectionService;
 import com.lhiot.ims.rbac.aspect.LogCollection;
+import com.lhiot.util.FeginResponseTools;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -19,11 +21,12 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.net.URI;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -33,14 +36,14 @@ import java.util.stream.Collectors;
 @Slf4j
 @RestController
 public class ProductSectionApi {
-    private final ProductSectionFegin productSectionFegin;
-    private final ProductSectionRelationFegin productSectionRelationFegin;
+    private final ProductSectionFeign productSectionFeign;
+    private final ProductSectionRelationFeign productSectionRelationFeign;
     private final ProductSectionService productSectionService;
 
     @Autowired
-    public ProductSectionApi(ProductSectionFegin productSectionFegin, ProductSectionRelationFegin productSectionRelationFegin, ProductSectionService productSectionService) {
-        this.productSectionFegin = productSectionFegin;
-        this.productSectionRelationFegin = productSectionRelationFegin;
+    public ProductSectionApi(ProductSectionFeign productSectionFeign, ProductSectionRelationFeign productSectionRelationFeign, ProductSectionService productSectionService) {
+        this.productSectionFeign = productSectionFeign;
+        this.productSectionRelationFeign = productSectionRelationFeign;
         this.productSectionService = productSectionService;
     }
 
@@ -63,8 +66,8 @@ public class ProductSectionApi {
     public ResponseEntity update(@PathVariable("id") Long id, @Valid @RequestBody ProductSection productSection) {
         log.debug("根据id修改商品版块\t id:{} param:{}", id, productSection);
 
-        ResponseEntity entity = productSectionFegin.update(id, productSection);
-        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok(entity.getBody());
+        ResponseEntity entity = productSectionFeign.update(id, productSection);
+        return FeginResponseTools.convertUpdateResponse(entity);
     }
 
     @ApiOperation(value = "根据Id查找商品版块", response = ProductSection.class)
@@ -73,8 +76,8 @@ public class ProductSectionApi {
     public ResponseEntity findById(@PathVariable("id") Long id) {
         log.debug("根据Id查找商品版块\t id:{}", id);
 
-        ResponseEntity<ProductSection> entity = productSectionFegin.findById(id, true, null, true);
-        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok(entity.getBody());
+        ResponseEntity entity = productSectionFeign.findById(id, true, null, true);
+        return FeginResponseTools.convertNoramlResponse(entity);
     }
 
     @LogCollection
@@ -84,8 +87,8 @@ public class ProductSectionApi {
     public ResponseEntity batchDelete(@PathVariable("ids") String ids) {
         log.debug("根据商品板块Ids删除商品版块\t param:{}", ids);
 
-        ResponseEntity entity = productSectionFegin.batchDelete(ids);
-        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.noContent().build();
+        ResponseEntity entity = productSectionFeign.batchDelete(ids);
+        return FeginResponseTools.convertDeleteResponse(entity);
     }
 
     @ApiOperation(value = "根据条件分页查询商品版块信息列表", response = ProductSection.class, responseContainer = "Set")
@@ -94,8 +97,8 @@ public class ProductSectionApi {
     public ResponseEntity search(@RequestBody ProductSectionParam param) {
         log.debug("查询商品版块信息列表\t param:{}", param);
 
-        ResponseEntity<Pages<ProductSection>> entity = productSectionFegin.pages(param);
-        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok(entity.getBody());
+        ResponseEntity entity = productSectionFeign.pages(param);
+        return FeginResponseTools.convertNoramlResponse(entity);
     }
 
     @ApiOperation("批量删除版块与商品上架关系")
@@ -107,8 +110,8 @@ public class ProductSectionApi {
     public ResponseEntity deleteRelation(@RequestParam("sectionId") Long sectionId, @RequestParam(value = "shelfIds", required = false) String shelfIds) {
         log.debug("批量删除版块与商品上架关系\t sectionId:{},shelfIds:{} ", sectionId, shelfIds);
 
-        ResponseEntity entity = productSectionRelationFegin.deleteBatch(sectionId, shelfIds);
-        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.noContent().build();
+        ResponseEntity entity = productSectionRelationFeign.deleteBatch(sectionId, shelfIds);
+        return FeginResponseTools.convertDeleteResponse(entity);
     }
 
     @LogCollection
@@ -117,12 +120,9 @@ public class ProductSectionApi {
     public ResponseEntity addRelation(@RequestBody ProductSectionRelation productSectionRelation) {
         log.debug("根据关联id删除商品和板块关联\t param:{}", productSectionRelation);
 
-        ResponseEntity entity = productSectionRelationFegin.create(productSectionRelation);
-        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok().build();
-       /* String location = entity.getHeaders().getLocation().toString();
-        Long relationId = Long.valueOf(location.substring(location.lastIndexOf('/') + 1));
-        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.created(URI.create("/product-sections/relation/" + relationId)).body(Maps.of("id", relationId));*/
-    }
+        ResponseEntity entity = productSectionRelationFeign.create(productSectionRelation);
+        return FeginResponseTools.convertNoramlResponse(entity);
+      }
 
     @ApiOperation(value = "查询去重的商品板块集合", response = String.class, responseContainer = "List")
     @GetMapping("/product-sections/")
@@ -130,12 +130,16 @@ public class ProductSectionApi {
         log.debug("查询去重的商品板块集合\t");
 
         ProductSectionParam productSectionParam = new ProductSectionParam();
-        ResponseEntity<Pages<ProductSection>> entity = productSectionFegin.pages(productSectionParam);
+        ResponseEntity entity = productSectionFeign.pages(productSectionParam);
         if (entity.getStatusCode().isError()) {
             return ResponseEntity.badRequest().body(entity.getBody());
         }
-        List<ProductSection> productSectionList = entity.getBody().getArray();
-        List<String> sectionNameList = productSectionList.stream().map(ProductSection::getSectionName).distinct().collect(Collectors.toList());
-        return ResponseEntity.ok(sectionNameList);
+        Pages<ProductSection> pages = (Pages<ProductSection>) entity.getBody();
+        List<String> sectionNameList = null;
+        if (Objects.nonNull(pages)) {
+            List<ProductSection> productSectionList = Optional.of(pages.getArray()).orElse(Collections.emptyList());
+            sectionNameList = CollectionUtils.isEmpty(productSectionList) ? null : productSectionList.stream().map(ProductSection::getSectionName).distinct().collect(Collectors.toList());
+        }
+        return ResponseEntity.ok(Tuple.of(sectionNameList));
     }
 }

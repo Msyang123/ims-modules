@@ -1,7 +1,7 @@
 package com.lhiot.ims.healthygood.api.customplan;
 
-import com.leon.microx.util.Maps;
 import com.leon.microx.web.result.Pages;
+import com.leon.microx.web.result.Tuple;
 import com.leon.microx.web.swagger.ApiHideBodyProperty;
 import com.leon.microx.web.swagger.ApiParamType;
 import com.lhiot.ims.healthygood.feign.customplan.CustomPlanSectionFeign;
@@ -10,17 +10,21 @@ import com.lhiot.ims.healthygood.feign.customplan.entity.CustomPlanSection;
 import com.lhiot.ims.healthygood.feign.customplan.entity.CustomPlanSectionRelation;
 import com.lhiot.ims.healthygood.feign.customplan.model.CustomPlanSectionParam;
 import com.lhiot.ims.rbac.aspect.LogCollection;
+import com.lhiot.util.FeginResponseTools;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.net.URI;
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -46,14 +50,7 @@ public class CustomPlanSectionApi {
         log.debug("添加定制板块\t param:{}", customPlanSection);
 
         ResponseEntity entity = customPlanSectionFeign.create(customPlanSection);
-        if (entity.getStatusCode().isError()) {
-            return ResponseEntity.badRequest().body(entity.getBody());
-        }
-        String location = entity.getHeaders().getLocation().toString();
-        Long id = Long.valueOf(location.substring(location.lastIndexOf('/') + 1));
-        return id > 0
-                ? ResponseEntity.created(URI.create("/custom-plan-sections/" + id)).body(Maps.of("id", id))
-                : ResponseEntity.badRequest().body(entity.getBody());
+        return FeginResponseTools.convertCreateResponse(entity);
     }
 
 
@@ -69,7 +66,7 @@ public class CustomPlanSectionApi {
         log.debug("修改定制板块\t param:{}", customPlanSection);
 
         ResponseEntity entity = customPlanSectionFeign.update(id, customPlanSection);
-        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok().build();
+        return FeginResponseTools.convertUpdateResponse(entity);
     }
 
     @ApiOperation(value = "根据id查找单个定制板块", response = CustomPlanSection.class)
@@ -81,8 +78,8 @@ public class CustomPlanSectionApi {
     public ResponseEntity findById(@PathVariable("id") Long id, @RequestParam(value = "flag", required = false) boolean flag) {
         log.debug("根据id查找单个定制板块\t param:{}", id, flag);
 
-        ResponseEntity<CustomPlanSection> entity = customPlanSectionFeign.findById(id, true);
-        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok().body(entity.getBody());
+        ResponseEntity entity = customPlanSectionFeign.findById(id, true);
+        return FeginResponseTools.convertNoramlResponse(entity);
     }
 
     @LogCollection
@@ -93,7 +90,7 @@ public class CustomPlanSectionApi {
         log.debug("批量删除定制板块\t param:{}", ids);
 
         ResponseEntity entity = customPlanSectionFeign.batchDelete(ids);
-        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.noContent().build();
+        return FeginResponseTools.convertDeleteResponse(entity);
     }
 
     @ApiOperation(value = "根据条件分页查询定制板块信息列表", response = CustomPlanSection.class, responseContainer = "Set")
@@ -102,8 +99,8 @@ public class CustomPlanSectionApi {
     public ResponseEntity search(@RequestBody CustomPlanSectionParam param) {
         log.debug("根据条件分页查询定制板块信息列表\t param:{}", param);
 
-        ResponseEntity<Pages<CustomPlanSection>> entity = customPlanSectionFeign.search(param);
-        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok(entity.getBody());
+        ResponseEntity entity = customPlanSectionFeign.search(param);
+        return FeginResponseTools.convertNoramlResponse(entity);
     }
 
     @ApiOperation(value = "查询去重的定制板块集合", response = String.class, responseContainer = "List")
@@ -112,13 +109,17 @@ public class CustomPlanSectionApi {
         log.debug("查询去重的定制板块集合\t");
 
         CustomPlanSectionParam customPlanSectionParam = new CustomPlanSectionParam();
-        ResponseEntity<Pages<CustomPlanSection>> entity = customPlanSectionFeign.search(customPlanSectionParam);
+        ResponseEntity entity = customPlanSectionFeign.search(customPlanSectionParam);
         if (entity.getStatusCode().isError()) {
             return ResponseEntity.badRequest().body(entity.getBody());
         }
-        List<CustomPlanSection> customPlanSectionList = entity.getBody().getArray();
-        List<String> sectionNameList = customPlanSectionList.stream().map(CustomPlanSection::getSectionName).distinct().collect(Collectors.toList());
-        return ResponseEntity.ok(sectionNameList);
+        Pages<CustomPlanSection> pages = (Pages<CustomPlanSection>) entity.getBody();
+        List<String> sectionNameList = null;
+        if (Objects.nonNull(pages)) {
+            List<CustomPlanSection> customPlanSectionList = Optional.of(pages.getArray()).orElse(Collections.emptyList());
+            sectionNameList = CollectionUtils.isEmpty(customPlanSectionList) ? null : customPlanSectionList.stream().map(CustomPlanSection::getSectionName).distinct().collect(Collectors.toList());
+        }
+        return ResponseEntity.ok(Tuple.of(sectionNameList));
     }
 
     @LogCollection
@@ -129,12 +130,7 @@ public class CustomPlanSectionApi {
         log.debug("批量修改定制版块与定制计划关系\t param:{}", customPlanSectionRelation);
 
         ResponseEntity entity = customPlanSectionRelationFeign.create(customPlanSectionRelation);
-        String location = entity.getHeaders().getLocation().toString();
-        Long relationId = Long.valueOf(location.substring(location.lastIndexOf('/') + 1));
-
-        return entity.getStatusCode().isError()
-                ? ResponseEntity.badRequest().body("添加商品与版块关系记录失败！")
-                : ResponseEntity.created(URI.create("/custom-plan-section-relations/" + relationId)).body(Maps.of("id", relationId));
+        return FeginResponseTools.convertCreateResponse(entity);
     }
 
     @ApiOperation("批量删除定制版块与定制计划架关系")
@@ -147,6 +143,6 @@ public class CustomPlanSectionApi {
         log.debug("批量删除版块与商品上架关系\t sectionId:{},shelfIds:{} ", sectionId, planIds);
 
         ResponseEntity entity = customPlanSectionRelationFeign.deleteBatch(sectionId, planIds);
-        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.noContent().build();
+        return FeginResponseTools.convertDeleteResponse(entity);
     }
 }
