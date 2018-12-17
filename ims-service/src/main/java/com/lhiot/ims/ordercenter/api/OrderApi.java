@@ -63,7 +63,7 @@ public class OrderApi {
     }
 
     @ApiOperation(value = "根据订单code查询订单详情", response = OrderDetailResult.class)
-    @ApiImplicitParam(paramType = "path", name = "orderCode", dataType = "String", required = true, value = "订单code")
+    @ApiImplicitParam(paramType = ApiParamType.PATH, name = "orderCode", dataType = "String", required = true, value = "订单code")
     @GetMapping("/orders/{orderCode}")
     public ResponseEntity orderDetail(@PathVariable("orderCode") String orderCode) {
         log.debug("根据订单code查询订单详情\t param:{}", orderCode);

@@ -5,6 +5,7 @@ import com.leon.microx.web.result.Pages;
 import com.leon.microx.web.result.Tuple;
 import com.leon.microx.web.session.Sessions;
 import com.leon.microx.web.swagger.ApiHideBodyProperty;
+import com.leon.microx.web.swagger.ApiParamType;
 import com.lhiot.ims.healthygood.feign.customplan.CustomPlanSpecificationStandardFeign;
 import com.lhiot.ims.healthygood.feign.customplan.entity.CustomPlanSpecificationStandard;
 import com.lhiot.ims.healthygood.feign.customplan.model.CustomPlanSpecificationStandardParam;
@@ -57,6 +58,7 @@ public class CustomPlanSpecificationStandardApi {
 
     @LogCollection
     @PutMapping("/custom-plan-specification-standards/{id}")
+    @ApiImplicitParam(paramType = ApiParamType.PATH, value = "id", name = "id", dataType = "long", required = true)
     @ApiOperation(value = "根据id更新定制计划规格基础数据")
     @ApiHideBodyProperty({"id"})
     public ResponseEntity update(@PathVariable("id") Long id, @RequestBody CustomPlanSpecificationStandard customPlanSpecificationStandard) {
@@ -70,7 +72,7 @@ public class CustomPlanSpecificationStandardApi {
     @Sessions.Uncheck
     @DeleteMapping("/custom-plan-specification-standards/{ids}")
     @ApiOperation(value = "根据ids删除定制计划规格基础数据")
-    @ApiImplicitParam(paramType = "path", name = "ids", value = "要删除定制计划规格基础数据的ids,逗号分割", required = true, dataType = "String")
+    @ApiImplicitParam(paramType = ApiParamType.PATH, name = "ids", value = "要删除定制计划规格基础数据的ids,逗号分割", required = true, dataType = "String")
     public ResponseEntity deleteByIds(@PathVariable("ids") String ids) {
         log.debug("根据ids删除定制计划规格基础数据\t param:{}", ids);
 
@@ -80,7 +82,7 @@ public class CustomPlanSpecificationStandardApi {
 
     @GetMapping("/custom-plan-specification-standards/{id}")
     @ApiOperation(value = "根据id查询定制计划规格基础数据", notes = "根据id查询定制计划规格基础数据", response = CustomPlanSpecificationStandard.class)
-    @ApiImplicitParam(paramType = "path", name = "id", value = "主键id", required = true, dataType = "Long")
+    @ApiImplicitParam(paramType = ApiParamType.PATH, name = "id", value = "主键id", required = true, dataType = "Long")
     public ResponseEntity findCustomPlanSpecificationStandard(@PathVariable("id") Long id) {
         log.debug("根据id查询定制计划规格基础数据\t param:{}", id);
 

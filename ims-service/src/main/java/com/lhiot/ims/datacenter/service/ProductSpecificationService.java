@@ -12,7 +12,6 @@ import com.lhiot.ims.datacenter.feign.model.ProductSpecificationParam;
 import com.lhiot.ims.datacenter.feign.type.AttachmentType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
@@ -23,7 +22,6 @@ import java.util.stream.Collectors;
  * @author hufan created in 2018/11/23 9:42
  **/
 @Service
-@Transactional
 public class ProductSpecificationService {
 
     private DictionaryClient dictionaryClient;
@@ -56,7 +54,7 @@ public class ProductSpecificationService {
     public Tips pages(ProductSpecificationParam param) {
         ResponseEntity entity = productSpecificationFeign.pages(param);
         if (entity.getStatusCode().isError()) {
-            return Tips.warn(entity.getBody().toString());
+            return Tips.warn((String) entity.getBody());
         }
         Pages pages = (Pages) entity.getBody();
         List<ProductSpecification> productSpecificationList = pages.getArray();

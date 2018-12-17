@@ -15,7 +15,7 @@ import java.util.Arrays;
 * @date 2018/09/29
 */
 @Service
-@Transactional
+@Transactional(rollbackFor = Exception.class)
 public class ImsRelationRoleOperationService {
 
     private final ImsRelationRoleOperationMapper relationRoleOperationMapper;

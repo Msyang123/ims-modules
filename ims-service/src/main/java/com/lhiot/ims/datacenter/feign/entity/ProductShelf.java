@@ -2,10 +2,8 @@ package com.lhiot.ims.datacenter.feign.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.leon.microx.predefine.OnOff;
-import com.lhiot.dc.dictionary.HasEntries;
 import com.lhiot.ims.datacenter.feign.type.ApplicationType;
 import com.lhiot.ims.datacenter.feign.type.ShelfType;
-import com.lhiot.ims.datacenter.util.DictionaryCodes;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;

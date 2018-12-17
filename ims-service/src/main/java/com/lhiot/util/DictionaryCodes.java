@@ -1,4 +1,4 @@
-package com.lhiot.ims.datacenter.util;
+package com.lhiot.util;
 
 
 /**

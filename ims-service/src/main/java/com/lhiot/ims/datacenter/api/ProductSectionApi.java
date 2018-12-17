@@ -3,6 +3,7 @@ package com.lhiot.ims.datacenter.api;
 import com.leon.microx.util.Maps;
 import com.leon.microx.web.result.Pages;
 import com.leon.microx.web.result.Tips;
+import com.leon.microx.web.result.Tuple;
 import com.leon.microx.web.swagger.ApiHideBodyProperty;
 import com.leon.microx.web.swagger.ApiParamType;
 import com.lhiot.ims.datacenter.feign.ProductSectionFeign;
@@ -19,11 +20,12 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.net.URI;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -73,7 +75,7 @@ public class ProductSectionApi {
     public ResponseEntity findById(@PathVariable("id") Long id) {
         log.debug("根据Id查找商品版块\t id:{}", id);
 
-        ResponseEntity<ProductSection> entity = productSectionFeign.findById(id, true, null, true);
+        ResponseEntity entity = productSectionFeign.findById(id, true, null, true);
         return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok(entity.getBody());
     }
 
@@ -94,7 +96,7 @@ public class ProductSectionApi {
     public ResponseEntity search(@RequestBody ProductSectionParam param) {
         log.debug("查询商品版块信息列表\t param:{}", param);
 
-        ResponseEntity<Pages<ProductSection>> entity = productSectionFeign.pages(param);
+        ResponseEntity entity = productSectionFeign.pages(param);
         return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok(entity.getBody());
     }
 
@@ -119,10 +121,7 @@ public class ProductSectionApi {
 
         ResponseEntity entity = productSectionRelationFeign.create(productSectionRelation);
         return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok().build();
-       /* String location = entity.getHeaders().getLocation().toString();
-        Long relationId = Long.valueOf(location.substring(location.lastIndexOf('/') + 1));
-        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.created(URI.create("/product-sections/relation/" + relationId)).body(Maps.of("id", relationId));*/
-    }
+      }
 
     @ApiOperation(value = "查询去重的商品板块集合", response = String.class, responseContainer = "List")
     @GetMapping("/product-sections/")
@@ -130,12 +129,16 @@ public class ProductSectionApi {
         log.debug("查询去重的商品板块集合\t");
 
         ProductSectionParam productSectionParam = new ProductSectionParam();
-        ResponseEntity<Pages<ProductSection>> entity = productSectionFeign.pages(productSectionParam);
+        ResponseEntity entity = productSectionFeign.pages(productSectionParam);
         if (entity.getStatusCode().isError()) {
             return ResponseEntity.badRequest().body(entity.getBody());
         }
-        List<ProductSection> productSectionList = entity.getBody().getArray();
-        List<String> sectionNameList = productSectionList.stream().map(ProductSection::getSectionName).distinct().collect(Collectors.toList());
-        return ResponseEntity.ok(sectionNameList);
+        Pages<ProductSection> pages = (Pages<ProductSection>) entity.getBody();
+        List<String> sectionNameList = null;
+        if (Objects.nonNull(pages)) {
+            List<ProductSection> productSectionList = Optional.of(pages.getArray()).orElse(Collections.emptyList());
+            sectionNameList = CollectionUtils.isEmpty(productSectionList) ? null : productSectionList.stream().map(ProductSection::getSectionName).distinct().collect(Collectors.toList());
+        }
+        return ResponseEntity.ok(Tuple.of(sectionNameList));
     }
 }

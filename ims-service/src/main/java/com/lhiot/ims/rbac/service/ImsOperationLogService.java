@@ -1,7 +1,7 @@
 package com.lhiot.ims.rbac.service;
 
-import com.leon.microx.web.result.Pages;
 import com.leon.microx.util.StringUtils;
+import com.leon.microx.web.result.Pages;
 import com.lhiot.ims.rbac.domain.ImsOperationLog;
 import com.lhiot.ims.rbac.mapper.ImsOperationLogMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
-import java.util.Map;
 
 /**
 * Description:操作表日志服务类
@@ -17,7 +16,7 @@ import java.util.Map;
 * @date 2018/09/29
 */
 @Service
-@Transactional
+@Transactional(rollbackFor = Exception.class)
 public class ImsOperationLogService {
 
     private final ImsOperationLogMapper imsOperationLogMapper;

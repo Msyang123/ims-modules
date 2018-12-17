@@ -29,11 +29,14 @@ public class DeliverFeeRuleParam {
     private Integer maxOrderAmount;
 
     @NotNull
-    @ApiModelProperty(value = "配送时间 DAYTIME(8:00,18:00), EVENING(18:00,22:00),ALL_DAY(8:00,22:00)", dataType = "DeliverAtType")
+    @ApiModelProperty(value = "配送时间段类型 DAYTIME(8:00,18:00), EVENING(18:00,22:00),ALL_DAY(8:00,22:00)", dataType = "DeliverAtType")
     private DeliverAtType deliveryAtType;
 
     @ApiModelProperty(value = "创建人", dataType = "String")
     private String createBy;
+
+    @ApiModelProperty(value = "删除的配送规格详情ids", dataType = "List")
+    private List<String> deleteIds;
 
     @ApiModelProperty(value = "配送费规格详情", dataType = "List")
     private List<DeliverFeeRuleDetail> detailList;

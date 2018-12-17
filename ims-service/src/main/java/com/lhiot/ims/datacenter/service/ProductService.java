@@ -17,7 +17,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +26,6 @@ import java.util.Objects;
  * @author hufan created in 2018/11/23 18:46
  **/
 @Service
-@Transactional
 public class ProductService {
     private final ProductFeign productFeign;
     private final ProductSpecificationFeign productSpecificationFeign;
@@ -52,7 +50,7 @@ public class ProductService {
         product.setAttachments(productAttachments);
         ResponseEntity productEntity = productFeign.create(product);
         if (productEntity.getStatusCode().isError()) {
-            return Tips.warn(productEntity.getBody().toString());
+            return Tips.warn((String) productEntity.getBody());
         }
         // 返回参数 例：<201 Created,{content-type=[application/json;charset=UTF-8], date=[Sat, 24 Nov 2018 06:37:59 GMT], location=[/product-sections/13], transfer-encoding=[chunked]}>
         String location = productEntity.getHeaders().getLocation().toString();
@@ -70,7 +68,7 @@ public class ProductService {
             // TODO  productSpecification.setSpecificationQty(XXX);
             ResponseEntity specificationEntity = productSpecificationFeign.create(productSpecification);
             if (specificationEntity.getStatusCode().isError()) {
-                return Tips.warn(specificationEntity.getBody().toString());
+                return Tips.warn((String) specificationEntity.getBody());
             }
         }
         return Tips.info(productId + "");
@@ -91,7 +89,7 @@ public class ProductService {
         product.setAttachments(productAttachments);
         ResponseEntity entity = productFeign.update(id, product);
         if (entity.getStatusCode().isError()) {
-            return Tips.warn(entity.getBody().toString());
+            return Tips.warn((String) entity.getBody());
         }
         if (Objects.isNull(productResult.getProductSpecification())) {
             return Tips.warn("商品基础条码不能为空");
@@ -100,7 +98,7 @@ public class ProductService {
         ProductSpecification productSpecification = productResult.getProductSpecification();
         ResponseEntity specificationEntity = productSpecificationFeign.update(productSpecification.getId(), productSpecification);
         if (specificationEntity.getStatusCode().isError()) {
-            return Tips.warn(specificationEntity.getBody().toString());
+            return Tips.warn((String) specificationEntity.getBody());
         }
         return Tips.info("修改成功");
     }
@@ -116,7 +114,7 @@ public class ProductService {
         ProductResult productResult = new ProductResult();
         ResponseEntity productEntity = productFeign.findById(id);
         if (productEntity.getStatusCode().isError()) {
-            return Tips.warn(productEntity.getBody().toString());
+            return Tips.warn((String) productEntity.getBody());
         }
         Product product = (Product) productEntity.getBody();
         if (Objects.nonNull(product)) {
@@ -156,7 +154,7 @@ public class ProductService {
             productSpecificationParam.setProductId(productResult.getId());
             ResponseEntity productSpecificationEntity = productSpecificationFeign.pages(productSpecificationParam);
             if (productSpecificationEntity.getStatusCode().isError()) {
-                return Tips.warn(productSpecificationEntity.getBody().toString());
+                return Tips.warn((String) productSpecificationEntity.getBody());
             }
 
             Pages<ProductSpecification> pages = (Pages<ProductSpecification>) productSpecificationEntity.getBody();

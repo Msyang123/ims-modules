@@ -51,12 +51,12 @@ public class CustomPlanApi {
     }
 
     @GetMapping("/custom-plans/{id}")
-    @ApiOperation(value = "定制计划详细信息")
+    @ApiOperation(value = "定制计划详细信息", response = CustomPlanDetailResult.class)
     @ApiImplicitParam(paramType = ApiParamType.PATH, name = "id", value = "定制计划id", dataType = "Long", required = true)
-    public ResponseEntity<CustomPlanDetailResult> customPlans(@PathVariable Long id) {
+    public ResponseEntity customPlans(@PathVariable Long id) {
         log.debug("定制计划详细信息\t param:{}", id);
 
-        ResponseEntity<CustomPlanDetailResult> entity = customPlanFeign.findById(id);
+        ResponseEntity entity = customPlanFeign.findById(id);
         return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok(entity.getBody());
     }
 
@@ -105,7 +105,7 @@ public class CustomPlanApi {
     public ResponseEntity search(@RequestBody CustomPlanParam param) {
         log.debug("根据条件分页查询定制计划信息列表\t param:{}", param);
 
-        ResponseEntity<Pages<CustomPlanResult>> entity = customPlanFeign.search(param);
+        ResponseEntity entity = customPlanFeign.search(param);
         return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok(entity.getBody());
     }
 }

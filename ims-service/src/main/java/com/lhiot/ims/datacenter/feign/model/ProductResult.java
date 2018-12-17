@@ -5,7 +5,9 @@ import com.lhiot.ims.datacenter.feign.entity.ProductSpecification;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import reactor.util.annotation.Nullable;
 
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.List;
 
@@ -43,6 +45,7 @@ public class ProductResult {
     @ApiModelProperty(notes = "图标", dataType = "String")
     private String icon;
 
+    @NotNull(message = "商品基础规格信息不能为空")
     @ApiModelProperty(notes = "商品基础规格信息", dataType = "ProductSpecification")
     private ProductSpecification productSpecification;
 }

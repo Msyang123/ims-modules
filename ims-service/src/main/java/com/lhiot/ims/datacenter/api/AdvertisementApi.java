@@ -20,7 +20,6 @@ import com.lhiot.ims.healthygood.feign.customplan.model.CustomPlanDetailResult;
 import com.lhiot.ims.rbac.aspect.LogCollection;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,21 +57,19 @@ public class AdvertisementApi {
     @LogCollection
     @ApiOperation("添加广告")
     @PostMapping("/")
-    @ApiHideBodyProperty({"id", "uiPosition", "createAt", "validityPeriod"})
+    @ApiHideBodyProperty({"id", "uiPosition", "createAt", "validityPeriod", "articleList"})
     public ResponseEntity create(@RequestBody Advertisement advertisement) {
         log.debug("添加广告\t param:{}", advertisement);
 
         ResponseEntity entity = advertisementFeign.create(advertisement);
-        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok(entity.getBody());
+        return entity.getStatusCode().isError() || Objects.nonNull(entity.getBody()) ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok(entity.getBody());
     }
 
     @LogCollection
     @ApiOperation("修改广告")
-    @ApiImplicitParams({
-            @ApiImplicitParam(paramType = ApiParamType.PATH, name = "id", value = "广告id", dataType = "Long", required = true)
-    })
+    @ApiImplicitParam(paramType = ApiParamType.PATH, name = "id", value = "广告id", dataType = "Long", required = true)
     @PutMapping("/{id}")
-    @ApiHideBodyProperty({"uiPosition", "createAt", "validityPeriod"})
+    @ApiHideBodyProperty({"uiPosition", "createAt", "validityPeriod", "articleList"})
     public ResponseEntity update(@PathVariable("id") Long id, @RequestBody Advertisement advertisement) {
         log.debug("根据id修改广告\t id:{} param:{}", id, advertisement);
 
@@ -81,16 +78,19 @@ public class AdvertisementApi {
     }
 
     @ApiOperation(value = "根据Id查找广告", response = Advertisement.class)
-    @ApiImplicitParam(paramType = ApiParamType.PATH, name = "id", value = "广告id", dataType = "Long", required = true)
+    @ApiImplicitParam(paramType = ApiParamType.PATH, name = "id", value = "文章版块Id", dataType = "Long", required = true)
     @GetMapping("/{id}")
     public ResponseEntity findById(@PathVariable("id") Long id) {
         log.debug("根据Id查找广告\t id:{}", id);
 
-        ResponseEntity<Advertisement> entity = advertisementFeign.findById(id);
+        ResponseEntity entity = advertisementFeign.findById(id);
         if (entity.getStatusCode().isError()) {
             return ResponseEntity.badRequest().body(entity.getBody());
         }
-        Advertisement advertisement = entity.getBody();
+        Advertisement advertisement = (Advertisement) entity.getBody();
+        if (Objects.isNull(advertisement)) {
+            return ResponseEntity.ok(entity.getBody());
+        }
         RelationType relationType = advertisement.getRelationType();
         switch (relationType) {
             case STORE_LIVE_TELECAST:
@@ -164,19 +164,23 @@ public class AdvertisementApi {
     public ResponseEntity search(@RequestBody AdvertisementParam param) {
         log.debug("查询广告信息列表\t param:{}", param);
 
-        ResponseEntity<Pages<Advertisement>> entity = advertisementFeign.pages(param);
-        Pages<Advertisement> pages = entity.getBody();
-        pages.getArray().forEach(advertisement -> {
-            if (Objects.isNull(advertisement.getBeginAt()) && Objects.isNull(advertisement.getEndAt())) {
-                advertisement.setValidityPeriod("永久有效");
-            } else {
-                // FIXME 判空
-                String beginAt = new SimpleDateFormat("yyyy.MM.dd").format(advertisement.getBeginAt());
-                String endAt = new SimpleDateFormat("yyyy.MM.dd").format(advertisement.getEndAt());
-                advertisement.setValidityPeriod(beginAt + "-" + endAt);
-            }
-        });
-        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok(pages);
+        ResponseEntity entity = advertisementFeign.pages(param);
+        if (entity.getStatusCode().isError()) {
+            return ResponseEntity.badRequest().body(entity.getBody());
+        }
+        Pages<Advertisement> pages = (Pages<Advertisement>) entity.getBody();
+        if (!pages.getArray().isEmpty() || pages.getArray().size() != 0) {
+            pages.getArray().forEach(advertisement -> {
+                if (Objects.isNull(advertisement.getBeginAt()) && Objects.isNull(advertisement.getEndAt())) {
+                    advertisement.setValidityPeriod("永久有效");
+                } else {
+                    String beginAt = Objects.nonNull(advertisement.getBeginAt()) ? new SimpleDateFormat("yyyy.MM.dd").format(advertisement.getBeginAt()) : "";
+                    String endAt = Objects.nonNull(advertisement.getEndAt()) ? new SimpleDateFormat("yyyy.MM.dd").format(advertisement.getEndAt()) : "";
+                    advertisement.setValidityPeriod(beginAt + "-" + endAt);
+                }
+            });
+        }
+        return ResponseEntity.ok(pages);
     }
 
 }

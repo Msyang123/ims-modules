@@ -121,9 +121,9 @@ public class ProductCategoryApi {
         return ResponseEntity.ok(groupNameList);
     }
 
-    @ApiOperation(value = "查询商品分类树结构")
+    @ApiOperation(value = "查询商品分类树结构", response = MenuDisplay.class, responseContainer = "List")
     @GetMapping("/tree")
-    public ResponseEntity<Tuple<MenuDisplay>> tree() {
+    public ResponseEntity tree() {
         log.debug("查询商品分类树结构\t param:");
 
         Tips tips = productCategoryService.tree();

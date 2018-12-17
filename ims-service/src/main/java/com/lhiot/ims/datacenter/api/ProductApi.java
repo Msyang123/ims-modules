@@ -89,7 +89,7 @@ public class ProductApi {
     public ResponseEntity search(@RequestBody ProductParam param) {
         log.debug("查询商品信息列表\t param:{}", param);
 
-        ResponseEntity<Pages<Product>> entity = productFeign.pages(param);
+        ResponseEntity entity = productFeign.pages(param);
         return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok(entity.getBody());
     }
 }

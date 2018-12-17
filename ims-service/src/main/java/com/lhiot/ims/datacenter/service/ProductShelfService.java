@@ -13,7 +13,6 @@ import com.lhiot.ims.datacenter.feign.type.ApplicationType;
 import com.lhiot.ims.datacenter.feign.type.AttachmentType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
@@ -23,7 +22,6 @@ import java.util.stream.Collectors;
  * @author hufan created in 2018/12/3 9:49
  **/
 @Service
-@Transactional
 public class ProductShelfService {
     private final ProductShelfFeign productShelfFeign;
     private final ProductSectionRelationFeign productSectionRelationFeign;
@@ -40,7 +38,7 @@ public class ProductShelfService {
         productShelf.setApplicationType(ApplicationType.HEALTH_GOOD);
         ResponseEntity productShelfEntity = productShelfFeign.create(productShelf);
         if (productShelfEntity.getStatusCode().isError()) {
-            return Tips.warn(productShelfEntity.getBody().toString());
+            return Tips.warn((String) productShelfEntity.getBody());
         }
         // 返回参数 例：<201 Created,{content-type=[application/json;charset=UTF-8], date=[Sat, 24 Nov 2018 06:37:59 GMT], location=[/product-sections/13], transfer-encoding=[chunked]}>
         String location = productShelfEntity.getHeaders().getLocation().toString();
@@ -50,7 +48,7 @@ public class ProductShelfService {
         if (Objects.nonNull(productShelf.getSectionIds())) {
             ResponseEntity entity = productSectionRelationFeign.createBatch(productShelfId, productShelf.getSectionIds());
             if (entity.getStatusCode().isError()) {
-                return Tips.warn(entity.getBody().toString());
+                return Tips.warn((String) entity.getBody());
             }
         }
         return Tips.info(productShelfId + "");
@@ -59,7 +57,7 @@ public class ProductShelfService {
     public Tips update(Long id, ProductShelf productShelf) {
         ResponseEntity productShelfEntity = productShelfFeign.update(id, productShelf);
         if (productShelfEntity.getStatusCode().isError()) {
-            return Tips.warn(productShelfEntity.getBody().toString());
+            return Tips.warn((String) productShelfEntity.getBody());
         }
         return Tips.info("修改成功");
     }
@@ -67,7 +65,7 @@ public class ProductShelfService {
     public Tips findById(Long id) {
         ResponseEntity entity = productShelfFeign.findById(id, true);
         if (entity.getStatusCode().isError()) {
-            return Tips.warn(entity.getBody().toString());
+            return Tips.warn((String) entity.getBody());
         }
         ProductShelf productShelf = (ProductShelf) entity.getBody();
         ProductSpecification productSpecification = productShelf.getProductSpecification();
@@ -100,7 +98,7 @@ public class ProductShelfService {
         param.setApplicationType(ApplicationType.HEALTH_GOOD);
         ResponseEntity entity = productShelfFeign.pages(param);
         if (entity.getStatusCode().isError()) {
-            return Tips.warn(entity.getBody().toString());
+            return Tips.warn((String) entity.getBody());
         }
         Pages<ProductShelf> pages = (Pages<ProductShelf>) entity.getBody();
         List<ProductShelf> productShelfList = pages.getArray();

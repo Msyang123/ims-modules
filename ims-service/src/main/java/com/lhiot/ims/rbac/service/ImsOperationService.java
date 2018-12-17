@@ -19,7 +19,7 @@ import java.util.Optional;
 * @date 2018/09/29
 */
 @Service
-@Transactional
+@Transactional(rollbackFor = Exception.class)
 public class ImsOperationService {
 
     private final ImsOperationMapper imsOperationMapper;

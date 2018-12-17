@@ -1,17 +1,15 @@
 package com.lhiot.ims.datacenter.feign.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.leon.microx.predefine.Use;
 import com.lhiot.dc.dictionary.HasEntries;
 import com.lhiot.ims.datacenter.feign.type.InventorySpecification;
-import com.lhiot.ims.datacenter.util.DictionaryCodes;
+import com.lhiot.util.DictionaryCodes;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.util.Date;
-import java.util.Objects;
 
 /**
  * @author xiaojian  created in  2018/11/19 8:40

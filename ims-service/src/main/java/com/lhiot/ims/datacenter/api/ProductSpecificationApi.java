@@ -69,7 +69,7 @@ public class ProductSpecificationApi {
     public ResponseEntity findById(@PathVariable("id") Long id) {
         log.debug("根据Id查找商品规格\t id:{}", id);
 
-        ResponseEntity<ProductSpecification> entity = productSpecificationFeign.findById(id);
+        ResponseEntity entity = productSpecificationFeign.findById(id);
         return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok(entity.getBody());
     }
 

@@ -21,7 +21,7 @@ import java.util.Map;
 * @date 2018/09/29
 */
 @Service
-@Transactional
+@Transactional(rollbackFor = Exception.class)
 public class ImsUserService {
 
     private final ImsUserMapper imsUserMapper;
@@ -40,6 +40,7 @@ public class ImsUserService {
     * @return
     */
     public ImsUser create(ImsUser imsUser){
+        // TODO 幂等添加
         imsUser.setPassword(MD5.str(imsUser.getPassword()));
         this.imsUserMapper.create(imsUser);
         return imsUser;

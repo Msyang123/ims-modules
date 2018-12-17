@@ -48,9 +48,7 @@ public class ArticleApi {
 
     @LogCollection
     @ApiOperation("修改文章")
-    @ApiImplicitParams({
             @ApiImplicitParam(paramType = ApiParamType.PATH, name = "id", value = "文章Id", dataType = "Long", required = true)
-    })
     @PutMapping("/articles/{id}")
     @ApiHideBodyProperty("id")
     public ResponseEntity update(@PathVariable("id") Long id, @RequestBody Article article) {
@@ -69,8 +67,8 @@ public class ArticleApi {
     public ResponseEntity single(@PathVariable("id") Long id) {
         log.debug("根据Id查找商品规格\t id:{}", id);
 
-        ResponseEntity<Article> entity = articleFeign.single(id, false);
-        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok(entity.getBody());
+        ResponseEntity entity = articleFeign.single(id, false);
+        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok((Article)entity.getBody());
     }
 
 
@@ -94,7 +92,7 @@ public class ArticleApi {
     public ResponseEntity search(@RequestBody ArticleParam param) {
         log.debug("查询商品规格信息列表\t param:{}", param);
 
-        ResponseEntity<Pages<Article>> entity = articleFeign.search(param);
-        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok(entity.getBody());
+        ResponseEntity entity = articleFeign.search(param);
+        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok((Pages<Article>)entity.getBody());
     }
 }

@@ -74,7 +74,7 @@ public class FruitDoctorApi {
     @ApiOperation(value = "根据id更新鲜果师申请记录")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = ApiParamType.PATH, name = "id", value = "主键id", dataType = "Long", required = true),
-            @ApiImplicitParam(paramType = "body", name = "registerApplication", value = "要更新的鲜果师申请记录", required = true, dataType = "RegisterApplication")
+            @ApiImplicitParam(paramType = ApiParamType.BODY, name = "registerApplication", value = "要更新的鲜果师申请记录", required = true, dataType = "RegisterApplication")
     })
     @PutMapping("/fruit-doctors/qualifications/{id}")
     public ResponseEntity update(@PathVariable("id") Long id, @RequestBody RegisterApplication registerApplication, Sessions.User user) {

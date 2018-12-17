@@ -1,5 +1,6 @@
 package com.lhiot.ims.ordercenter.feign.entity;
 
+import com.lhiot.ims.ordercenter.feign.type.UpdateWay;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -40,4 +41,7 @@ public class DeliverFeeRuleDetail {
 
     @ApiModelProperty(value = "续重费用", dataType = "Integer")
     private Integer additionalFee;
+
+    @ApiModelProperty(value = "操作方式 INSERT(新增),UPDATE(修改)", dataType = "UpdateWay")
+    private UpdateWay updateWay;
 }
