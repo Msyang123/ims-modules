@@ -9,6 +9,7 @@ import com.lhiot.ims.datacenter.feign.entity.ProductShelf;
 import com.lhiot.ims.datacenter.feign.model.ProductShelfParam;
 import com.lhiot.ims.datacenter.service.ProductShelfService;
 import com.lhiot.ims.rbac.aspect.LogCollection;
+import com.lhiot.util.FeginResponseTools;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
@@ -78,7 +79,7 @@ public class ProductShelfApi {
         log.debug("根据商品上架Ids删除商品上架\t param:{}", ids);
 
         ResponseEntity entity = productShelfFeign.batchDelete(ids);
-        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.noContent().build();
+        return FeginResponseTools.convertDeleteResponse(entity);
     }
 
     @ApiOperation(value = "根据条件分页查询商品上架信息列表", response = ProductShelf.class, responseContainer = "Set")

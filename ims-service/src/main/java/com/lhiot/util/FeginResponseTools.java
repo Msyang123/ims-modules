@@ -41,17 +41,16 @@ public class FeginResponseTools {
     }
 
     /**
-     * 获取基础服务新增调用返回的responseEntity 返回ResponseEntity对象
+     * 获取基础服务新增 返回URI调用返回的responseEntity 返回ResponseEntity新增对象
      *
      * @param responseEntity
-     * @param <T>
      * @return
      */
-    public static <T> ResponseEntity convertCreateResponse(ResponseEntity<T> responseEntity) {
+    public static ResponseEntity convertCreateResponse(ResponseEntity responseEntity) {
 
         if (Objects.isNull(responseEntity) || responseEntity.getStatusCode().isError()) {
             log.error("调用基础服务失败:{}", responseEntity);
-            return ResponseEntity.badRequest().body(Objects.isNull(responseEntity) ? "服务内部错误" : (String) responseEntity.getBody());
+            return ResponseEntity.badRequest().body(Objects.isNull(responseEntity) ? "服务内部错误" : responseEntity.getBody());
         }
         String location = responseEntity.getHeaders().getLocation().toString();
         Long id = Long.valueOf(location.substring(location.lastIndexOf('/') + 1));
@@ -59,49 +58,46 @@ public class FeginResponseTools {
     }
 
     /**
-     * 获取基础服务修改调用返回的responseEntity 返回ResponseEntity对象
+     * 获取基础服务修改调用返回的responseEntity 返回ResponseEntity更新对象
      *
      * @param responseEntity
-     * @param <T>
      * @return
      */
-    public static <T> ResponseEntity convertUpdateResponse(ResponseEntity<T> responseEntity) {
+    public static ResponseEntity convertUpdateResponse(ResponseEntity responseEntity) {
 
         if (Objects.isNull(responseEntity) || responseEntity.getStatusCode().isError()) {
             log.error("调用基础服务失败:{}", responseEntity);
-            return ResponseEntity.badRequest().body(Objects.isNull(responseEntity) ? "服务内部错误" : (String) responseEntity.getBody());
+            return ResponseEntity.badRequest().body(Objects.isNull(responseEntity) ? "服务内部错误" : responseEntity.getBody());
         }
         return ResponseEntity.ok().build();
     }
 
     /**
-     * 获取基础服务删除调用返回的responseEntity 返回ResponseEntity对象
+     * 获取基础服务删除调用返回的responseEntity 返回ResponseEntity删除对象
      *
      * @param responseEntity
-     * @param <T>
      * @return
      */
-    public static <T> ResponseEntity convertDeleteResponse(ResponseEntity<T> responseEntity) {
+    public static ResponseEntity convertDeleteResponse(ResponseEntity responseEntity) {
 
         if (Objects.isNull(responseEntity) || responseEntity.getStatusCode().isError()) {
             log.error("调用基础服务失败:{}", responseEntity);
-            return ResponseEntity.badRequest().body(Objects.isNull(responseEntity) ? "服务内部错误" : (String) responseEntity.getBody());
+            return ResponseEntity.badRequest().body(Objects.isNull(responseEntity) ? "服务内部错误" : responseEntity.getBody());
         }
         return ResponseEntity.noContent().build();
     }
 
     /**
-     * 获取基础服务删除调用返回的responseEntity 返回ResponseEntity对象
+     * 获取基础服务调用返回的responseEntity 返回ResponseEntity一般对象
      *
      * @param responseEntity
-     * @param <T>
      * @return
      */
-    public static <T> ResponseEntity convertSelectResponse(ResponseEntity<T> responseEntity) {
+    public static ResponseEntity convertNoramlResponse(ResponseEntity responseEntity) {
 
         if (Objects.isNull(responseEntity) || responseEntity.getStatusCode().isError()) {
             log.error("调用基础服务失败:{}", responseEntity);
-            return ResponseEntity.badRequest().body(Objects.isNull(responseEntity) ? "服务内部错误" : (String) responseEntity.getBody());
+            return ResponseEntity.badRequest().body(Objects.isNull(responseEntity) ? "服务内部错误" : responseEntity.getBody());
         }
         return ResponseEntity.ok(responseEntity.getBody());
     }

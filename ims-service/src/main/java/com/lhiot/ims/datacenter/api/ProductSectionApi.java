@@ -13,6 +13,7 @@ import com.lhiot.ims.datacenter.feign.entity.ProductSectionRelation;
 import com.lhiot.ims.datacenter.feign.model.ProductSectionParam;
 import com.lhiot.ims.datacenter.service.ProductSectionService;
 import com.lhiot.ims.rbac.aspect.LogCollection;
+import com.lhiot.util.FeginResponseTools;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -66,7 +67,7 @@ public class ProductSectionApi {
         log.debug("根据id修改商品版块\t id:{} param:{}", id, productSection);
 
         ResponseEntity entity = productSectionFeign.update(id, productSection);
-        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok(entity.getBody());
+        return FeginResponseTools.convertUpdateResponse(entity);
     }
 
     @ApiOperation(value = "根据Id查找商品版块", response = ProductSection.class)
@@ -76,7 +77,7 @@ public class ProductSectionApi {
         log.debug("根据Id查找商品版块\t id:{}", id);
 
         ResponseEntity entity = productSectionFeign.findById(id, true, null, true);
-        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok(entity.getBody());
+        return FeginResponseTools.convertNoramlResponse(entity);
     }
 
     @LogCollection
@@ -87,7 +88,7 @@ public class ProductSectionApi {
         log.debug("根据商品板块Ids删除商品版块\t param:{}", ids);
 
         ResponseEntity entity = productSectionFeign.batchDelete(ids);
-        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.noContent().build();
+        return FeginResponseTools.convertDeleteResponse(entity);
     }
 
     @ApiOperation(value = "根据条件分页查询商品版块信息列表", response = ProductSection.class, responseContainer = "Set")
@@ -97,7 +98,7 @@ public class ProductSectionApi {
         log.debug("查询商品版块信息列表\t param:{}", param);
 
         ResponseEntity entity = productSectionFeign.pages(param);
-        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok(entity.getBody());
+        return FeginResponseTools.convertNoramlResponse(entity);
     }
 
     @ApiOperation("批量删除版块与商品上架关系")
@@ -110,7 +111,7 @@ public class ProductSectionApi {
         log.debug("批量删除版块与商品上架关系\t sectionId:{},shelfIds:{} ", sectionId, shelfIds);
 
         ResponseEntity entity = productSectionRelationFeign.deleteBatch(sectionId, shelfIds);
-        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.noContent().build();
+        return FeginResponseTools.convertDeleteResponse(entity);
     }
 
     @LogCollection
@@ -120,7 +121,7 @@ public class ProductSectionApi {
         log.debug("根据关联id删除商品和板块关联\t param:{}", productSectionRelation);
 
         ResponseEntity entity = productSectionRelationFeign.create(productSectionRelation);
-        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok().build();
+        return FeginResponseTools.convertNoramlResponse(entity);
       }
 
     @ApiOperation(value = "查询去重的商品板块集合", response = String.class, responseContainer = "List")

@@ -1,6 +1,5 @@
 package com.lhiot.ims.datacenter.api;
 
-import com.leon.microx.util.Maps;
 import com.leon.microx.web.result.Pages;
 import com.leon.microx.web.swagger.ApiHideBodyProperty;
 import com.leon.microx.web.swagger.ApiParamType;
@@ -9,6 +8,7 @@ import com.lhiot.ims.datacenter.feign.entity.Dictionary;
 import com.lhiot.ims.datacenter.feign.entity.DictionaryEntry;
 import com.lhiot.ims.datacenter.feign.model.SearchParameter;
 import com.lhiot.ims.rbac.aspect.LogCollection;
+import com.lhiot.util.FeginResponseTools;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,13 +37,7 @@ public class DictionaryApi {
         log.debug("添加一个字典\t param:{}", dictionary);
 
         ResponseEntity entity = dictionaryFeign.add(dictionary);
-        if (entity.getStatusCode().isError()) {
-            return ResponseEntity.badRequest().body(entity.getBody());
-        }
-        // 返回参数 例：<201 Created,{content-type=[application/json;charset=UTF-8], date=[Sat, 24 Nov 2018 06:37:59 GMT], location=[/product-sections/13], transfer-encoding=[chunked]}>
-        String location = entity.getHeaders().getLocation().toString();
-        Long id = Long.valueOf(location.substring(location.lastIndexOf('/') + 1));
-        return id > 0 ? ResponseEntity.created(entity.getHeaders().getLocation()).body(Maps.of("id", id)) : ResponseEntity.badRequest().body(entity.getBody());
+        return FeginResponseTools.convertCreateResponse(entity);
     }
 
     @LogCollection
@@ -54,7 +48,7 @@ public class DictionaryApi {
         log.debug("删除字典（级联删除字典下所有子项）\t param:{}", code);
 
         ResponseEntity entity = dictionaryFeign.remove(code);
-        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.noContent().build();
+        return FeginResponseTools.convertDeleteResponse(entity);
     }
 
     @LogCollection
@@ -66,7 +60,7 @@ public class DictionaryApi {
         log.debug("修改字典信息\t id:{} param:{}", code, dictionary);
 
         ResponseEntity entity = dictionaryFeign.update(code, dictionary);
-        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok(entity.getBody());
+        return FeginResponseTools.convertUpdateResponse(entity);
     }
 
     @GetMapping("/dictionaries/{code}")
@@ -79,7 +73,7 @@ public class DictionaryApi {
         log.debug("查询一个字典数据\t code:{},param:{}", code, includeEntries);
 
         ResponseEntity entity = dictionaryFeign.dictionary(code, includeEntries);
-        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok(entity.getBody());
+        return FeginResponseTools.convertNoramlResponse(entity);
     }
 
     @ApiOperation("分页查询字典数据")
@@ -93,7 +87,7 @@ public class DictionaryApi {
         log.debug("分页查询字典数据\t param:{}", search);
 
         ResponseEntity entity = dictionaryFeign.dictionaries(search);
-        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok(entity.getBody());
+        return FeginResponseTools.convertNoramlResponse(entity);
     }
 
     @LogCollection
@@ -102,16 +96,10 @@ public class DictionaryApi {
     @PostMapping("/dictionaries/{dictCode}/entries")
     @ApiHideBodyProperty("id")
     public ResponseEntity addEntry(@PathVariable("dictCode") String dictCode, @RequestBody DictionaryEntry entry) {
-        log.debug("给字典添加一个子项\t code:{}, param:{}",dictCode, entry);
+        log.debug("给字典添加一个子项\t code:{}, param:{}", dictCode, entry);
 
         ResponseEntity entity = dictionaryFeign.addEntry(dictCode, entry);
-        if (entity.getStatusCode().isError()) {
-            return ResponseEntity.badRequest().body(entity.getBody());
-        }
-        // 返回参数 例：<201 Created,{content-type=[application/json;charset=UTF-8], date=[Sat, 24 Nov 2018 06:37:59 GMT], location=[/product-sections/13], transfer-encoding=[chunked]}>
-        String location = entity.getHeaders().getLocation().toString();
-        Long id = Long.valueOf(location.substring(location.lastIndexOf('/') + 1));
-        return id > 0 ? ResponseEntity.created(entity.getHeaders().getLocation()).body(Maps.of("id", id)) : ResponseEntity.badRequest().body(entity.getBody());
+        return FeginResponseTools.convertCreateResponse(entity);
     }
 
     @LogCollection
@@ -125,7 +113,7 @@ public class DictionaryApi {
         log.debug("删除字典子项（如果子项code为空，则删除此字典下所有子项）\t dictCode:{},code:{}", dictCode, code);
 
         ResponseEntity entity = dictionaryFeign.removeEntry(dictCode, code);
-        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.noContent().build();
+        return FeginResponseTools.convertDeleteResponse(entity);
     }
 
     @LogCollection
@@ -140,6 +128,6 @@ public class DictionaryApi {
         log.debug("修改字典子项信息\t id:{} param:{}, entry:{}", dictCode, code, entry);
 
         ResponseEntity entity = dictionaryFeign.updateEntry(dictCode, code, entry);
-        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok(entity.getBody());
+        return FeginResponseTools.convertUpdateResponse(entity);
     }
 }

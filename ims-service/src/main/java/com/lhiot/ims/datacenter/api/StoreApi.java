@@ -5,6 +5,7 @@ import com.leon.microx.web.swagger.ApiParamType;
 import com.lhiot.ims.datacenter.feign.StoreFeign;
 import com.lhiot.ims.datacenter.feign.entity.Store;
 import com.lhiot.ims.datacenter.feign.model.StoreSearchParam;
+import com.lhiot.util.FeginResponseTools;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -38,7 +39,7 @@ public class StoreApi {
         log.debug("根据id查询门店\t id:{}, param:{}", id, applicationType);
 
         ResponseEntity entity = storeFeign.findStore(id, applicationType);
-        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok(entity.getBody());
+        return FeginResponseTools.convertNoramlResponse(entity);
     }
 
     @ApiOperation(value = "根据门店编码查询门店信息", response = Store.class)
@@ -50,8 +51,8 @@ public class StoreApi {
     public ResponseEntity findStoreByCode(@PathVariable("code") String code, @RequestParam("applicationType") String applicationType) {
         log.debug("根据门店编码查询门店信息\t code:{}, param{}", code, applicationType);
 
-        ResponseEntity<Store> entity = storeFeign.findStoreByCode(code, applicationType);
-        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok(entity.getBody());
+        ResponseEntity entity = storeFeign.findStoreByCode(code, applicationType);
+        return FeginResponseTools.convertNoramlResponse(entity);
     }
 
     @ApiOperation(value = "添加门店")
@@ -73,7 +74,7 @@ public class StoreApi {
 
         store.setId(id);
         ResponseEntity entity = storeFeign.update(id, store);
-        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok().build();
+        return FeginResponseTools.convertUpdateResponse(entity);
     }
 
     @ApiOperation(value = "根据id删除门店")
@@ -83,7 +84,7 @@ public class StoreApi {
         log.debug("根据ids删除门店\t param:{}", id);
 
         ResponseEntity entity = storeFeign.deleteById(id);
-        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.noContent().build();
+        return FeginResponseTools.convertDeleteResponse(entity);
     }
 
     @PostMapping("/stores/pages")
@@ -93,6 +94,6 @@ public class StoreApi {
         log.debug("根据位置查询门店列表\t param:{}", param);
 
         ResponseEntity entity = storeFeign.search(param);
-        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok(entity.getBody());
+        return FeginResponseTools.convertNoramlResponse(entity);
     }
 }

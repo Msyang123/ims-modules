@@ -1,7 +1,6 @@
 package com.lhiot.ims.datacenter.api;
 
 import com.leon.microx.util.Maps;
-import com.leon.microx.web.result.Pages;
 import com.leon.microx.web.result.Tips;
 import com.leon.microx.web.swagger.ApiHideBodyProperty;
 import com.leon.microx.web.swagger.ApiParamType;
@@ -11,6 +10,7 @@ import com.lhiot.ims.datacenter.feign.model.ProductParam;
 import com.lhiot.ims.datacenter.feign.model.ProductResult;
 import com.lhiot.ims.datacenter.service.ProductService;
 import com.lhiot.ims.rbac.aspect.LogCollection;
+import com.lhiot.util.FeginResponseTools;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
@@ -90,6 +90,6 @@ public class ProductApi {
         log.debug("查询商品信息列表\t param:{}", param);
 
         ResponseEntity entity = productFeign.pages(param);
-        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok(entity.getBody());
+        return FeginResponseTools.convertNoramlResponse(entity);
     }
 }

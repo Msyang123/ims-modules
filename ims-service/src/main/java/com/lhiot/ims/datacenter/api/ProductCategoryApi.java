@@ -1,6 +1,5 @@
 package com.lhiot.ims.datacenter.api;
 
-import com.leon.microx.util.Maps;
 import com.leon.microx.web.result.Pages;
 import com.leon.microx.web.result.Tips;
 import com.leon.microx.web.result.Tuple;
@@ -12,16 +11,19 @@ import com.lhiot.ims.datacenter.feign.model.ProductCategoryParam;
 import com.lhiot.ims.datacenter.service.ProductCategoryService;
 import com.lhiot.ims.rbac.aspect.LogCollection;
 import com.lhiot.ims.rbac.domain.MenuDisplay;
+import com.lhiot.util.FeginResponseTools;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -50,13 +52,7 @@ public class ProductCategoryApi {
         log.debug("添加商品分类\t param:{}", productCategory);
 
         ResponseEntity entity = productCategoryFeign.create(productCategory);
-        if (entity.getStatusCode().isError()) {
-            return ResponseEntity.badRequest().body(entity.getBody());
-        }
-        // 返回参数 例：<201 Created,{content-type=[application/json;charset=UTF-8], date=[Sat, 24 Nov 2018 06:37:59 GMT], location=[/product-sections/13], transfer-encoding=[chunked]}>
-        String location = entity.getHeaders().getLocation().toString();
-        Long id = Long.valueOf(location.substring(location.lastIndexOf('/') + 1));
-        return id > 0 ? ResponseEntity.created(entity.getHeaders().getLocation()).body(Maps.of("id", id)) : ResponseEntity.badRequest().body(entity.getBody());
+        return FeginResponseTools.convertCreateResponse(entity);
     }
 
     @LogCollection
@@ -68,7 +64,7 @@ public class ProductCategoryApi {
         log.debug("根据id更新商品分类\t id:{} param:{}", id, productCategory);
 
         ResponseEntity entity = productCategoryFeign.update(id, productCategory);
-        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok(entity.getBody());
+        return FeginResponseTools.convertUpdateResponse(entity);
     }
 
 
@@ -78,8 +74,8 @@ public class ProductCategoryApi {
     public ResponseEntity findById(@PathVariable("id") Long id) {
         log.debug("根据Id查找商品分类\t param:{}", id);
 
-        ResponseEntity<ProductCategory> entity = productCategoryFeign.findById(id);
-        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok(entity.getBody());
+        ResponseEntity entity = productCategoryFeign.findById(id);
+        return FeginResponseTools.convertNoramlResponse(entity);
     }
 
     @LogCollection
@@ -90,7 +86,7 @@ public class ProductCategoryApi {
         log.debug("根据Ids删除商品分类\t param:{}", ids);
 
         ResponseEntity entity = productCategoryFeign.batchDelete(ids);
-        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.noContent().build();
+        return FeginResponseTools.convertDeleteResponse(entity);
     }
 
 
@@ -100,8 +96,8 @@ public class ProductCategoryApi {
     public ResponseEntity search(@RequestBody ProductCategoryParam param) {
         log.debug("查询商品分类信息列表\t param:{}", param);
 
-        ResponseEntity<Pages<ProductCategory>> entity = productCategoryFeign.pages(param);
-        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok(entity.getBody());
+        ResponseEntity entity = productCategoryFeign.pages(param);
+        return FeginResponseTools.convertNoramlResponse(entity);
     }
 
     @ApiOperation(value = "查询去重的商品分类集合", response = String.class, responseContainer = "List")
@@ -112,12 +108,16 @@ public class ProductCategoryApi {
 
         ProductCategoryParam productCategoryParam = new ProductCategoryParam();
         productCategoryParam.setParentId(parentId);
-        ResponseEntity<Pages<ProductCategory>> entity = productCategoryFeign.pages(productCategoryParam);
-        if (entity.getStatusCode().isError()) {
-            return ResponseEntity.badRequest().body(entity.getBody());
+        ResponseEntity entity = productCategoryFeign.pages(productCategoryParam);
+        if (Objects.isNull(entity.getBody()) || entity.getStatusCode().isError()) {
+            return ResponseEntity.badRequest().body(Objects.isNull(entity.getBody()) ? "调用基础服务失败" : entity.getBody());
         }
-        List<ProductCategory> productCategoryList = entity.getBody().getArray();
-        List<String> groupNameList = productCategoryList.stream().map(ProductCategory::getGroupName).distinct().collect(Collectors.toList());
+        Pages<ProductCategory> pages = (Pages<ProductCategory>) entity.getBody();
+        List<String> groupNameList = null;
+        if (Objects.nonNull(pages)) {
+            List<ProductCategory> productCategoryList = Optional.of(pages.getArray()).orElse(Collections.emptyList());
+            groupNameList = CollectionUtils.isEmpty(productCategoryList) ? null : productCategoryList.stream().map(ProductCategory::getGroupName).distinct().collect(Collectors.toList());
+        }
         return ResponseEntity.ok(groupNameList);
     }
 

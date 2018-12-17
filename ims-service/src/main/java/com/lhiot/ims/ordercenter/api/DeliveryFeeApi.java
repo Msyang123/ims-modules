@@ -10,6 +10,7 @@ import com.lhiot.ims.ordercenter.feign.model.DeliverFeeRuleParam;
 import com.lhiot.ims.ordercenter.feign.model.DeliverFeeRulesResult;
 import com.lhiot.ims.ordercenter.feign.model.DeliverFeeSearchParam;
 import com.lhiot.ims.ordercenter.feign.type.UpdateWay;
+import com.lhiot.util.FeginResponseTools;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author hufan created in 2018/12/15 19:35
@@ -45,7 +47,7 @@ public class DeliveryFeeApi {
 
         deliverFeeRuleParam.setCreateBy((String) user.getUser().get("name"));
         ResponseEntity entity = deliveryFeign.createRule(deliverFeeRuleParam);
-        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok(entity.getBody());
+        return FeginResponseTools.convertNoramlResponse(entity);
     }
 
     @ApiOperation("修改配送费计算规则")
@@ -59,7 +61,7 @@ public class DeliveryFeeApi {
         log.debug("修改配送费计算规则\t id:{} param:{}", ruleId, deliverFeeRuleParam);
 
         ResponseEntity entity = deliveryFeign.updateRules(ruleId, deliverFeeRuleParam);
-        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok(entity.getBody());
+        return FeginResponseTools.convertUpdateResponse(entity);
     }
 
     @ApiOperation(value = "后台管理查询配送费规则列表", response = DeliverFeeRulesResult.class, responseContainer = "Set")
@@ -69,8 +71,8 @@ public class DeliveryFeeApi {
         log.debug("查询商品分类信息列表\t param:{}", param);
 
         ResponseEntity entity = deliveryFeign.query(param);
-        if (entity.getStatusCode().isError()) {
-            return ResponseEntity.badRequest().body(entity.getBody());
+        if (entity.getStatusCode().isError() || Objects.isNull(entity.getBody())) {
+            return ResponseEntity.badRequest().body(Objects.isNull(entity.getBody()) ? "基础服务调用失败" : entity.getBody());
         }
         Pages<DeliverFeeRulesResult> pages = (Pages<DeliverFeeRulesResult>) entity.getBody();
         List<DeliverFeeRulesResult> deliverFeeRulesResultList = pages.getArray();
@@ -82,7 +84,7 @@ public class DeliveryFeeApi {
                 }
             });
         }
-        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok(entity.getBody());
+        return ResponseEntity.ok(entity.getBody());
     }
 
     @ApiOperation("根据配送费详细规则Id删除")
@@ -92,7 +94,7 @@ public class DeliveryFeeApi {
         log.debug("根据配送费详细规则Id删除\t param:{}", id);
 
         ResponseEntity entity = deliveryFeign.deleteDetail(id);
-        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.noContent().build();
+        return FeginResponseTools.convertDeleteResponse(entity);
     }
 
     @ApiOperation("根据配送费规则模板Id删除")
@@ -102,6 +104,6 @@ public class DeliveryFeeApi {
         log.debug("根据配送费规则模板Id删除\t param:{}", id);
 
         ResponseEntity entity = deliveryFeign.deleteRule(id);
-        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.noContent().build();
+        return FeginResponseTools.convertDeleteResponse(entity);
     }
 }

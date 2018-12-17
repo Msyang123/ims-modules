@@ -6,6 +6,7 @@ import com.lhiot.ims.usercenter.feign.UserFeign;
 import com.lhiot.ims.usercenter.feign.model.QuerySearch;
 import com.lhiot.ims.usercenter.feign.model.UserDetailResult;
 import com.lhiot.ims.usercenter.feign.type.LockStatus;
+import com.lhiot.util.FeginResponseTools;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -36,7 +37,7 @@ public class UserApi {
         log.debug("后台管理分页查询用户列表\t param{}", querySearch);
 
         ResponseEntity entity = userFeign.query(querySearch);
-        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok(entity.getBody());
+        return FeginResponseTools.convertNoramlResponse(entity);
     }
 
     @LogCollection
@@ -50,6 +51,6 @@ public class UserApi {
         log.debug("修改用户锁状态\t userId{},param{}", userId, lockStatus);
 
         ResponseEntity entity = userFeign.unlock(userId, lockStatus);
-        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok().build();
+        return FeginResponseTools.convertUpdateResponse(entity);
     }
 }

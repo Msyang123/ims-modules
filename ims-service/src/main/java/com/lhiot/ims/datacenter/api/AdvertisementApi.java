@@ -18,12 +18,14 @@ import com.lhiot.ims.healthygood.feign.customplan.CustomPlanSectionFeign;
 import com.lhiot.ims.healthygood.feign.customplan.entity.CustomPlanSection;
 import com.lhiot.ims.healthygood.feign.customplan.model.CustomPlanDetailResult;
 import com.lhiot.ims.rbac.aspect.LogCollection;
+import com.lhiot.util.FeginResponseTools;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.SimpleDateFormat;
@@ -62,7 +64,7 @@ public class AdvertisementApi {
         log.debug("添加广告\t param:{}", advertisement);
 
         ResponseEntity entity = advertisementFeign.create(advertisement);
-        return entity.getStatusCode().isError() || Objects.nonNull(entity.getBody()) ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok(entity.getBody());
+        return FeginResponseTools.convertNoramlResponse(entity);
     }
 
     @LogCollection
@@ -74,7 +76,7 @@ public class AdvertisementApi {
         log.debug("根据id修改广告\t id:{} param:{}", id, advertisement);
 
         ResponseEntity entity = advertisementFeign.update(id, advertisement);
-        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok(entity.getBody());
+        return FeginResponseTools.convertUpdateResponse(entity);
     }
 
     @ApiOperation(value = "根据Id查找广告", response = Advertisement.class)
@@ -84,13 +86,10 @@ public class AdvertisementApi {
         log.debug("根据Id查找广告\t id:{}", id);
 
         ResponseEntity entity = advertisementFeign.findById(id);
-        if (entity.getStatusCode().isError()) {
-            return ResponseEntity.badRequest().body(entity.getBody());
+        if (entity.getStatusCode().isError() || Objects.isNull(entity.getBody())) {
+            return ResponseEntity.badRequest().body(Objects.isNull(entity.getBody()) ? "基础服务调用失败" : entity.getBody());
         }
         Advertisement advertisement = (Advertisement) entity.getBody();
-        if (Objects.isNull(advertisement)) {
-            return ResponseEntity.ok(entity.getBody());
-        }
         RelationType relationType = advertisement.getRelationType();
         switch (relationType) {
             case STORE_LIVE_TELECAST:
@@ -144,7 +143,7 @@ public class AdvertisementApi {
                 advertisement.setAdvertiseRelationText(advertisement.getAdvertiseRelation());
                 break;
         }
-        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok(entity.getBody());
+        return FeginResponseTools.convertNoramlResponse(entity);
     }
 
     @LogCollection
@@ -155,7 +154,7 @@ public class AdvertisementApi {
         log.debug("根据广告Ids删除广告\t param:{}", ids);
 
         ResponseEntity entity = advertisementFeign.batchDelete(ids);
-        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.noContent().build();
+        return FeginResponseTools.convertDeleteResponse(entity);
     }
 
     @ApiOperation(value = "根据条件分页查询广告信息列表", response = Advertisement.class, responseContainer = "Set")
@@ -165,11 +164,11 @@ public class AdvertisementApi {
         log.debug("查询广告信息列表\t param:{}", param);
 
         ResponseEntity entity = advertisementFeign.pages(param);
-        if (entity.getStatusCode().isError()) {
-            return ResponseEntity.badRequest().body(entity.getBody());
+        if (Objects.isNull(entity.getBody()) || entity.getStatusCode().isError()) {
+            return ResponseEntity.badRequest().body(Objects.isNull(entity.getBody()) ? "服务内部错误" : entity.getBody());
         }
         Pages<Advertisement> pages = (Pages<Advertisement>) entity.getBody();
-        if (!pages.getArray().isEmpty() || pages.getArray().size() != 0) {
+        if (!pages.getArray().isEmpty() || !CollectionUtils.isEmpty(pages.getArray())) {
             pages.getArray().forEach(advertisement -> {
                 if (Objects.isNull(advertisement.getBeginAt()) && Objects.isNull(advertisement.getEndAt())) {
                     advertisement.setValidityPeriod("永久有效");

@@ -16,6 +16,7 @@ import com.lhiot.ims.ordercenter.feign.model.BaseOrderParam;
 import com.lhiot.ims.ordercenter.feign.model.OrderDetailResult;
 import com.lhiot.ims.usercenter.feign.UserFeign;
 import com.lhiot.ims.usercenter.feign.model.UserDetailResult;
+import com.lhiot.util.FeginResponseTools;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -49,7 +50,6 @@ public class OrderApi {
         this.productShelfFeign = productShelfFeign;
     }
 
-
     @ApiOperation(value = "根据条件分页获取订单列表", response = OrderDetailResult.class, responseContainer = "Set")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = ApiParamType.BODY, name = "param", value = "查询条件", dataType = "BaseOrderParam")
@@ -58,8 +58,8 @@ public class OrderApi {
     public ResponseEntity search(@RequestBody BaseOrderParam param) {
         log.debug("获取订单列表\t param:{}", param);
 
-        ResponseEntity<Pages<OrderDetailResult>> entity = orderFeign.search(param);
-        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok(entity.getBody());
+        ResponseEntity entity = orderFeign.search(param);
+        return FeginResponseTools.convertNoramlResponse(entity);
     }
 
     @ApiOperation(value = "根据订单code查询订单详情", response = OrderDetailResult.class)
@@ -116,7 +116,7 @@ public class OrderApi {
                 });
             }
         }
-        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok(entity.getBody());
+        return ResponseEntity.ok(entity.getBody());
     }
 
     @ApiOperation(value = "海鼎订单调货", response = ResponseEntity.class)
@@ -130,6 +130,6 @@ public class OrderApi {
 
         String operationUser = (String) user.getUser().get("name");
         ResponseEntity entity = orderFeign.modifyStoreInOrder(orderCode, storeId, operationUser);
-        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok(entity.getBody());
+        return FeginResponseTools.convertNoramlResponse(entity);
     }
 }

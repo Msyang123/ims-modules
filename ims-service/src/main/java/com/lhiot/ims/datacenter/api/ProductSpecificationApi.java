@@ -1,6 +1,5 @@
 package com.lhiot.ims.datacenter.api;
 
-import com.leon.microx.util.Maps;
 import com.leon.microx.web.result.Tips;
 import com.leon.microx.web.swagger.ApiHideBodyProperty;
 import com.leon.microx.web.swagger.ApiParamType;
@@ -9,6 +8,7 @@ import com.lhiot.ims.datacenter.feign.entity.ProductSpecification;
 import com.lhiot.ims.datacenter.feign.model.ProductSpecificationParam;
 import com.lhiot.ims.datacenter.service.ProductSpecificationService;
 import com.lhiot.ims.rbac.aspect.LogCollection;
+import com.lhiot.util.FeginResponseTools;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
@@ -42,13 +42,7 @@ public class ProductSpecificationApi {
         log.debug("添加商品规格\t param:{}", productSpecification);
 
         ResponseEntity entity = productSpecificationFeign.create(productSpecification);
-        if (entity.getStatusCode().isError()) {
-            return ResponseEntity.badRequest().body(entity.getBody());
-        }
-        // 返回参数 例：<201 Created,{content-type=[application/json;charset=UTF-8], date=[Sat, 24 Nov 2018 06:37:59 GMT], location=[/product-sections/13], transfer-encoding=[chunked]}>
-        String location = entity.getHeaders().getLocation().toString();
-        Long id = Long.valueOf(location.substring(location.lastIndexOf('/') + 1));
-        return ResponseEntity.created(entity.getHeaders().getLocation()).body(Maps.of("id", id));
+        return FeginResponseTools.convertCreateResponse(entity);
     }
 
     @LogCollection
@@ -60,7 +54,7 @@ public class ProductSpecificationApi {
         log.debug("根据id修改商品规格\t id:{} param:{}", id, productSpecification);
 
         ResponseEntity entity = productSpecificationFeign.update(id, productSpecification);
-        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok(entity.getBody());
+        return FeginResponseTools.convertUpdateResponse(entity);
     }
 
     @ApiOperation(value = "根据Id查找商品规格", response = ProductSpecification.class)
@@ -70,7 +64,7 @@ public class ProductSpecificationApi {
         log.debug("根据Id查找商品规格\t id:{}", id);
 
         ResponseEntity entity = productSpecificationFeign.findById(id);
-        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok(entity.getBody());
+        return FeginResponseTools.convertNoramlResponse(entity);
     }
 
     @LogCollection
@@ -81,7 +75,7 @@ public class ProductSpecificationApi {
         log.debug("根据商品规格Ids删除商品规格\t param:{}", ids);
 
         ResponseEntity entity = productSpecificationFeign.batchDelete(ids);
-        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.noContent().build();
+        return FeginResponseTools.convertDeleteResponse(entity);
     }
 
     @ApiOperation(value = "根据条件分页查询商品规格信息列表(传值produtId/输入条码或品名)", response = ProductSpecification.class, responseContainer = "Set")
@@ -91,7 +85,7 @@ public class ProductSpecificationApi {
         log.debug("查询商品规格信息列表\t param:{}", param);
 
         Tips tips = productSpecificationService.pages(param);
-        return tips.err() ?  ResponseEntity.badRequest().body(tips.getMessage()) : ResponseEntity.ok(tips.getData());
+        return tips.err() ? ResponseEntity.badRequest().body(tips.getMessage()) : ResponseEntity.ok(tips.getData());
     }
 
     @ApiOperation(value = "查询所有基础规格单位列表", response = String.class, responseContainer = "List")

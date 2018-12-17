@@ -1,13 +1,12 @@
 package com.lhiot.ims.healthygood.api.customplan;
 
-import com.leon.microx.util.Maps;
-import com.leon.microx.web.result.Pages;
 import com.leon.microx.web.swagger.ApiParamType;
 import com.lhiot.ims.healthygood.feign.customplan.CustomPlanFeign;
 import com.lhiot.ims.healthygood.feign.customplan.model.CustomPlanDetailResult;
 import com.lhiot.ims.healthygood.feign.customplan.model.CustomPlanParam;
 import com.lhiot.ims.healthygood.feign.customplan.model.CustomPlanResult;
 import com.lhiot.ims.rbac.aspect.LogCollection;
+import com.lhiot.util.FeginResponseTools;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -17,7 +16,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.net.URI;
 
 /**
  * @author hufan created in 2018/12/1 15:20
@@ -40,14 +38,7 @@ public class CustomPlanApi {
         log.debug("添加定制计划\t param:{}", customPlanDetailResult);
 
         ResponseEntity entity = customPlanFeign.create(customPlanDetailResult);
-        if (entity.getStatusCode().isError()) {
-            return ResponseEntity.badRequest().body(entity.getBody());
-        }
-        String location = entity.getHeaders().getLocation().toString();
-        Long id = Long.valueOf(location.substring(location.lastIndexOf('/') + 1));
-        return id > 0 ?
-                ResponseEntity.created(URI.create("/custom-plans/" + id)).body(Maps.of("id", id)) :
-                ResponseEntity.badRequest().body(entity.getBody());
+        return FeginResponseTools.convertCreateResponse(entity);
     }
 
     @GetMapping("/custom-plans/{id}")
@@ -57,7 +48,7 @@ public class CustomPlanApi {
         log.debug("定制计划详细信息\t param:{}", id);
 
         ResponseEntity entity = customPlanFeign.findById(id);
-        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok(entity.getBody());
+        return FeginResponseTools.convertNoramlResponse(entity);
     }
 
     @LogCollection
@@ -71,7 +62,7 @@ public class CustomPlanApi {
         log.debug("修改定制计划\t param:{}", customPlanDetailResult);
 
         ResponseEntity entity = customPlanFeign.update(id, customPlanDetailResult);
-        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body("修改定制计划失败!") : ResponseEntity.ok().build();
+        return FeginResponseTools.convertUpdateResponse(entity);
     }
 
     @LogCollection
@@ -85,7 +76,7 @@ public class CustomPlanApi {
         log.debug("修改定制计划\t param:{}", customPlanDetailResult);
 
         ResponseEntity entity = customPlanFeign.updateProduct(id, customPlanDetailResult);
-        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok().build();
+        return FeginResponseTools.convertUpdateResponse(entity);
     }
 
     @LogCollection
@@ -96,7 +87,7 @@ public class CustomPlanApi {
         log.debug("批量删除定制计划\t param:{}", ids);
 
         ResponseEntity entity = customPlanFeign.batchDelete(ids);
-        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.noContent().build();
+        return FeginResponseTools.convertDeleteResponse(entity);
     }
 
     @ApiOperation(value = "根据条件分页查询定制计划信息列表", response = CustomPlanResult.class, responseContainer = "Set")
@@ -106,6 +97,6 @@ public class CustomPlanApi {
         log.debug("根据条件分页查询定制计划信息列表\t param:{}", param);
 
         ResponseEntity entity = customPlanFeign.search(param);
-        return entity.getStatusCode().isError() ? ResponseEntity.badRequest().body(entity.getBody()) : ResponseEntity.ok(entity.getBody());
+        return FeginResponseTools.convertNoramlResponse(entity);
     }
 }
