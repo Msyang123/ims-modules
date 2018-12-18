@@ -18,8 +18,8 @@ public interface OrderFeign {
     /**
      * 根据条件分页获取基础订单列表
      *
-     * @param param
-     * @return
+     * @param param 分页查询条件
+     * @return 分页查询结果
      */
     @PostMapping("/orders/pages")
     ResponseEntity<Pages<OrderDetailResult>> search(@RequestBody BaseOrderParam param);
@@ -27,10 +27,10 @@ public interface OrderFeign {
     /**
      * 根据订单code查询订单详情
      *
-     * @param orderCode
-     * @param needProductList
-     * @param needOrderFlowList
-     * @return
+     * @param orderCode         订单code
+     * @param needProductList   是否需要加载商品信息
+     * @param needOrderFlowList 是否需要订单流信息
+     * @return 查询结果
      */
     @GetMapping("/orders/{orderCode}")
     ResponseEntity<OrderDetailResult> orderDetail(@PathVariable("orderCode") String orderCode, @RequestParam("needProductList") boolean needProductList,
@@ -39,10 +39,10 @@ public interface OrderFeign {
     /**
      * 海鼎订单调货
      *
-     * @param orderCode
-     * @param storeId
-     * @param operationUser
-     * @return
+     * @param orderCode     订单code
+     * @param storeId       门店id
+     * @param operationUser 操作用户
+     * @return 海鼎订单调货结果
      */
     @PutMapping("/orders/{orderCode}/store")
     ResponseEntity modifyStoreInOrder(@PathVariable("orderCode") String orderCode, @RequestParam("storeId") Long storeId, @RequestParam("operationUser") String operationUser);

@@ -51,9 +51,7 @@ public class OrderApi {
     }
 
     @ApiOperation(value = "根据条件分页获取订单列表", response = OrderDetailResult.class, responseContainer = "Set")
-    @ApiImplicitParams({
-            @ApiImplicitParam(paramType = ApiParamType.BODY, name = "param", value = "查询条件", dataType = "BaseOrderParam")
-    })
+    @ApiImplicitParam(paramType = ApiParamType.BODY, name = "param", value = "查询条件", dataType = "BaseOrderParam")
     @PostMapping("/orders/pages")
     public ResponseEntity search(@RequestBody BaseOrderParam param) {
         log.debug("获取订单列表\t param:{}", param);
@@ -80,7 +78,7 @@ public class OrderApi {
             if (userEntity.getStatusCode().isError()) {
                 return ResponseEntity.badRequest().body(userEntity.getBody());
             } else if (Objects.nonNull(userEntity.getBody())) {
-                orderDetailResult.setPhone(userEntity.getBody().getPhone());
+                orderDetailResult.setUserPhone(userEntity.getBody().getPhone());
             }
         }
         // 配送信息

@@ -16,7 +16,6 @@ import java.util.List;
 @Data
 @ApiModel
 public class DeliverFeeRuleParam {
-    @Min(1)
     @ApiModelProperty(value = "配送规则id", dataType = "Long")
     private Long id;
 

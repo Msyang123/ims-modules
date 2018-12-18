@@ -20,9 +20,9 @@ public interface FruitDoctorSettlementFeign {
     /**
      * 结算申请修改
      *
-     * @param id
-     * @param settlementApplication
-     * @return
+     * @param id                    结算申请id
+     * @param settlementApplication 要修改的结算申请
+     * @return 修改操作的结果
      */
     @PutMapping("/fruit-doctors/settlement/{id}")
     ResponseEntity updateSettlement(@PathVariable("id") Long id, @RequestBody SettlementApplication settlementApplication);
@@ -30,8 +30,8 @@ public interface FruitDoctorSettlementFeign {
     /**
      * 结算申请分页查询
      *
-     * @param settlementApplication
-     * @return
+     * @param settlementApplication 分页查询条件
+     * @return 分页查询结果
      */
     @PostMapping("/fruit-doctors/settlement/pages")
     ResponseEntity<Pages<SettlementApplication>> search(@RequestBody SettlementApplication settlementApplication);

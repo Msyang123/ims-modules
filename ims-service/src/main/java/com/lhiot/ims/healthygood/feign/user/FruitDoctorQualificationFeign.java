@@ -19,9 +19,10 @@ public interface FruitDoctorQualificationFeign {
 
     /**
      * 根据id更新鲜果师申请记录
-     * @param id
-     * @param registerApplication
-     * @return
+     *
+     * @param id                  鲜果师申请id
+     * @param registerApplication 要修改的鲜果师申请记录
+     * @return 修改操作的结果
      */
 
     @PutMapping("/fruit-doctors/qualifications/{id}")
@@ -29,8 +30,9 @@ public interface FruitDoctorQualificationFeign {
 
     /**
      * 根据条件分页查询鲜果师申请记录列表
-     * @param registerApplication
-     * @return
+     *
+     * @param registerApplication 分页查询条件
+     * @return 分页查询结果
      */
     @PostMapping("/fruit-doctors/qualifications/pages")
     ResponseEntity<Pages<RegisterApplication>> search(@RequestBody RegisterApplication registerApplication);

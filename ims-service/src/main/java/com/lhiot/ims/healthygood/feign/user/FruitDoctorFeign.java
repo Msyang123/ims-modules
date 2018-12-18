@@ -15,25 +15,28 @@ import org.springframework.web.bind.annotation.*;
 public interface FruitDoctorFeign {
     /**
      * 查询鲜果师成员分页列表
-     * @param fruitDoctor
-     * @return
+     *
+     * @param fruitDoctor 分页查询条件
+     * @return 分页查询结果
      */
     @PostMapping("/fruit-doctors/pages")
     ResponseEntity<Pages<FruitDoctor>> search(@RequestBody FruitDoctor fruitDoctor);
 
     /**
      * 查询鲜果师成员详情
-     * @param id
-     * @return
+     *
+     * @param id 鲜果师id
+     * @return 查询结果
      */
     @GetMapping("/fruit-doctors/{id}")
     ResponseEntity<FruitDoctor> findById(@PathVariable("id") Long id);
 
     /**
      * 修改鲜果师成员信息
-     * @param id
-     * @param fruitDoctor
-     * @return
+     *
+     * @param id          鲜果师id
+     * @param fruitDoctor 要修改的鲜果师成员
+     * @return 修改操作的结果
      */
     @PutMapping("/fruit-doctors/{id}")
     ResponseEntity updateById(@PathVariable("id") Long id, @RequestBody FruitDoctor fruitDoctor);

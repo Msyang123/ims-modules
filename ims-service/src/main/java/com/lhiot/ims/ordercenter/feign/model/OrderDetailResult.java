@@ -3,6 +3,7 @@ package com.lhiot.ims.ordercenter.feign.model;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+import com.lhiot.ims.datacenter.feign.type.ApplicationType;
 import com.lhiot.ims.ordercenter.feign.entity.DeliverNote;
 import com.lhiot.ims.ordercenter.feign.entity.OrderFlow;
 import com.lhiot.ims.ordercenter.feign.entity.OrderProduct;
@@ -34,10 +35,10 @@ public class OrderDetailResult {
     @JsonSerialize(using = ToStringSerializer.class)
     private Long userId;
 
-    @ApiModelProperty(notes = "用户手机号", dataType = "String")
-    private String phone;
+    @ApiModelProperty(notes = "用户手机号码",dataType = "String")
+    private String userPhone;
 
-    @ApiModelProperty(notes = "应用类型", dataType = "String")
+    @ApiModelProperty(notes = "应用类型 APP(视食),WECHAT_MALL(微商城),WECHAT_SMALL_SHOP(小程序),HEALTH_GOOD(鲜果师商城),WXSMALL_SHOP(微商城小程序);", dataType = "ApplicationType")
     private String applicationType;
 
     @ApiModelProperty(notes = "订单类型：NORMAL-普通订单,CUSTOM-定制订单,TEAM_BUY-团购订单, FREEGO-孚力购订单", dataType = "String")
