@@ -1,5 +1,6 @@
 package com.lhiot.ims.datacenter.service;
 
+import com.leon.microx.util.BeanUtils;
 import com.leon.microx.web.result.Pages;
 import com.leon.microx.web.result.Tips;
 import com.lhiot.ims.datacenter.feign.AdvertisementFeign;
@@ -13,7 +14,6 @@ import com.lhiot.ims.datacenter.feign.entity.UiPosition;
 import com.lhiot.ims.datacenter.feign.model.*;
 import com.lhiot.ims.datacenter.feign.type.PositionType;
 import com.lhiot.ims.datacenter.type.YesOrNo;
-import org.springframework.beans.BeanUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -45,7 +45,7 @@ public class UiPositionService {
             return Tips.warn((String) entity.getBody());
         }
         UiPosition uiPosition = (UiPosition) entity.getBody();
-        BeanUtils.copyProperties(uiPosition, uiPositionDetail);
+        BeanUtils.of(uiPosition).populate(uiPositionDetail);
         PositionType positionType = uiPosition.getPositionType();
         Long uiPositionId = uiPosition.getId();
         switch (positionType) {
@@ -117,6 +117,7 @@ public class UiPositionService {
             BeanUtils.copyProperties(uiPosition, uiPositionResult);
             result.add(uiPositionResult);
         });
+
         // 是否查询关联的商品板块
         if (Objects.equals(YesOrNo.YES, uiPositionParam.getIncludeSection())) {
             ProductSectionParam productSectionParam = new ProductSectionParam();

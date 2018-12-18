@@ -36,6 +36,10 @@ public class ArticleParam {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     @ApiModelProperty(notes = "截止创建时间", dataType = "Date")
     private Date endCreateAt;
+    @ApiModelProperty(notes = "起始发布时间", dataType = "Date")
+    private Date beginPublishAt;
+    @ApiModelProperty(notes = "截止发布时间", dataType = "Date")
+    private Date endPublishAt;
     @ApiModelProperty(notes = "每页查询条数(为空或0不分页查所有)", dataType = "Integer")
     private Integer rows;
     @ApiModelProperty(notes = "当前页", dataType = "Integer")

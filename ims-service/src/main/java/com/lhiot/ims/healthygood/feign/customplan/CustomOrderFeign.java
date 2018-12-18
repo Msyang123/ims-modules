@@ -20,8 +20,8 @@ public interface CustomOrderFeign {
     /**
      * 根据条件分页查询定制订单信息列表
      *
-     * @param customOrder
-     * @return
+     * @param customOrder 分页查询条件
+     * @return 分页查询结果
      */
     @PostMapping("/custom-orders/pages")
     ResponseEntity<Pages<CustomOrder>> search(@RequestBody CustomOrder customOrder);
@@ -30,8 +30,8 @@ public interface CustomOrderFeign {
     /**
      * 根据orderCode查询定制订单信息
      *
-     * @param orderCode
-     * @return
+     * @param orderCode 订单编码
+     * @return 查询结果
      */
     @GetMapping("/custom-orders/{orderCode}")
     ResponseEntity<CustomOrder> selectByCode(@PathVariable("orderCode") String orderCode);

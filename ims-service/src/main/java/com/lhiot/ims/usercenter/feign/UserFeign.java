@@ -19,8 +19,8 @@ public interface UserFeign {
     /**
      * 后台管理分页查询用户列表
      *
-     * @param querySearch
-     * @return
+     * @param querySearch 分页查询条件
+     * @return 分页查询结果
      */
     @PostMapping("/users/query/search")
     ResponseEntity<Pages<UserDetailResult>> query(@RequestBody QuerySearch querySearch);
@@ -28,8 +28,9 @@ public interface UserFeign {
     /**
      * 解除用户锁定
      *
-     * @param userId
-     * @return
+     * @param userId     用户id
+     * @param lockStatus 解锁状态
+     * @return 解锁结果
      */
     @PutMapping("/users/{userId}/locked-status")
     ResponseEntity unlock(@PathVariable("userId") Long userId, @RequestParam("lockStatus") LockStatus lockStatus);
@@ -37,8 +38,8 @@ public interface UserFeign {
     /**
      * 根据用户ID查询用户信息
      *
-     * @param userId
-     * @return
+     * @param userId 用户id
+     * @return 查询结果
      */
     @GetMapping("/users/{id}")
     ResponseEntity<UserDetailResult> findById(@PathVariable("id") Long userId);
