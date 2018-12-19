@@ -1,13 +1,11 @@
 package com.lhiot.ims.datacenter.feign.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.util.Date;
-import java.util.Objects;
 
 /**
  * @author xiaojian  created in  2018/11/17 9:59
@@ -19,10 +17,10 @@ public class ProductCategoryParam {
     private Long parentId;
     @ApiModelProperty(notes = "分类名", dataType = "String")
     private String groupName;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     @ApiModelProperty(notes = "起始创建时间", dataType = "Date")
     private Date beginCreateAt;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     @ApiModelProperty(notes = "截止创建时间", dataType = "Date")
     private Date endCreateAt;
     @ApiModelProperty(notes = "每页查询条数(为空或0不分页查所有)", dataType = "Integer")

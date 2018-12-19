@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author hufan created in 2018/11/26 9:09
@@ -23,22 +24,18 @@ public class ProductCategoryService {
 
     /**
      * 查询商品分类树结构
-     * @return
+     *
+     * @return 返回商品分类树结构
      */
-    public Tips<List<ProductCategory>> tree(){
+    @SuppressWarnings("unchecked")
+    public Tips<List<ProductCategory>> tree() {
         ProductCategoryParam productCategoryParam = new ProductCategoryParam();
         ResponseEntity entity = productCategoryFeign.pages(productCategoryParam);
-        if (entity.getStatusCode().isError()) {
-            return Tips.warn((String) entity.getBody());
+        if (entity.getStatusCode().isError() || Objects.isNull(entity.getBody())) {
+            return Tips.warn(Objects.isNull(entity.getBody()) ? "基础服务调用失败" : (String) entity.getBody());
         }
         Pages<ProductCategory> pages = (Pages<ProductCategory>) entity.getBody();
-        List<ProductCategory> productCategory = pages.getArray();
-        Tips tips = new Tips();
-        if (!productCategory.isEmpty()) {
-            tips.setData(productCategory);
-            return tips;
-        }
-        return Tips.empty();
+        return Objects.isNull(pages) ? Tips.empty() : Tips.<List<ProductCategory>>empty().data(pages.getArray());
     }
 
 }

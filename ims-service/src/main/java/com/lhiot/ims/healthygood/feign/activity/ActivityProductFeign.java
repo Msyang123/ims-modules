@@ -25,7 +25,7 @@ public interface ActivityProductFeign {
      * @return 添加操作的结果
      */
     @PostMapping("/activity-products")
-    ResponseEntity<ActivityProduct> create(@Valid @RequestBody ActivityProduct activityProduct);
+    ResponseEntity create(@RequestBody ActivityProduct activityProduct);
 
     /**
      * 修改新品尝鲜活动商品
@@ -35,7 +35,7 @@ public interface ActivityProductFeign {
      * @return 修改操作的结果
      */
     @PutMapping("/activity-products/{id}")
-    ResponseEntity update(@PathVariable("id") Long id, @Valid @RequestBody ActivityProduct activityProduct);
+    ResponseEntity update(@PathVariable("id") Long id, @RequestBody ActivityProduct activityProduct);
 
     /**
      * 根据ids删除新品尝鲜活动商品

@@ -3,7 +3,7 @@ package com.lhiot.ims.rbac.api;
 import com.leon.microx.util.Maps;
 import com.leon.microx.util.StringUtils;
 import com.leon.microx.util.auditing.MD5;
-import com.leon.microx.web.http.RemoteInvoker;
+import com.leon.microx.web.result.Tips;
 import com.leon.microx.web.session.Authority;
 import com.leon.microx.web.session.Sessions;
 import com.leon.microx.web.swagger.ApiParamType;
@@ -46,18 +46,16 @@ import java.util.stream.Collectors;
 public class ImsUserApi {
 
 
-    private RemoteInvoker remoteInvoker;
     private Sessions session;
     private final ImsUserService imsUserService;
     private final ImsOperationService imsOperationService;
     private final ImsRelationUserRoleService imsRelationUserRoleService;
 
-    public ImsUserApi(RemoteInvoker remoteInvoker, ObjectProvider<Sessions> sessionsObjectProvider, ImsUserService imsUserService, ImsOperationService imsOperationService, ImsRelationUserRoleService imsRelationUserRoleService) {
+    public ImsUserApi(ObjectProvider<Sessions> sessionsObjectProvider, ImsUserService imsUserService, ImsOperationService imsOperationService, ImsRelationUserRoleService imsRelationUserRoleService) {
         this.session = sessionsObjectProvider.getIfAvailable();
         this.imsUserService = imsUserService;
         this.imsOperationService = imsOperationService;
         this.imsRelationUserRoleService = imsRelationUserRoleService;
-        this.remoteInvoker = remoteInvoker;
     }
 
     @Sessions.Uncheck
@@ -80,14 +78,6 @@ public class ImsUserApi {
     @ApiOperation("管理员登录, 返回session用户")
     @ApiImplicitParam(paramType = ApiParamType.BODY, name = "login", value = "登录参数", required = true, dataType = "AdminLogin")
     public ResponseEntity login(@RequestBody AdminLogin login, @ApiIgnore HttpServletRequest request) {
-
-        //接口请求例子
-//         ResponseEntity<String> response = invoker.server("user-center")
-//                 .uriVariables(Maps.of("id", "111"))
-//                 .addHeaders(Pair.of("version", "v1-1-1"))
-//                 .body(Collections.emptyMap())
-//                 .request("/user/session/{id}", HttpMethod.PUT, String.class);
-
         ImsUser admin = imsUserService.selectByAccount(login.getAccount());
         if (Objects.isNull(admin)) {
             return ResponseEntity.badRequest().body("帐号不存在");
@@ -111,10 +101,6 @@ public class ImsUserApi {
         List<Authority> authorityList = imsOperationList.stream()
                 .map(op -> Authority.of(op.getAntUrl(), StringUtils.tokenizeToStringArray(op.getType(), ",")))
                 .collect(Collectors.toList());
-
-//                new ArrayList<>(imsOperationList.size());
-//        imsOperationList.forEach(item->authorityList.add(Authority.of(item.getAntUrl(), ConverStrToRequestMethod.getListFromStr(item.getType()))));
-        //sessionUser.authorities(Authority.of("/**/ims-menu/**", RequestMethod.GET,RequestMethod.POST,RequestMethod.DELETE,RequestMethod.PUT));
         sessionUser.authorities(authorityList);
         String sessionId = session.cache(sessionUser);
         try {
@@ -155,7 +141,8 @@ public class ImsUserApi {
         log.debug("添加用户\t param:{}", imsUser);
 
         imsUser.setCreateAt(Date.from(Instant.now()));
-        return ResponseEntity.ok(imsUserService.create(imsUser));
+        Tips<ImsUser> tips = imsUserService.create(imsUser);
+        return tips.err() ? ResponseEntity.badRequest().body(tips.getMessage()) : ResponseEntity.ok(tips.getData());
     }
 
 

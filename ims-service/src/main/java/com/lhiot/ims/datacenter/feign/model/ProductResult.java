@@ -5,7 +5,6 @@ import com.lhiot.ims.datacenter.feign.entity.ProductSpecification;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import reactor.util.annotation.Nullable;
 
 import javax.validation.constraints.NotNull;
 import java.util.Date;
@@ -31,7 +30,7 @@ public class ProductResult {
     private String benefit;
     @ApiModelProperty(notes = "商品描述", dataType = "String")
     private String description;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     @ApiModelProperty(notes = "创建时间", dataType = "Date", readOnly = true)
     private Date createAt;
 

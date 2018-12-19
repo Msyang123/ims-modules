@@ -24,7 +24,7 @@ import java.util.Optional;
 * @date 2018/09/29
 */
 @Service
-@Transactional
+@Transactional(rollbackFor = Exception.class)
 public class ImsRoleService {
 
     private final ImsRoleMapper imsRoleMapper;

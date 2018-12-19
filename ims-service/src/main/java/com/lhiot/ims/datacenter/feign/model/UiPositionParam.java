@@ -1,7 +1,6 @@
 package com.lhiot.ims.datacenter.feign.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.lhiot.ims.datacenter.feign.type.ApplicationType;
 import com.lhiot.ims.datacenter.feign.type.PositionType;
 import com.lhiot.ims.datacenter.type.YesOrNo;
 import io.swagger.annotations.ApiModel;
