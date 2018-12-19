@@ -26,6 +26,7 @@ import java.util.Objects;
  * @author hufan created in 2018/11/23 18:46
  **/
 @Service
+@SuppressWarnings("unchecked")
 public class ProductService {
     private final ProductFeign productFeign;
     private final ProductSpecificationFeign productSpecificationFeign;
@@ -36,24 +37,19 @@ public class ProductService {
         this.productSpecificationFeign = productSpecificationFeign;
     }
 
-    /**
-     * 新增商品
-     *
-     * @param productResult
-     * @return
-     */
     public Tips create(ProductResult productResult) {
         Product product = new Product();
-        BeanUtils.of(productResult).populate(product);
+        BeanUtils.of(product).populate(productResult);
         // 设置附件
         List<ProductAttachment> productAttachments = setAttachmentImages(productResult.getMainImg(), productResult.getSubImg(), productResult.getDetailImg(), productResult.getIcon());
+
         product.setAttachments(productAttachments);
         ResponseEntity productEntity = productFeign.create(product);
         if (productEntity.getStatusCode().isError()) {
             return Tips.warn((String) productEntity.getBody());
         }
         // 返回参数 例：<201 Created,{content-type=[application/json;charset=UTF-8], date=[Sat, 24 Nov 2018 06:37:59 GMT], location=[/product-sections/13], transfer-encoding=[chunked]}>
-        String location = productEntity.getHeaders().getLocation().toString();
+        String location = Objects.isNull(productEntity.getHeaders().getLocation()) ? "" : productEntity.getHeaders().getLocation().toString();
         Long productId = Long.valueOf(location.substring(location.lastIndexOf('/') + 1));
 
         if (Objects.isNull(productResult.getProductSpecification())) {
@@ -74,16 +70,9 @@ public class ProductService {
         return Tips.info(productId + "");
     }
 
-    /**
-     * 修改商品
-     *
-     * @param id
-     * @param productResult
-     * @return
-     */
     public Tips update(Long id, ProductResult productResult) {
         Product product = new Product();
-        BeanUtils.of(productResult).populate(product);
+        BeanUtils.of(product).populate(productResult);
         // 设置附件
         List<ProductAttachment> productAttachments = setAttachmentImages(productResult.getMainImg(), productResult.getSubImg(), productResult.getDetailImg(), productResult.getIcon());
         product.setAttachments(productAttachments);
@@ -103,14 +92,7 @@ public class ProductService {
         return Tips.info("修改成功");
     }
 
-    /**
-     * 获取商品及关联附件和基础规格信息
-     *
-     * @param id
-     * @return
-     */
     public Tips<ProductResult> findProductById(Long id) {
-        Tips<ProductResult> tips = new Tips();
         ProductResult productResult = new ProductResult();
         ResponseEntity productEntity = productFeign.findById(id);
         if (productEntity.getStatusCode().isError()) {
@@ -119,7 +101,7 @@ public class ProductService {
         Product product = (Product) productEntity.getBody();
         if (Objects.nonNull(product)) {
             // 设置附件信息
-            BeanUtils.of(product).populate(productResult);
+            BeanUtils.of(productResult).populate(product);
             List<String> subImgs = new ArrayList<>();
             List<String> detailImgs = new ArrayList<>();
             List<String> mainImags = new ArrayList<>();
@@ -156,31 +138,14 @@ public class ProductService {
             if (productSpecificationEntity.getStatusCode().isError()) {
                 return Tips.warn((String) productSpecificationEntity.getBody());
             }
-
             Pages<ProductSpecification> pages = (Pages<ProductSpecification>) productSpecificationEntity.getBody();
-            if (!pages.getArray().isEmpty() && pages.getArray().size() > 0) {
-                ProductSpecification productSpecification = pages.getArray().get(0);
-                productResult.setProductSpecification(productSpecification);
-                tips.setData(productResult);
-                return tips;
-            }
-            productResult.setProductSpecification(new ProductSpecification());
-            tips.setData(productResult);
-            return tips;
+            productResult.setProductSpecification(Objects.isNull(pages) ? new ProductSpecification() : pages.getArray().get(0));
+            return Tips.<ProductResult>empty().data(productResult);
         }
         return Tips.empty();
     }
 
-    /**
-     * 设置附件图片
-     *
-     * @param mainImg
-     * @param subImgs
-     * @param detailImgs
-     * @param icon
-     * @return
-     */
-    public List<ProductAttachment> setAttachmentImages(String mainImg, List<String> subImgs, List<String> detailImgs, String icon) {
+    private List<ProductAttachment> setAttachmentImages(String mainImg, List<String> subImgs, List<String> detailImgs, String icon) {
         List<ProductAttachment> productAttachments = new ArrayList<>();
         if (Objects.nonNull(mainImg)) {
             ProductAttachment attachmentMainImg = new ProductAttachment();

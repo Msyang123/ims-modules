@@ -23,7 +23,7 @@ public class ActivityProductResult {
     @ApiModelProperty(value = "活动类型", dataType = "String")
     private String activityType;
     @ApiModelProperty(value = "商品上架id", dataType = "Long")
-    private Long productShelfId;
+    private Long shelfId;
     @ApiModelProperty(value = "活动价", dataType = "Integer")
     private Integer activityPrice;
     @ApiModelProperty(value = "序号", dataType = "Integer")
@@ -41,4 +41,9 @@ public class ActivityProductResult {
     private Integer price;
     @ApiModelProperty(notes = "原价", dataType = "Integer")
     private Integer originalPrice;
+
+
+    @ApiModelProperty(notes = "上架商品信息（排毒养颜套餐  1盒  [00815]）", dataType = "String", readOnly = true)
+    private String specificationInfo;
+
 }

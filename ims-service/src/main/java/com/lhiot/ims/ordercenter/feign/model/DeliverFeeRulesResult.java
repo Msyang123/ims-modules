@@ -1,5 +1,6 @@
 package com.lhiot.ims.ordercenter.feign.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.lhiot.ims.ordercenter.feign.entity.DeliverFeeRuleDetail;
 import com.lhiot.ims.ordercenter.feign.type.DeliverAtType;
 import io.swagger.annotations.ApiModelProperty;
@@ -7,6 +8,7 @@ import lombok.Data;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -29,6 +31,10 @@ public class DeliverFeeRulesResult {
     @NotNull
     @ApiModelProperty(value = "配送时间段类型 DAYTIME(8:00,18:00), EVENING(18:00,22:00),ALL_DAY(8:00,22:00)", dataType = "DeliverAtType")
     private DeliverAtType deliveryAtType;
+
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
+    @ApiModelProperty(value = "更新时间", dataType = "Date")
+    private Date updateAt;
 
     @ApiModelProperty(value = "创建人", dataType = "String")
     private String createBy;

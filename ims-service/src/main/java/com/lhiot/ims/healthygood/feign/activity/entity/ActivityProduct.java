@@ -1,5 +1,6 @@
 package com.lhiot.ims.healthygood.feign.activity.entity;
 
+import com.lhiot.ims.datacenter.type.YesOrNo;
 import com.lhiot.ims.healthygood.feign.activity.type.ActivityType;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -33,10 +34,13 @@ public class ActivityProduct {
     private ActivityType activityType = ActivityType.NEW_SPECIAL;
     @ApiModelProperty(value = "商品上架id", dataType = "Long")
     @NotNull(message = "商品上架id不为空")
-    private Long productShelfId;
+    private Long shelfId;
     @ApiModelProperty(value = "活动价", dataType = "Integer")
     private Integer activityPrice;
     @ApiModelProperty(value = "序号", dataType = "Integer")
     private Integer sort;
+
+    @ApiModelProperty(value = "是否关联新品尝鲜板块", dataType = "YesOrNo")
+    private YesOrNo relationSection;
 }
 

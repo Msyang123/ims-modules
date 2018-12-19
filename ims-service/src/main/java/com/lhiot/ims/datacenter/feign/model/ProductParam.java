@@ -1,11 +1,8 @@
 package com.lhiot.ims.datacenter.feign.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-
-import java.util.Objects;
 
 /**
  * @author xiaojian  created in  2018/11/17 12:18

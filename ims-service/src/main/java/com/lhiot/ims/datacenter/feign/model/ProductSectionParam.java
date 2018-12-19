@@ -13,7 +13,7 @@ import java.util.Date;
 @ApiModel
 @Data
 public class ProductSectionParam {
-    @ApiModelProperty(notes = "板块主键Id集合",dataType = "String")
+    @ApiModelProperty(notes = "板块主键Id集合", dataType = "String")
     private String ids;
     @ApiModelProperty(notes = "位置ID(多个以英文逗号分隔)", dataType = "String")
     private String positionIds;
@@ -21,10 +21,10 @@ public class ProductSectionParam {
     private String description;
     @ApiModelProperty(notes = "板块名称", dataType = "String")
     private String sectionName;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     @ApiModelProperty(notes = "起始创建时间", dataType = "Date")
     private Date beginCreateAt;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     @ApiModelProperty(notes = "截止创建时间", dataType = "Date")
     private Date endCreateAt;
     @ApiModelProperty(notes = "是否加载版块下商品上架信息(为空则默认为false)", dataType = "Boolean")

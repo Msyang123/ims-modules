@@ -23,8 +23,9 @@ import org.springframework.util.CollectionUtils;
  * @author yijun
  * @date 2018/09/29
  */
+@SuppressWarnings("ALL")
 @Service
-@Transactional
+@Transactional(rollbackFor = Exception.class)
 public class ImsRelationRoleMenuService {
 
     private final ImsRelationRoleMenuMapper relationRoleMenuMapper;
@@ -48,7 +49,8 @@ public class ImsRelationRoleMenuService {
      * @date 2018/09/29 11:42:57
      */
     public int create(Long roleId, String menuIds) {
-        if (Objects.equals("-1",menuIds)){ //没有传递menuIds 则只删除
+        //没有传递menuIds 则只删除
+        if (Objects.equals("-1",menuIds)){
             //删除角色与菜单关联关系
             int result = this.relationRoleMenuMapper.deleteByRoleIds(Arrays.asList(roleId.toString()));
             //删除角色与操作关联关系
