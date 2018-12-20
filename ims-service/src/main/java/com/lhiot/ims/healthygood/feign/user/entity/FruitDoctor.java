@@ -73,8 +73,8 @@ public class FruitDoctor {
     @ApiModelProperty(value = "明星鲜果师 NO-普通鲜果师，YES-明星鲜果师", dataType = "Hot")
     private Hot hot;
 
-    @ApiModelProperty(value = "剩余可结算金额", dataType = "Integer")
-    private Integer balance;
+    @ApiModelProperty(value = "红利余额", dataType = "Integer")
+    private Integer bonus;
 
     @ApiModelProperty(value = "当月销售额", dataType = "Integer")
     private Integer amountOfMonth;
@@ -90,6 +90,9 @@ public class FruitDoctor {
 
     @ApiModelProperty(value = "审核通过记录id", dataType = "Long")
     private Long applicationId;
+
+    @ApiModelProperty(value = "可结算余额", dataType = "Integer")
+    private Integer settlement;
 
     @ApiModelProperty(notes = "每页查询条数(为空或0不分页查所有)", dataType = "Integer")
     private Integer rows;

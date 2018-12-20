@@ -4,7 +4,6 @@ import com.leon.microx.web.swagger.ApiParamType;
 import com.lhiot.ims.healthygood.feign.customplan.CustomPlanFeign;
 import com.lhiot.ims.healthygood.feign.customplan.model.CustomPlanDetailResult;
 import com.lhiot.ims.healthygood.feign.customplan.model.CustomPlanParam;
-import com.lhiot.ims.healthygood.feign.customplan.model.CustomPlanResult;
 import com.lhiot.ims.rbac.aspect.LogCollection;
 import com.lhiot.util.FeginResponseTools;
 import io.swagger.annotations.Api;
@@ -90,7 +89,7 @@ public class CustomPlanApi {
         return FeginResponseTools.convertDeleteResponse(entity);
     }
 
-    @ApiOperation(value = "根据条件分页查询定制计划信息列表", response = CustomPlanResult.class, responseContainer = "Set")
+    @ApiOperation(value = "根据条件分页查询定制计划信息列表", response = CustomPlanDetailResult.class, responseContainer = "Set")
     @ApiImplicitParam(paramType = ApiParamType.BODY, name = "param", value = "查询条件", dataType = "CustomPlanParam")
     @PostMapping("/custom-plans/pages")
     public ResponseEntity search(@RequestBody CustomPlanParam param) {

@@ -16,7 +16,7 @@ import javax.validation.constraints.NotNull;
 public class UiPosition {
     @ApiModelProperty(notes = "主键Id", dataType = "Long", readOnly = true)
     private Long id;
-    @ApiModelProperty(notes = "类别:PRODUCT-商品，ADVERTISEMENT-广告，ARTICLE-文章", dataType = "PositionType")
+    @ApiModelProperty(notes = "位置类别PositionType:PRODUCT-商品，ADVERTISEMENT-广告，ARTICLE-文章", dataType = "PositionType")
     private PositionType positionType;
     @NotNull(message = "位置编码不能为空")
     @ApiModelProperty(notes = "位置编码", dataType = "String")

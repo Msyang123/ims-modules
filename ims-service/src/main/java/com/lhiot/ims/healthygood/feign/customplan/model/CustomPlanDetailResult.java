@@ -45,7 +45,7 @@ public class CustomPlanDetailResult {
     private Long price;
 
     @ApiModelProperty(value = "周期类型", dataType = "List")
-    private List<CustomPlanPeriodResult> customPlanPeriodResultList;
+    private List<CustomPlanPeriodResult> periodList;
 
     /**
      * 定制计划和定制板块关联
