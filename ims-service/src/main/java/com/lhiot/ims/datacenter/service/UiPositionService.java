@@ -107,7 +107,7 @@ public class UiPositionService {
     public Tips<Pages<UiPositionResult>> search(UiPositionParam uiPositionParam) {
         List<UiPositionResult> result = new ArrayList<>();
         // 查询鲜果师的所有位置板块
-        // uiPositionParam.setApplicationType(ApplicationType.HEALTH_GOOD);
+//         uiPositionParam.setApplicationType(ApplicationType.HEALTH_GOOD.toString());
         ResponseEntity entity = uiPositionFeign.pages(uiPositionParam);
         if (entity.getStatusCode().isError()) {
             return Tips.warn((String) entity.getBody());
@@ -139,6 +139,7 @@ public class UiPositionService {
                 List<ProductSection> productSectionList = productSectionPages.getArray();
                 result.forEach(uiPositionResult -> productSectionList.forEach(productSection -> {
                     if (Objects.equals(uiPositionResult.getId(), productSection.getPositionId())) {
+                        uiPositionResult.setProductSections(new ArrayList<>());
                         uiPositionResult.getProductSections().add(productSection);
                     }
                 }));

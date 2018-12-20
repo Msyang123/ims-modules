@@ -3,7 +3,6 @@ package com.lhiot.ims.healthygood.feign.customplan;
 import com.leon.microx.web.result.Pages;
 import com.lhiot.ims.healthygood.feign.customplan.model.CustomPlanDetailResult;
 import com.lhiot.ims.healthygood.feign.customplan.model.CustomPlanParam;
-import com.lhiot.ims.healthygood.feign.customplan.model.CustomPlanResult;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -65,7 +64,7 @@ public interface CustomPlanFeign {
      * @return 分页查询结果
      */
     @PostMapping("/custom-plans/pages")
-    ResponseEntity<Pages<CustomPlanResult>> search(@RequestBody CustomPlanParam customPlanParam);
+    ResponseEntity<Pages<CustomPlanDetailResult>> search(@RequestBody CustomPlanParam customPlanParam);
 
     /**
      * 查询定制计划详细信息
