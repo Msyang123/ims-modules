@@ -1,5 +1,7 @@
 package com.lhiot.ims.healthygood.api.customplan;
 
+import com.leon.microx.web.session.Sessions;
+import com.leon.microx.web.swagger.ApiHideBodyProperty;
 import com.leon.microx.web.swagger.ApiParamType;
 import com.lhiot.ims.healthygood.feign.customplan.CustomPlanFeign;
 import com.lhiot.ims.healthygood.feign.customplan.model.CustomPlanDetailResult;
@@ -31,11 +33,12 @@ public class CustomPlanApi {
 
     @LogCollection
     @ApiOperation("添加定制计划")
-    @ApiImplicitParam(paramType = ApiParamType.BODY, name = "customPlanDetailResult", value = "定制计划", dataType = "CustomPlanDetailResult", required = true)
     @PostMapping("/custom-plans")
-    public ResponseEntity create(@Valid @RequestBody CustomPlanDetailResult customPlanDetailResult) {
+    @ApiHideBodyProperty({"id","createAt","createUser"})
+    public ResponseEntity create(@Valid @RequestBody CustomPlanDetailResult customPlanDetailResult, Sessions.User user) {
         log.debug("添加定制计划\t param:{}", customPlanDetailResult);
 
+        customPlanDetailResult.setCreateUser((String) user.getUser().get("name"));
         ResponseEntity entity = customPlanFeign.create(customPlanDetailResult);
         return FeginResponseTools.convertCreateResponse(entity);
     }
