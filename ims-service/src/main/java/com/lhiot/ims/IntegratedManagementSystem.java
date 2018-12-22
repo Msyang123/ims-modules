@@ -20,25 +20,18 @@ public class IntegratedManagementSystem {
         SpringApplication.run(IntegratedManagementSystem.class, args);
     }
 
-    private CorsConfiguration buildConfig() {
-        CorsConfiguration corsConfiguration = new CorsConfiguration();
-        corsConfiguration.addAllowedOrigin("*");
-        corsConfiguration.addAllowedHeader("*");
-        corsConfiguration.addAllowedMethod("*");
-        corsConfiguration.addExposedHeader("x-total-count");
-        corsConfiguration.addExposedHeader("x-auth-token");
-        return corsConfiguration;
-    }
-
-    /**
-     * 跨域过滤器
-     *
-     * @return
-     */
     @Bean
     public CorsFilter corsFilter() {
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", buildConfig()); // 4
+        final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        final CorsConfiguration config = new CorsConfiguration();
+        config.setAllowCredentials(true);
+        config.addAllowedOrigin("*");
+        config.addAllowedHeader("*");
+        config.addAllowedMethod("GET");
+        config.addAllowedMethod("PUT");
+        config.addAllowedMethod("POST");
+        config.addAllowedMethod("DELETE");
+        source.registerCorsConfiguration("/**", config);
         return new CorsFilter(source);
     }
 }
