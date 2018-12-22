@@ -1,8 +1,8 @@
 package com.lhiot.ims.rbac.service;
 
-import com.leon.microx.web.result.Pages;
 import com.leon.microx.util.Maps;
 import com.leon.microx.util.StringUtils;
+import com.leon.microx.web.result.Pages;
 import com.lhiot.ims.rbac.domain.ImsMenu;
 import com.lhiot.ims.rbac.domain.ImsRelationRoleMenu;
 import com.lhiot.ims.rbac.mapper.ImsMenuMapper;
@@ -10,9 +10,11 @@ import com.lhiot.ims.rbac.mapper.ImsOperationMapper;
 import com.lhiot.ims.rbac.mapper.ImsRelationRoleMenuMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
 /**
 * Description:菜单服务类
@@ -20,7 +22,6 @@ import java.util.*;
 * @date 2018/09/29
 */
 @Service
-@Transactional
 public class ImsMenuService {
 
     private final ImsMenuMapper imsMenuMapper;

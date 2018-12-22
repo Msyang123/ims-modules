@@ -18,7 +18,7 @@ import java.util.List;
  * @date 2018/09/29
  */
 @Service
-@Transactional
+@Transactional(rollbackFor = Exception.class)
 public class ImsRelationUserRoleService {
 
     private final ImsRelationUserRoleMapper relationUserRoleMapper;

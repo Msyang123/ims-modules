@@ -1,6 +1,7 @@
 package com.lhiot.ims.rbac.domain;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.lhiot.ims.datacenter.feign.entity.ProductCategory;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -44,6 +45,16 @@ public class MenuDisplay {
         this.icon = menu.getIcon();
         this.meta = new Meta(menu.getName(), menu.getIcon());
         this.type = menu.getType();
+    }
+
+    public MenuDisplay(ProductCategory productCategory) {
+        this.id = productCategory.getId();
+        this.parentid = productCategory.getParentId();
+        this.code = null;
+        this.title = productCategory.getGroupName();
+        this.icon = null;
+        this.meta = new Meta(productCategory.getGroupName(), null);
+        this.type = productCategory.getParentId() == 0 ? "PARENT" : "SON";
     }
 
     @JsonProperty("id")

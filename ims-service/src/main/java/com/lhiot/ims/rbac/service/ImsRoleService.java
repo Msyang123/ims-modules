@@ -24,7 +24,7 @@ import java.util.Optional;
 * @date 2018/09/29
 */
 @Service
-@Transactional
+@Transactional(rollbackFor = Exception.class)
 public class ImsRoleService {
 
     private final ImsRoleMapper imsRoleMapper;
@@ -140,7 +140,6 @@ public class ImsRoleService {
      * @return
      */
     public List<ImsMenu> getRelationMenusById(Long id) {
-//        return  this.imsRoleMapper.getRelationMenusById(id);
         return Optional.of(this.imsRoleMapper.getRelationMenusById(id)).orElse(Collections.emptyList());
 
     }

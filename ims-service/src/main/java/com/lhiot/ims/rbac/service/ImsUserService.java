@@ -3,6 +3,7 @@ package com.lhiot.ims.rbac.service;
 import com.leon.microx.web.result.Pages;
 import com.leon.microx.util.StringUtils;
 import com.leon.microx.util.auditing.MD5;
+import com.leon.microx.web.result.Tips;
 import com.lhiot.ims.rbac.domain.ImsRole;
 import com.lhiot.ims.rbac.domain.ImsUser;
 import com.lhiot.ims.rbac.mapper.ImsRelationUserRoleMapper;
@@ -14,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
 * Description:用户服务类
@@ -21,7 +23,7 @@ import java.util.Map;
 * @date 2018/09/29
 */
 @Service
-@Transactional
+@Transactional(rollbackFor = Exception.class)
 public class ImsUserService {
 
     private final ImsUserMapper imsUserMapper;
@@ -39,10 +41,14 @@ public class ImsUserService {
     * @param imsUser
     * @return
     */
-    public ImsUser create(ImsUser imsUser){
+    public Tips<ImsUser> create(ImsUser imsUser){
+        ImsUser findImsUser = imsUserMapper.selectByAccount(imsUser.getAccount());
+        if (Objects.nonNull(findImsUser)) {
+            return Tips.warn("该用户已存在，添加失败");
+        }
         imsUser.setPassword(MD5.str(imsUser.getPassword()));
         this.imsUserMapper.create(imsUser);
-        return imsUser;
+        return Tips.<ImsUser>empty().data(imsUser);
     }
 
     /** 

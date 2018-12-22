@@ -18,6 +18,10 @@
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-core</artifactId>
+        </dependency>
         <!-- microx-utils -->
         <dependency>
             <groupId>com.leon.microx.core</groupId>
@@ -72,6 +76,12 @@
             <groupId>org.mybatis.spring.boot</groupId>
             <artifactId>mybatis-spring-boot-starter</artifactId>
             <version>LATEST</version>
+        </dependency>
+        <!--数据字典-->
+        <dependency>
+            <groupId>com.lhiot.dc</groupId>
+            <artifactId>dictionary-client</artifactId>
+            <version>1.0</version>
         </dependency>
     </dependencies>
 
