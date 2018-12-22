@@ -24,6 +24,10 @@
             <artifactId>microx-core</artifactId>
         </dependency>
         <!-- microx-redis -->
+
+
+
+
         <dependency>
             <groupId>com.leon.microx.common</groupId>
             <artifactId>microx-redis-core</artifactId>
