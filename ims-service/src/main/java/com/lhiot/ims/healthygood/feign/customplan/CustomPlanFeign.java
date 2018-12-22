@@ -1,6 +1,7 @@
 package com.lhiot.ims.healthygood.feign.customplan;
 
 import com.leon.microx.web.result.Pages;
+import com.lhiot.ims.healthygood.feign.customplan.entity.CustomPlanProduct;
 import com.lhiot.ims.healthygood.feign.customplan.model.CustomPlanDetailResult;
 import com.lhiot.ims.healthygood.feign.customplan.model.CustomPlanParam;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -41,11 +42,21 @@ public interface CustomPlanFeign {
      * 修改定制计划商品
      *
      * @param id                     定制计划商品id
-     * @param customPlanDetailResult 要修改的定制计划商品
+     * @param customPlanProduct 要修改的定制计划商品
      * @return 修改操作的结果
      */
     @PutMapping("/custom-plan-product/{id}")
-    ResponseEntity updateProduct(@PathVariable("id") Long id, @Valid @RequestBody CustomPlanDetailResult customPlanDetailResult);
+    ResponseEntity updateProduct(@PathVariable("id") Long id, @RequestBody CustomPlanProduct customPlanProduct);
+
+    /**
+     * 修改定制计划规格
+     *
+     * @param id                     定制计划商品id
+     * @param customPlanDetailResult 要修改的定制计划商品
+     * @return 修改操作的结果
+     */
+    @PutMapping("/custom-plan-specification/{id}")
+    ResponseEntity updateSpecification(@PathVariable("id") Long id, @RequestBody CustomPlanDetailResult customPlanDetailResult);
 
 
     /**

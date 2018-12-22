@@ -25,7 +25,7 @@ public class CustomPlanProduct {
     private Long planId;
 
     @ApiModelProperty(value = "上架Id", dataType = "Long")
-    private Long productShelfId;
+    private Long shelfId;
 
     @ApiModelProperty(value = "第x天", dataType = "Integer")
     private Integer dayOfPeriod;
