@@ -4,6 +4,7 @@ import com.leon.microx.web.session.Sessions;
 import com.leon.microx.web.swagger.ApiHideBodyProperty;
 import com.leon.microx.web.swagger.ApiParamType;
 import com.lhiot.ims.healthygood.feign.customplan.CustomPlanFeign;
+import com.lhiot.ims.healthygood.feign.customplan.entity.CustomPlanProduct;
 import com.lhiot.ims.healthygood.feign.customplan.model.CustomPlanDetailResult;
 import com.lhiot.ims.healthygood.feign.customplan.model.CustomPlanParam;
 import com.lhiot.ims.rbac.aspect.LogCollection;
@@ -57,10 +58,10 @@ public class CustomPlanApi {
     @ApiOperation("修改定制计划")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = ApiParamType.PATH, name = "id", value = "定制计划id", dataType = "Long", required = true),
-            @ApiImplicitParam(paramType = ApiParamType.BODY, name = "customPlanDetailResult", value = "定制计划", dataType = "CustomPlanDetailResult", required = true)
+            @ApiImplicitParam(paramType = ApiParamType.BODY, name = "customPlanDetailResult", value = "定制计划相关信息", dataType = "CustomPlanDetailResult", required = true)
     })
     @PutMapping("/custom-plans/{id}")
-    public ResponseEntity update(@PathVariable("id") Long id, @Valid @RequestBody CustomPlanDetailResult customPlanDetailResult) {
+    public ResponseEntity update(@PathVariable("id") Long id, @RequestBody CustomPlanDetailResult customPlanDetailResult) {
         log.debug("修改定制计划\t param:{}", customPlanDetailResult);
 
         ResponseEntity entity = customPlanFeign.update(id, customPlanDetailResult);
@@ -70,14 +71,28 @@ public class CustomPlanApi {
     @LogCollection
     @ApiOperation("修改定制计划商品")
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType = ApiParamType.PATH, name = "id", value = "定制计划id", dataType = "Long", required = true),
-            @ApiImplicitParam(paramType = ApiParamType.BODY, name = "customPlanDetailResult", value = "定制计划商品", dataType = "CustomPlanDetailResult", required = true)
+            @ApiImplicitParam(paramType = ApiParamType.PATH, name = "id", value = "定制计划商品id", dataType = "Long", required = true),
+            @ApiImplicitParam(paramType = ApiParamType.BODY, name = "customPlanProduct", value = "定制计划商品(传shelfId)", dataType = "CustomPlanProduct", required = true)
     })
     @PutMapping("/custom-plan-products/{id}")
-    public ResponseEntity updateProduct(@PathVariable("id") Long id, @RequestBody CustomPlanDetailResult customPlanDetailResult) {
+    public ResponseEntity updateProduct(@PathVariable("id") Long id, @RequestBody CustomPlanProduct customPlanProduct) {
+        log.debug("修改定制计划\t param:{}", customPlanProduct);
+
+        ResponseEntity entity = customPlanFeign.updateProduct(id, customPlanProduct);
+        return FeginResponseTools.convertUpdateResponse(entity);
+    }
+
+    @LogCollection
+    @ApiOperation("修改定制计划规格")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = ApiParamType.PATH, name = "id", value = "定制计划id", dataType = "Long", required = true),
+            @ApiImplicitParam(paramType = ApiParamType.BODY, name = "customPlanDetailResult", value = "定制计划规格(传定制计划规格id和price)", dataType = "CustomPlanDetailResult", required = true)
+    })
+    @PutMapping("/custom-plan-specification/{id}")
+    public ResponseEntity updateSpecification(@PathVariable("id") Long id, @RequestBody CustomPlanDetailResult customPlanDetailResult) {
         log.debug("修改定制计划\t param:{}", customPlanDetailResult);
 
-        ResponseEntity entity = customPlanFeign.updateProduct(id, customPlanDetailResult);
+        ResponseEntity entity = customPlanFeign.updateSpecification(id, customPlanDetailResult);
         return FeginResponseTools.convertUpdateResponse(entity);
     }
 
