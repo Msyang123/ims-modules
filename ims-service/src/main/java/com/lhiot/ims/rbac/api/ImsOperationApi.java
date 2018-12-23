@@ -1,6 +1,8 @@
 package com.lhiot.ims.rbac.api;
 
 import com.leon.microx.web.result.Tuple;
+import com.leon.microx.web.session.Sessions;
+import com.leon.microx.web.swagger.ApiHideBodyProperty;
 import com.leon.microx.web.swagger.ApiParamType;
 import com.lhiot.ims.rbac.aspect.LogCollection;
 import com.lhiot.ims.rbac.domain.ImsOperation;
@@ -69,6 +71,13 @@ public class ImsOperationApi {
         log.debug("查询功能操作分页列表\t param:{}", imsOperation);
 
         return ResponseEntity.ok(imsOperationService.pageList(imsOperation));
+    }
+
+    @Sessions.Uncheck
+    @ApiOperation(value = "查询和色果膳用户Sesseion权限限制访问接口", response = ImsOperation.class, responseContainer = "List")
+    @GetMapping("/mall-user")
+    public ResponseEntity selectAuthority(){
+        return ResponseEntity.ok(imsOperationService.selectAuthority());
     }
 
     @GetMapping("/list/{menuIds}")

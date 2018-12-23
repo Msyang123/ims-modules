@@ -93,6 +93,10 @@ public class ImsOperationService {
               this.imsOperationMapper.pageImsOperations(imsOperation));
     }
 
+    public List<ImsOperation> selectAuthority(){
+        return this.imsOperationMapper.selectAuthority();
+    }
+
     /**
      * Description: 查询功能操作分页列表
      *
