@@ -14,6 +14,7 @@ import lombok.ToString;
  * 定制计划商品信息
  */
 public class CustomPlanProductResult {
+    private Integer index;
 
     @ApiModelProperty(value = "定制商品id", dataType = "Long")
     private Long id;

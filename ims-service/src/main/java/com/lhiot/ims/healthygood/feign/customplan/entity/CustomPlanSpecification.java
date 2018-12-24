@@ -19,6 +19,7 @@ import lombok.ToString;
 @NoArgsConstructor
 public class CustomPlanSpecification {
 
+    private Integer index;
 
     @ApiModelProperty(value = "id", dataType = "Long")
     private Long id;
