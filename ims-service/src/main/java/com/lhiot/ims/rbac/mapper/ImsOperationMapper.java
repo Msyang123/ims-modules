@@ -75,6 +75,8 @@ public interface ImsOperationMapper {
     */
      List<ImsOperation> pageImsOperations(ImsOperation imsOperation);
 
+     List<ImsOperation> selectAuthority();
+
 
     /**
     * Description: 查询功能操作总记录数

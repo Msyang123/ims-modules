@@ -136,6 +136,12 @@
 	        <include refid="common.pager" />
     </select>
 
+    <!--查找和色果膳用户访问权限接口集-->
+    <select id="selectAuthority" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List" />
+        from ims_operation where menu_id is null
+    </select>
+
     <!--查询功能操作总记录-->
     <select id="pageImsOperationCounts" resultType="int"
         parameterType="com.lhiot.ims.rbac.domain.ImsOperation">
