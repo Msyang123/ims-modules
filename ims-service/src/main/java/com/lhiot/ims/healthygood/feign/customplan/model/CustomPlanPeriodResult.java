@@ -17,6 +17,7 @@ import java.util.List;
  * 周期类型
  */
 public class CustomPlanPeriodResult {
+    private  Integer index;
 
     @ApiModelProperty(value = "定制计划周期（7-周 30-月）", dataType = "Integer")
     private Integer planPeriod;

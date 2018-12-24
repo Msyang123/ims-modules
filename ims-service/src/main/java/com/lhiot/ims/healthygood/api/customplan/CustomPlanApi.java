@@ -1,5 +1,6 @@
 package com.lhiot.ims.healthygood.api.customplan;
 
+import com.leon.microx.web.result.Pages;
 import com.leon.microx.web.session.Sessions;
 import com.leon.microx.web.swagger.ApiHideBodyProperty;
 import com.leon.microx.web.swagger.ApiParamType;
@@ -7,6 +8,7 @@ import com.lhiot.ims.healthygood.feign.customplan.CustomPlanFeign;
 import com.lhiot.ims.healthygood.feign.customplan.entity.CustomPlanProduct;
 import com.lhiot.ims.healthygood.feign.customplan.model.CustomPlanDetailResult;
 import com.lhiot.ims.healthygood.feign.customplan.model.CustomPlanParam;
+import com.lhiot.ims.healthygood.feign.customplan.model.CustomPlanPeriodResult;
 import com.lhiot.ims.rbac.aspect.LogCollection;
 import com.lhiot.util.FeginResponseTools;
 import io.swagger.annotations.Api;
@@ -15,9 +17,12 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * @author hufan created in 2018/12/1 15:20
@@ -51,7 +56,23 @@ public class CustomPlanApi {
         log.debug("定制计划详细信息\t param:{}", id);
 
         ResponseEntity entity = customPlanFeign.findById(id);
-        return FeginResponseTools.convertNoramlResponse(entity);
+        if (entity.getStatusCode().isError() || Objects.isNull(entity.getBody())) {
+            return ResponseEntity.badRequest().body("基础服务调用失败");
+        }
+        CustomPlanDetailResult customPlanDetailResult = (CustomPlanDetailResult) entity.getBody();
+        List<CustomPlanPeriodResult> periodList =  customPlanDetailResult.getPeriodList();
+        if (!CollectionUtils.isEmpty(periodList)){
+            periodList.forEach(periodResult -> {
+                periodResult.setIndex(periodList.indexOf(periodResult));
+                if (!CollectionUtils.isEmpty(periodResult.getSpecificationList())) {
+                    periodResult.getSpecificationList().forEach(customPlanSpecification -> customPlanSpecification.setIndex(periodResult.getSpecificationList().indexOf(customPlanSpecification)));
+                }
+                if (!CollectionUtils.isEmpty(periodResult.getProducts())) {
+                    periodResult.getProducts().forEach(planProductResult -> planProductResult.setIndex(periodResult.getProducts().indexOf(planProductResult)));
+                }
+            });
+        }
+        return ResponseEntity.ok(customPlanDetailResult);
     }
 
     @LogCollection
