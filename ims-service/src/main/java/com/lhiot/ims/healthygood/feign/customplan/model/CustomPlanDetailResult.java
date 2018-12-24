@@ -24,7 +24,7 @@ public class CustomPlanDetailResult {
     private ValidOrInvalid status;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    @ApiModelProperty(value = "创建时间", dataType = "Date")
+    @ApiModelProperty(value = "创建时间", dataType = "Date", example = "yyyy-MM-dd HH:mm:ss")
     private java.util.Date createAt;
 
     @ApiModelProperty(value = "到期规则", dataType = "String")

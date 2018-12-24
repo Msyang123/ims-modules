@@ -33,7 +33,7 @@ public class DeliverFeeRulesResult {
     private DeliverAtType deliveryAtType;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
-    @ApiModelProperty(value = "更新时间", dataType = "Date")
+    @ApiModelProperty(value = "更新时间", dataType = "Date", example = "yyyy-MM-dd HH:mm:ss")
     private Date updateAt;
 
     @ApiModelProperty(value = "创建人", dataType = "String")

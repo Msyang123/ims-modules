@@ -54,7 +54,7 @@ public class CustomOrder {
     private Integer price;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    @ApiModelProperty(value = "创建时间", dataType = "Date", readOnly = true)
+    @ApiModelProperty(value = "创建时间", dataType = "Date", readOnly = true, example = "yyyy-MM-dd HH:mm:ss")
     private Date createAt;
 
     @ApiModelProperty(value = "x人套餐", dataType = "Integer")
@@ -94,11 +94,11 @@ public class CustomOrder {
     private String phone;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    @ApiModelProperty(notes = "起始创建时间", dataType = "Date")
+    @ApiModelProperty(notes = "起始创建时间", dataType = "Date", example = "yyyy-MM-dd HH:mm:ss")
     private Date beginCreateAt;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    @ApiModelProperty(notes = "截止创建时间", dataType = "Date")
+    @ApiModelProperty(notes = "截止创建时间", dataType = "Date", example = "yyyy-MM-dd HH:mm:ss")
     private Date endCreateAt;
 
     @ApiModelProperty(notes = "第三方支付产生的商户单号", dataType = "String", readOnly = true)
@@ -108,7 +108,7 @@ public class CustomOrder {
     private String description;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
-    @ApiModelProperty(notes = "定制提取截止时间", dataType = "Date", readOnly = true)
+    @ApiModelProperty(notes = "定制提取截止时间", dataType = "Date", readOnly = true, example = "yyyy-MM-dd HH:mm:ss")
     private Date endExtractionAt;
 
     @ApiModelProperty(notes = "已暂停天数", dataType = "Long", readOnly = true)

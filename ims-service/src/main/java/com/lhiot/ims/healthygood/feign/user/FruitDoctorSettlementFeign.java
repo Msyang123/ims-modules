@@ -1,6 +1,7 @@
 package com.lhiot.ims.healthygood.feign.user;
 
 import com.leon.microx.web.result.Pages;
+import com.leon.microx.web.result.Tips;
 import com.lhiot.ims.healthygood.feign.user.entity.SettlementApplication;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
@@ -35,4 +36,12 @@ public interface FruitDoctorSettlementFeign {
      */
     @PostMapping("/fruit-doctors/settlement/pages")
     ResponseEntity<Pages<SettlementApplication>> search(@RequestBody SettlementApplication settlementApplication);
+
+    /**
+     * 结算申请退款
+     * @param id 结算申请id
+     * @return 结算申请退款的结果
+     */
+    @PutMapping("/fruit-doctors/settlement/refund/{id}")
+    ResponseEntity refund(@PathVariable("id") Long id);
 }

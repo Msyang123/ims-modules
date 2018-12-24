@@ -60,7 +60,7 @@ public class OrderDetailResult {
     private Integer couponAmount;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    @ApiModelProperty(notes = "海鼎备货时间", dataType = "Date")
+    @ApiModelProperty(notes = "海鼎备货时间", dataType = "Date", example = "yyyy-MM-dd HH:mm:ss")
     private Date hdStockAt;
 
     @ApiModelProperty(notes = "订单状态 WAIT_PAYMENT-待支付,WAIT_SEND_OUT-待出库,SEND_OUTING-出库中,WAIT_DISPATCHING-待配送,DISPATCHING-配送中," +
@@ -80,7 +80,7 @@ public class OrderDetailResult {
     private String remark;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    @ApiModelProperty(notes = "提货截止时间", dataType = "Date")
+    @ApiModelProperty(notes = "提货截止时间", dataType = "Date", example = "yyyy-MM-dd HH:mm:ss")
     private Date deliveryEndAt;
 
     @ApiModelProperty(notes = "海鼎的订单编码", dataType = "String")
@@ -96,7 +96,7 @@ public class OrderDetailResult {
     private AllowRefund allowRefund = AllowRefund.YES;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    @ApiModelProperty(notes = "订单创建时间", dataType = "Date")
+    @ApiModelProperty(notes = "订单创建时间", dataType = "Date", example = "yyyy-MM-dd HH:mm:ss")
     private Date createAt;
 
     @ApiModelProperty(notes = "支付Id", dataType = "String")

@@ -56,6 +56,8 @@ public class OrderApi {
     public ResponseEntity search(@RequestBody BaseOrderParam param) {
         log.debug("获取订单列表\t param:{}", param);
 
+        param.setOrderCode(param.getCode());
+        param.setPhone(param.getUserPhone());
         ResponseEntity entity = orderFeign.search(param);
         return FeginResponseTools.convertNoramlResponse(entity);
     }

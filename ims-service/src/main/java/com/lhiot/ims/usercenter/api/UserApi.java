@@ -36,6 +36,7 @@ public class UserApi {
     public ResponseEntity query(@RequestBody QuerySearch querySearch) {
         log.debug("后台管理分页查询用户列表\t param{}", querySearch);
 
+        querySearch.setUserId(querySearch.getId());
         ResponseEntity entity = userFeign.query(querySearch);
         return FeginResponseTools.convertNoramlResponse(entity);
     }
