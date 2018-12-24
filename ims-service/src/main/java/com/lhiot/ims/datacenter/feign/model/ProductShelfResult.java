@@ -40,7 +40,7 @@ public class ProductShelfResult {
     @ApiModelProperty(notes = "上架类型：NORMAL-普通商品,GIFT-赠品", dataType = "ShelfType", readOnly = true)
     private ShelfType shelfType = ShelfType.NORMAL;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
-    @ApiModelProperty(notes = "创建时间", dataType = "Date", readOnly = true)
+    @ApiModelProperty(notes = "创建时间", dataType = "Date", readOnly = true, example = "yyyy-MM-dd HH:mm:ss")
     private Date createAt;
     @ApiModelProperty(notes = "描述", dataType = "String")
     private String description;

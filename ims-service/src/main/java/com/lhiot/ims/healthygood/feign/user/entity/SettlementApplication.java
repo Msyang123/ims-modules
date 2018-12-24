@@ -29,7 +29,7 @@ public class SettlementApplication {
     private Long doctorId;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    @ApiModelProperty(value = "申请时间", dataType = "Date")
+    @ApiModelProperty(value = "申请时间", dataType = "Date", example = "yyyy-MM-dd HH:mm:ss")
     private java.util.Date createAt;
 
     @ApiModelProperty(value = "申请提取金额", dataType = "Integer")
@@ -39,15 +39,15 @@ public class SettlementApplication {
     private SettlementStatus settlementStatus;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    @ApiModelProperty(value = "处理时间", dataType = "Date")
+    @ApiModelProperty(value = "处理时间", dataType = "Date", example = "yyyy-MM-dd HH:mm:ss")
     private java.util.Date dealAt;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    @ApiModelProperty(notes = "起始创建时间(用于搜索)", dataType = "Date")
+    @ApiModelProperty(notes = "起始创建时间(用于搜索)", dataType = "Date", example = "yyyy-MM-dd HH:mm:ss")
     private Date beginCreateAt;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    @ApiModelProperty(notes = "截止创建时间(用于搜索)", dataType = "Date")
+    @ApiModelProperty(notes = "截止创建时间(用于搜索)", dataType = "Date", example = "yyyy-MM-dd HH:mm:ss")
     private Date endCreateAt;
 
     @ApiModelProperty(value = "申请人（鲜果师名称）", dataType = "String")

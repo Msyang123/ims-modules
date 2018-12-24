@@ -29,7 +29,7 @@ public class ProductSection {
     @ApiModelProperty(notes = "排序字段", dataType = "Integer")
     private Integer sorting;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
-    @ApiModelProperty(notes = "创建时间", dataType = "Date", readOnly = true)
+    @ApiModelProperty(notes = "创建时间", dataType = "Date", readOnly = true, example = "yyyy-MM-dd HH:mm:ss")
     private Date createAt;
     @ApiModelProperty(notes = "父ID", dataType = "Long")
     private Long parentId;

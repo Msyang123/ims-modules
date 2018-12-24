@@ -26,7 +26,7 @@ public class DeliverNote {
     private Long orderId;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    @ApiModelProperty(notes = "配送单编码", dataType = "Date")
+    @ApiModelProperty(notes = "配送单编码", dataType = "Date", example = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
 
     @ApiModelProperty(notes = "配送员姓名", dataType = "String")
@@ -51,11 +51,11 @@ public class DeliverNote {
     private String failureCause;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    @ApiModelProperty(notes = "配送取消时间", dataType = "Date")
+    @ApiModelProperty(notes = "配送取消时间", dataType = "Date", example = "yyyy-MM-dd HH:mm:ss")
     private Date cancelTime;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    @ApiModelProperty(notes = "接单时间", dataType = "Date")
+    @ApiModelProperty(notes = "接单时间", dataType = "Date", example = "yyyy-MM-dd HH:mm:ss")
     private Date receiveTime;
 
     @ApiModelProperty(notes = "配送状态 UNRECEIVED-未接单 WAIT_GET-待取货 DELIVERING-配送中 DONE-配送完成 FAILURE-配送失败", dataType = "DeliverStatus")

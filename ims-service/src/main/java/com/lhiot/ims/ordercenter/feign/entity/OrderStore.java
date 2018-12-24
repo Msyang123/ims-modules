@@ -31,6 +31,6 @@ public class OrderStore {
     private String operationUser;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    @ApiModelProperty(notes = "创建时间", dataType = "Date")
+    @ApiModelProperty(notes = "创建时间", dataType = "Date", example = "yyyy-MM-dd HH:mm:ss")
     private Date createAt = Date.from(Instant.now());
 }

@@ -31,7 +31,7 @@ public class ProductResult {
     @ApiModelProperty(notes = "商品描述", dataType = "String")
     private String description;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    @ApiModelProperty(notes = "创建时间", dataType = "Date", readOnly = true)
+    @ApiModelProperty(notes = "创建时间", dataType = "Date", readOnly = true, example = "yyyy-MM-dd HH:mm:ss")
     private Date createAt;
 
     @ApiModelProperty(notes = "主图", dataType = "String")

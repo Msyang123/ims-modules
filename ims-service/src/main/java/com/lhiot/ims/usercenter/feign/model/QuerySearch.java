@@ -14,8 +14,12 @@ import java.util.Date;
 @Data
 public class QuerySearch {
     @JsonSerialize(using = ToStringSerializer.class)
-    @ApiModelProperty(notes = "用户id", dataType = "Long")
+    @ApiModelProperty(notes = "用户id(后端)", dataType = "Long")
     private Long userId;
+
+    @JsonSerialize(using = ToStringSerializer.class)
+    @ApiModelProperty(notes = "用户id(前端)", dataType = "Long")
+    private Long id;
 
     @ApiModelProperty(notes = "手机号", dataType = "String")
     private String phone;
@@ -24,11 +28,11 @@ public class QuerySearch {
     private String nickname;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    @ApiModelProperty(notes = "创建时间启", dataType = "Date")
+    @ApiModelProperty(notes = "创建时间启", dataType = "Date",example = "yyyy-MM-dd HH:mm:ss")
     private Date createAtStart;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    @ApiModelProperty(notes = "创建时间止", dataType = "Date")
+    @ApiModelProperty(notes = "创建时间止", dataType = "Date",example = "yyyy-MM-dd HH:mm:ss")
     private Date createAtEnd;
 
     @ApiModelProperty(notes = "每页查询条数(为空或0不分页查所有)", dataType = "Integer")

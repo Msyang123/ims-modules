@@ -52,7 +52,7 @@ public class FruitDoctor {
     private String jobTitle;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    @ApiModelProperty(value = "注册时间", dataType = "Date")
+    @ApiModelProperty(value = "注册时间", dataType = "Date", example = "yyyy-MM-dd HH:mm:ss")
     private java.util.Date createAt;
 
     @ApiModelProperty(value = "推荐人（鲜果师编号）", dataType = "Long")

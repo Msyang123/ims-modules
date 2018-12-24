@@ -29,7 +29,7 @@ public class ArticleSection {
     private String nameEn;
     @ApiModelProperty(notes = "父级编号", dataType = "Long")
     private Long parentId;
-    @ApiModelProperty(notes = "创建时间", dataType = "Date", readOnly = true)
+    @ApiModelProperty(notes = "创建时间", dataType = "Date", readOnly = true, example = "yyyy-MM-dd HH:mm:ss")
     private Date createAt;
     @ApiModelProperty(notes = "序号", dataType = "Integer")
     private Integer sorting;

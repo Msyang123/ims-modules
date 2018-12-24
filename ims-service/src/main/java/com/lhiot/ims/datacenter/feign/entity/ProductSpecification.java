@@ -40,7 +40,7 @@ public class ProductSpecification {
     @ApiModelProperty(notes = "是否可用：ENABLE-可用，DISABLE-不可用", dataType = "Use")
     private Use availableStatus;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
-    @ApiModelProperty(notes = "创建时间", dataType = "Date", readOnly = true)
+    @ApiModelProperty(notes = "创建时间", dataType = "Date", readOnly = true, example = "yyyy-MM-dd HH:mm:ss")
     private Date createAt;
 
     @ApiModelProperty(notes = "规格信息（排毒养颜套餐  1盒  [00815]）", dataType = "String", readOnly = true)

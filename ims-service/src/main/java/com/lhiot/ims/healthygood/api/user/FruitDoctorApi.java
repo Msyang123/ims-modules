@@ -1,5 +1,6 @@
 package com.lhiot.ims.healthygood.api.user;
 
+import com.leon.microx.web.result.Tips;
 import com.leon.microx.web.session.Sessions;
 import com.leon.microx.web.swagger.ApiParamType;
 import com.lhiot.ims.healthygood.feign.user.FruitDoctorFeign;
@@ -106,6 +107,16 @@ public class FruitDoctorApi {
         log.debug("结算申请修改\t id:{},param:{}", id, settlementApplication);
 
         ResponseEntity entity = fruitDoctorSettlementFeign.updateSettlement(id, settlementApplication);
+        return FeginResponseTools.convertUpdateResponse(entity);
+    }
+
+    @ApiOperation(value = "结算申请退款")
+    @ApiImplicitParam(paramType = ApiParamType.PATH, name = "id", value = "结算申请id", required = true, dataType = "Long")
+    @PutMapping("/fruit-doctors/settlement/refund/{id}")
+    public ResponseEntity refund(@PathVariable("id") Long id) {
+        log.debug("结算申请退款\t id:{},param:{}", id);
+
+        ResponseEntity entity = fruitDoctorSettlementFeign.refund(id);
         return FeginResponseTools.convertUpdateResponse(entity);
     }
 

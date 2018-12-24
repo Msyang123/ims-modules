@@ -22,9 +22,9 @@ public class ArticleSectionParam {
     private String nameEn;
     @ApiModelProperty(notes = "应用类型", dataType = "String")
     private String applicationType;
-    @ApiModelProperty(notes = "起始创建时间", dataType = "Date")
+    @ApiModelProperty(notes = "起始创建时间", dataType = "Date", example = "yyyy-MM-dd HH:mm:ss")
     private Date beginCreateAt;
-    @ApiModelProperty(notes = "截止创建时间", dataType = "Date")
+    @ApiModelProperty(notes = "截止创建时间", dataType = "Date", example = "yyyy-MM-dd HH:mm:ss")
     private Date endCreateAt;
     @ApiModelProperty(notes = "版块内文章ID", dataType = "Long")
     private Long articleId;

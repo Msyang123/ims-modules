@@ -23,7 +23,7 @@ public class Article {
     @ApiModelProperty(notes = "编辑人", dataType = "String")
     private String editor;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
-    @ApiModelProperty(notes = "创建时间", dataType = "Date", readOnly = true)
+    @ApiModelProperty(notes = "创建时间", dataType = "Date", readOnly = true, example = "yyyy-MM-dd HH:mm:ss")
     private Date createAt;
     @ApiModelProperty(notes = "文章类型（ORIGINAL-原创  REPRINTED-转载）", dataType = "ArticleType")
     private ArticleType articleType;
@@ -46,10 +46,10 @@ public class Article {
     @ApiModelProperty(notes = "审核人", dataType = "String")
     private String auditor;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
-    @ApiModelProperty(notes = "编辑时间", dataType = "Date")
+    @ApiModelProperty(notes = "编辑时间", dataType = "Date", example = "yyyy-MM-dd HH:mm:ss")
     private Date editAt;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
-    @ApiModelProperty(notes = "发布时间", dataType = "Date")
+    @ApiModelProperty(notes = "发布时间", dataType = "Date", example = "yyyy-MM-dd HH:mm:ss")
     private Date publishAt;
     @ApiModelProperty(notes = "关键字", dataType = "String")
     private String keywords;

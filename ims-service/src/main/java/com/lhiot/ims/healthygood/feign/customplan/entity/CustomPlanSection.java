@@ -42,7 +42,7 @@ public class CustomPlanSection{
     private Integer sort;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
-    @ApiModelProperty(value = "创建时间", dataType = "Date", readOnly = true)
+    @ApiModelProperty(value = "创建时间", dataType = "Date", readOnly = true, example = "yyyy-MM-dd HH:mm:ss")
     private Date createAt;
 
 

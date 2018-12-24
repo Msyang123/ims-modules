@@ -22,7 +22,7 @@ public class CustomOrderDelivery {
     @ApiModelProperty(dataType = "Long", hidden = true, notes = "商品上架id")
     private Long productShelfId;
 
-    @ApiModelProperty(value = "创建时间", dataType = "Date", hidden = true)
+    @ApiModelProperty(value = "创建时间", dataType = "Date", hidden = true, example = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date createAt;
 
@@ -35,7 +35,7 @@ public class CustomOrderDelivery {
     @ApiModelProperty(value = "提取的定制订单状态", dataType = "CustomOrderDeliveryStatus")
     private CustomOrderDeliveryStatus deliveryStatus;
 
-    @ApiModelProperty(notes = "收货时间", dataType = "Date")
+    @ApiModelProperty(notes = "收货时间", dataType = "Date", example = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date recevingTime;
 
