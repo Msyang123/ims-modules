@@ -17,6 +17,7 @@ import com.lhiot.ims.datacenter.feign.type.InventorySpecification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,7 +62,8 @@ public class ProductService {
             productSpecification.setInventorySpecification(InventorySpecification.YES);
             productSpecification.setAvailableStatus(Use.ENABLE);
             productSpecification.setProductId(productId);
-            // TODO  productSpecification.setSpecificationQty(XXX);
+            productSpecification.setLimitInventory(productResult.getProductSpecification().getLimitInventory());
+            productSpecification.setSpecificationQty(productResult.getProductSpecification().getSpecificationQty());
             ResponseEntity specificationEntity = productSpecificationFeign.create(productSpecification);
             if (specificationEntity.getStatusCode().isError()) {
                 return Tips.warn((String) specificationEntity.getBody());
@@ -124,7 +126,6 @@ public class ProductService {
                         break;
                 }
             });
-
             productResult.setSubImg(subImgs);
             productResult.setDetailImg(detailImgs);
             productResult.setMainImg(StringUtils.collectionToDelimitedString(mainImags, ","));
@@ -139,7 +140,7 @@ public class ProductService {
                 return Tips.warn((String) productSpecificationEntity.getBody());
             }
             Pages<ProductSpecification> pages = (Pages<ProductSpecification>) productSpecificationEntity.getBody();
-            productResult.setProductSpecification(Objects.isNull(pages) ? new ProductSpecification() : pages.getArray().get(0));
+            productResult.setProductSpecification((Objects.isNull(pages) || CollectionUtils.isEmpty(pages.getArray()))? new ProductSpecification() : pages.getArray().get(0));
             return Tips.<ProductResult>empty().data(productResult);
         }
         return Tips.empty();
@@ -166,18 +167,19 @@ public class ProductService {
         if (Objects.nonNull(detailImgs)) {
             for (String imgs : detailImgs) {
                 ProductAttachment attachmentDetailImg = new ProductAttachment();
+                attachmentDetailImg.setUrl(imgs);
                 attachmentDetailImg.setSorting(detailImgs.indexOf(imgs) + 1);
                 attachmentDetailImg.setAttachmentType(AttachmentType.DETAIL_IMG);
                 productAttachments.add(attachmentDetailImg);
             }
         }
-        if (Objects.nonNull(icon)) {
-            ProductAttachment attachmentIcon = new ProductAttachment();
-            attachmentIcon.setUrl(icon);
-            attachmentIcon.setSorting(1);
-            attachmentIcon.setAttachmentType(AttachmentType.ICON);
-            productAttachments.add(attachmentIcon);
-        }
+//        if (Objects.nonNull(icon)) {
+//            ProductAttachment attachmentIcon = new ProductAttachment();
+//            attachmentIcon.setUrl(icon);
+//            attachmentIcon.setSorting(1);
+//            attachmentIcon.setAttachmentType(AttachmentType.ICON);
+//            productAttachments.add(attachmentIcon);
+//        }
         return productAttachments;
     }
 }

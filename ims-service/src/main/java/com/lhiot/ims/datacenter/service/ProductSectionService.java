@@ -28,7 +28,7 @@ public class ProductSectionService {
 
     public Tips create(ProductSection productSection) {
         ResponseEntity entity = productSectionFeign.create(productSection);
-        if (entity.getStatusCode().isError() || Objects.isNull(entity.getBody())) {
+        if (entity.getStatusCode().isError()) {
             return Tips.warn((String) entity.getBody());
         }
         // 返回参数 例：<201 Created,{content-type=[application/json;charset=UTF-8], date=[Sat, 24 Nov 2018 06:37:59 GMT], location=[/product-sections/13], transfer-encoding=[chunked]}>

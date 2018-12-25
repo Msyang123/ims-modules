@@ -127,7 +127,7 @@ public class CustomPlanSectionApi {
     @PostMapping("/custom-plan-sections/relation")
     @ApiHideBodyProperty("id")
     public ResponseEntity create(@RequestBody CustomPlanSectionRelation customPlanSectionRelation) {
-        log.debug("批量修改定制版块与定制计划关系\t param:{}", customPlanSectionRelation);
+        log.debug("添加定制版块与定制计划关系\t param:{}", customPlanSectionRelation);
 
         ResponseEntity entity = customPlanSectionRelationFeign.create(customPlanSectionRelation);
         return FeginResponseTools.convertCreateResponse(entity);

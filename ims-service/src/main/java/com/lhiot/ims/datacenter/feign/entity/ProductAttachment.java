@@ -15,7 +15,7 @@ import javax.validation.constraints.NotNull;
 @ApiModel
 @EqualsAndHashCode(of = "url")
 public class ProductAttachment {
-    @ApiModelProperty(notes = "主键Id", dataType = "Long", readOnly = true)
+    @ApiModelProperty(notes = "主键Id", dataType = "Long")
     private Long id;
     @ApiModelProperty(notes = "附件地址", dataType = "String")
     private String url;

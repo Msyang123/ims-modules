@@ -81,7 +81,6 @@ public class FruitDoctorApi {
     public ResponseEntity update(@PathVariable("id") Long id, @RequestBody RegisterApplication registerApplication, Sessions.User user) {
         log.debug("根据id更新鲜果师申请记录\t id:{} param:{}", id, registerApplication);
 
-        registerApplication.setAuditAt(Date.from(Instant.now()));
         registerApplication.setAuditUser((String) user.getUser().get("name"));
         ResponseEntity entity = fruitDoctorQualificationFeign.update(id, registerApplication);
         return FeginResponseTools.convertUpdateResponse(entity);
