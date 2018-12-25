@@ -65,9 +65,9 @@ public interface DeliveryFeign {
     /**
      * 根据配送费规则模板Id删除
      *
-     * @param id 配送费计算规则id
+     * @param ids 配送费计算规则id，英文逗号分隔
      * @return 删除操作结果
      */
-    @DeleteMapping("/delivery-fee-rule/{id}")
-    ResponseEntity deleteRule(@PathVariable("id") Long id);
+    @DeleteMapping("/delivery-fee-rule/{ids}")
+    ResponseEntity deleteRule(@PathVariable("ids") String ids);
 }

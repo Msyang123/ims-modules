@@ -63,7 +63,7 @@ public class ProductSectionApi {
     @ApiImplicitParam(paramType = ApiParamType.PATH, name = "id", value = "商品版块id", dataType = "Long", required = true)
     @PutMapping("/product-sections/{id}")
     @ApiHideBodyProperty({"id", "createAt"})
-    public ResponseEntity update(@PathVariable("id") Long id, @Valid @RequestBody ProductSection productSection) {
+    public ResponseEntity update(@PathVariable("id") Long id, @RequestBody ProductSection productSection) {
         log.debug("根据id修改商品版块\t id:{} param:{}", id, productSection);
 
         ResponseEntity entity = productSectionFeign.update(id, productSection);

@@ -98,12 +98,12 @@ public class DeliveryFeeApi {
     }
 
     @ApiOperation("根据配送费规则模板Id删除")
-    @ApiImplicitParam(paramType = ApiParamType.PATH, name = "id", value = "配送费规则Id", dataType = "Long", required = true)
-    @DeleteMapping("/delivery-fee-rule/{id}")
-    public ResponseEntity deleteRule(@PathVariable("id") Long id) {
-        log.debug("根据配送费规则模板Id删除\t param:{}", id);
+    @ApiImplicitParam(paramType = ApiParamType.PATH, name = "ids", value = "配送费规则Ids,逗号分隔", dataType = "String", required = true)
+    @DeleteMapping("/delivery-fee-rule/{ids}")
+    public ResponseEntity deleteRule(@PathVariable("ids") String ids) {
+        log.debug("根据配送费规则模板Id删除\t param:{}", ids);
 
-        ResponseEntity entity = deliveryFeign.deleteRule(id);
+        ResponseEntity entity = deliveryFeign.deleteRule(ids);
         return FeginResponseTools.convertDeleteResponse(entity);
     }
 }

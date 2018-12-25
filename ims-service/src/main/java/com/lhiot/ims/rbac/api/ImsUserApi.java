@@ -91,9 +91,12 @@ public class ImsUserApi {
         if (!md5.equalsIgnoreCase(admin.getPassword())) {
             return ResponseEntity.badRequest().body("密码错误");
         }
-        Sessions.User sessionUser = session.create(request).user(Maps.of(
-                "id", admin.getId(), "name", admin.getName(), "account", admin.getAccount(), "avatar", StringUtils.isBlank(admin.getAvatarUrl()) ? "" : admin.getAvatarUrl()
-        )).timeToLive(30, TimeUnit.MINUTES);
+        Sessions.User sessionUser = session
+                .create(request)
+                .user(Maps.of(
+                        "id", admin.getId(), "name", admin.getName(), "account", admin.getAccount(), "avatar", StringUtils.isBlank(admin.getAvatarUrl()) ? "" : admin.getAvatarUrl()
+                ))
+                .timeToLive(30, TimeUnit.MINUTES);
 
         //填充访问权限：sessionUser.authorities(Authority.of("/**/users/?, RequestMethod.GET))
         //查找用户的操作权限
@@ -103,6 +106,7 @@ public class ImsUserApi {
                 .collect(Collectors.toList());
         sessionUser.authorities(authorityList);
         String sessionId = session.cache(sessionUser);
+        this.session.expired(sessionId, (bind, user) -> log.warn("用户 {} session过期……", bind));
         try {
             return ResponseEntity
                     .created(URI.create("/ims-user/session/" + sessionId))
