@@ -1,9 +1,13 @@
 package com.lhiot.ims.ordercenter.feign.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.lhiot.ims.ordercenter.feign.type.OrderStatus;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.util.Date;
 
 /**
  * @author xiaojian  created in  2018/12/8 11:28
@@ -26,7 +30,7 @@ public class BaseOrderParam {
 
     @ApiModelProperty(notes = "订单编号(前端)",dataType = "String")
     private String code;
-    
+
     @ApiModelProperty(notes = "用户手机号码(后端)",dataType = "String")
     private String phone;
 
@@ -36,7 +40,15 @@ public class BaseOrderParam {
     @ApiModelProperty(notes = "应用类型 APP(视食),WECHAT_MALL(微商城),WECHAT_SMALL_SHOP(小程序), HEALTH_GOOD(鲜果师商城),WXSMALL_SHOP(微商城小程序)",dataType = "ApplicationType")
     private String applicationType;
 
-    // TODO 起止时间
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @ApiModelProperty(notes = "订单创建开始时间",dataType = "Date", example = "yyyy-MM-dd HH:mm:ss")
+    private Date startAt;
+
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @ApiModelProperty(notes = "订单创建结束时间",dataType = "Date", example = "yyyy-MM-dd HH:mm:ss")
+    private Date endAt;
 
     @ApiModelProperty(notes = "每页查询条数(为空或0不分页查所有)", dataType = "Integer")
     private Integer rows;

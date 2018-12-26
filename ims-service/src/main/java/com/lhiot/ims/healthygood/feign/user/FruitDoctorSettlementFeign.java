@@ -1,7 +1,6 @@
 package com.lhiot.ims.healthygood.feign.user;
 
 import com.leon.microx.web.result.Pages;
-import com.leon.microx.web.result.Tips;
 import com.lhiot.ims.healthygood.feign.user.entity.SettlementApplication;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
