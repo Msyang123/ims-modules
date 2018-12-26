@@ -1,5 +1,6 @@
 package com.lhiot.ims.ordercenter.api;
 
+import com.leon.microx.util.Jackson;
 import com.leon.microx.util.StringUtils;
 import com.leon.microx.web.result.Pages;
 import com.leon.microx.web.session.Sessions;
@@ -13,6 +14,7 @@ import com.lhiot.ims.ordercenter.feign.OrderFeign;
 import com.lhiot.ims.ordercenter.feign.entity.DeliverNote;
 import com.lhiot.ims.ordercenter.feign.entity.OrderProduct;
 import com.lhiot.ims.ordercenter.feign.model.BaseOrderParam;
+import com.lhiot.ims.ordercenter.feign.model.DeliverTime;
 import com.lhiot.ims.ordercenter.feign.model.OrderDetailResult;
 import com.lhiot.ims.usercenter.feign.UserFeign;
 import com.lhiot.ims.usercenter.feign.model.UserDetailResult;
@@ -24,8 +26,11 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -68,33 +73,45 @@ public class OrderApi {
     public ResponseEntity orderDetail(@PathVariable("orderCode") String orderCode) {
         log.debug("根据订单code查询订单详情\t param:{}", orderCode);
 
-        ResponseEntity<OrderDetailResult> entity = orderFeign.orderDetail(orderCode, true, false);
+        OrderDetailResult orderDetailResult = new OrderDetailResult();
+        ResponseEntity entity = orderFeign.orderDetail(orderCode, true, false);
         if (entity.getStatusCode().isError()) {
             return ResponseEntity.badRequest().body(entity.getBody());
+        } else if (Objects.isNull(entity.getBody())){
+            return ResponseEntity.ok(orderDetailResult);
         }
-        OrderDetailResult orderDetailResult = entity.getBody();
+        orderDetailResult = (OrderDetailResult)entity.getBody();
+        // 自动配送解析配送时间
+        String deliveryAt = orderDetailResult.getDeliverAt();
+        DeliverTime deliverTime =Jackson.object(deliveryAt, DeliverTime.class);
+        SimpleDateFormat sdfStart = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat sdf2End = new SimpleDateFormat("HH:mm:ss");
+        Date startTime = deliverTime.getStartTime();
+        Date endTime = deliverTime.getEndTime();
+        orderDetailResult.setDeliverAt(sdfStart.format(startTime) + "-" + sdf2End.format(endTime));
+
         Long userId = orderDetailResult.getUserId();
         // 用户信息
         if (Objects.nonNull(userId)) {
-            ResponseEntity<UserDetailResult> userEntity = userFeign.findById(userId);
+            ResponseEntity userEntity = userFeign.findById(userId);
             if (userEntity.getStatusCode().isError()) {
-                return ResponseEntity.badRequest().body(userEntity.getBody());
+                return ResponseEntity.badRequest().body((UserDetailResult)userEntity.getBody());
             } else if (Objects.nonNull(userEntity.getBody())) {
-                orderDetailResult.setUserPhone(userEntity.getBody().getPhone());
+                UserDetailResult userDetailResult = (UserDetailResult) userEntity.getBody();
+                orderDetailResult.setUserPhone(userDetailResult.getPhone());
             }
         }
         // 配送信息
         String hdOrderCode = orderDetailResult.getHdOrderCode();
-        ResponseEntity<DeliverNote> deliverNoteEntity = deliveryFeign.localDetail(hdOrderCode);
-        if (deliverNoteEntity.getStatusCode().isError()) {
-            return ResponseEntity.badRequest().body(deliverNoteEntity.getBody());
-        }
-        if (Objects.nonNull(deliverNoteEntity.getBody())) {
-            orderDetailResult.setDeliverNote(deliverNoteEntity.getBody());
+        ResponseEntity deliverNoteEntity = deliveryFeign.localDetail(hdOrderCode);
+        if (deliverNoteEntity.getStatusCode().isError() || Objects.isNull(deliverNoteEntity.getBody()) || Objects.equals("该配送单不存在", deliverNoteEntity.getBody())) {
+            orderDetailResult.setDeliverNote(new DeliverNote());
+        }else if (Objects.nonNull(deliverNoteEntity.getBody())) {
+            orderDetailResult.setDeliverNote((DeliverNote)deliverNoteEntity.getBody());
         }
         // 上架规格完善
         List<OrderProduct> orderProductList = orderDetailResult.getOrderProductList();
-        if (!orderProductList.isEmpty() || orderProductList.size() != 0) {
+        if (!CollectionUtils.isEmpty(orderProductList)) {
             List<Long> shelfIdList = orderProductList.stream().filter(orderProduct -> Objects.nonNull(orderProduct.getShelfId())).map(OrderProduct::getShelfId).collect(Collectors.toList());
             ProductShelfParam productShelfParam = new ProductShelfParam();
             productShelfParam.setIds(StringUtils.collectionToDelimitedString(shelfIdList, ","));
@@ -104,7 +121,7 @@ public class OrderApi {
                 return ResponseEntity.badRequest().body(pages.getBody());
             }
             List<ProductShelf> productShelfList = pages.getBody().getArray();
-            if (!productShelfList.isEmpty() || productShelfList.size() != 0) {
+            if (!CollectionUtils.isEmpty(productShelfList)) {
                 orderProductList.forEach(orderProduct -> {
                     productShelfList.forEach(productShelf -> {
                         if (Objects.equals(orderProduct.getShelfId(), productShelf.getId())) {
