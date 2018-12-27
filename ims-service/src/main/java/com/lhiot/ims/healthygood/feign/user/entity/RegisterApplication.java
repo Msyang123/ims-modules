@@ -1,6 +1,7 @@
 package com.lhiot.ims.healthygood.feign.user.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.lhiot.ims.healthygood.feign.user.type.AuditStatus;
@@ -67,6 +68,10 @@ public class RegisterApplication {
     @JsonSerialize(using = ToStringSerializer.class)
     @ApiModelProperty(value = "用户id", dataType = "Long")
     private Long userId;
+
+    @JsonSerialize(using = ToStringSerializer.class)
+    @ApiModelProperty(value = "推荐人（鲜果师编号）", dataType = "Long")
+    private Long refereeId;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     @ApiModelProperty(notes = "起始创建时间", dataType = "Date", example = "yyyy-MM-dd HH:mm:ss")
