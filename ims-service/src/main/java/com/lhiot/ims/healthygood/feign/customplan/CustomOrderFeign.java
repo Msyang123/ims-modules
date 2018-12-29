@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
  * @author hufan created in 2018/12/8 19:34
  **/
 @Component
-@FeignClient(value = "healthy-good-service-v2-0-hufan")
+@FeignClient(value = "healthy-good-service-v2-0")
 public interface CustomOrderFeign {
 
     /**
