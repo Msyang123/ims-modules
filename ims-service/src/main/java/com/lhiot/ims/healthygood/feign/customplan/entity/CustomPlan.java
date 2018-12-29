@@ -45,6 +45,9 @@ public class CustomPlan {
     @ApiModelProperty(value = "创建人", dataType = "String")
     private String createUser;
 
+    @ApiModelProperty(value = "定制计划关联定制板块id", dataType = "Long")
+    private Long relationId;
+
     @ApiModelProperty(value = "定制计划关联排序", dataType = "Long")
     private Long relationSort;
 }

@@ -145,4 +145,31 @@ public class CustomPlanSectionApi {
         ResponseEntity entity = customPlanSectionRelationFeign.deleteBatch(sectionId, planIds);
         return FeginResponseTools.convertDeleteResponse(entity);
     }
+
+    @ApiOperation("修改定制板块关联")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = ApiParamType.PATH, name = "id", value = "定制板块关联id", dataType = "Long", required = true),
+            @ApiImplicitParam(paramType = ApiParamType.BODY, name = "customPlanSectionRelation", value = "定制板块关联", dataType = "CustomPlanSectionRelation", required = true)
+    })
+    @PutMapping("/custom-plan-sections/relation/{id}")
+    public ResponseEntity update(@PathVariable("id") Long id, @RequestBody CustomPlanSectionRelation customPlanSectionRelation) {
+        log.debug("修改定制板块\t id:{}, param:{}",id, customPlanSectionRelation);
+
+        ResponseEntity entity = customPlanSectionRelationFeign.update(id, customPlanSectionRelation);
+        return FeginResponseTools.convertUpdateResponse(entity);
+    }
+
+    @ApiOperation("修改定制板块关联")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = ApiParamType.QUERY, name = "sectionId", value = "定制版块Id", dataType = "Long", required = true),
+            @ApiImplicitParam(paramType = ApiParamType.QUERY, name = "planIds", value = "多个定制计划Id以英文逗号分隔", dataType = "String", required = true),
+            @ApiImplicitParam(paramType = ApiParamType.QUERY, name = "sorts", value = "多个排序以英文逗号分隔", dataType = "String", required = true)
+    })
+    @PutMapping("/custom-plan-sections/relation/batches")
+    public ResponseEntity update(@RequestParam("sectionId") Long sectionId, @RequestParam("planIds") String planIds, @RequestParam("sorts") String sorts) {
+        log.debug("批量修改定制版块与定制计划关系\t sectionId: {}, planIds: {},param:{}", sectionId, planIds, sorts);
+
+        ResponseEntity entity = customPlanSectionRelationFeign.updateBatch(sectionId, planIds,  sorts);
+        return FeginResponseTools.convertUpdateResponse(entity);
+    }
 }

@@ -112,6 +112,12 @@ public class CustomPlanApi {
                     periodResult.getProducts().forEach(planProductResult -> planProductResult.setIndex(periodResult.getProducts().indexOf(planProductResult)));
                 }
             });
+            for (int i = 0; i < periodList.size(); i++) {
+                if (CollectionUtils.isEmpty(periodList.get(i).getSpecificationList()) || CollectionUtils.isEmpty(periodList.get(i).getProducts())) {
+                    periodList.remove(i);
+                    i--;
+                }
+            }
         }
         return ResponseEntity.ok(customPlanDetailResult);
     }

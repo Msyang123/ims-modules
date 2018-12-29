@@ -64,5 +64,14 @@ public interface CustomPlanSectionRelationFeign {
     @DeleteMapping(value = "/custom-plan-section-relations/batches")
     ResponseEntity deleteBatch(@RequestParam("sectionId") Long sectionId, @RequestParam(value = "planIds", required = false) String planIds);
 
+
+    /**
+     * 修改定制板块关联
+     * @param id 定制板块关联id
+     * @param customPlanSectionRelation 定制板块关联
+     * @return 修改定制板块关联结果
+     */
+    @PutMapping("/custom-plan-section-relations/{id}")
+    ResponseEntity update(@PathVariable("id") Long id, @RequestBody CustomPlanSectionRelation customPlanSectionRelation);
 }
 
