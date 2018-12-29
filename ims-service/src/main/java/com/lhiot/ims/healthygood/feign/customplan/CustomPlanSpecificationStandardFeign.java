@@ -14,7 +14,7 @@ import java.util.List;
  * @author hufan created in 2018/12/8 10:19
  **/
 @Component
-@FeignClient(value = "healthy-good-service-v2-0-hufan")
+@FeignClient(value = "healthy-good-service-v2-0")
 public interface CustomPlanSpecificationStandardFeign {
     /**
      * 添加定制计划规格基础数据
