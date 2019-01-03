@@ -1,6 +1,7 @@
 package com.lhiot.ims.healthygood.feign.customplan.entity;
 
 
+import com.lhiot.ims.healthygood.feign.customplan.type.OptionType;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -44,5 +45,8 @@ public class CustomPlanSpecification {
 
     @ApiModelProperty(value = "定制规格基础id", dataType = "Long")
     private Long standardId;
+
+    @ApiModelProperty(value = "操作类型", dataType = "OptionType")
+    private OptionType optionType;
 
 }

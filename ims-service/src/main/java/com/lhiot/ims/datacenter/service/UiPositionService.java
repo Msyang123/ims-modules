@@ -1,6 +1,6 @@
 package com.lhiot.ims.datacenter.service;
 
-import com.leon.microx.util.BeanUtils;
+import com.leon.microx.util.Beans;
 import com.leon.microx.util.StringUtils;
 import com.leon.microx.web.result.Pages;
 import com.leon.microx.web.result.Tips;
@@ -52,7 +52,7 @@ public class UiPositionService {
         if (Objects.isNull(uiPosition)) {
             return Tips.empty();
         }
-        BeanUtils.of(uiPositionDetail).populate(uiPosition);
+        Beans.wrap(uiPositionDetail).copyOf(uiPosition);
         PositionType positionType = uiPosition.getPositionType();
         Long uiPositionId = uiPosition.getId();
         switch (positionType) {
@@ -119,7 +119,7 @@ public class UiPositionService {
         List<UiPosition> uiPositionList = pages.getArray();
         uiPositionList.forEach(uiPosition -> {
             UiPositionResult uiPositionResult = new UiPositionResult();
-            BeanUtils.of(uiPositionResult).populate(uiPosition);
+            Beans.wrap(uiPositionResult).copyOf(uiPosition);
             result.add(uiPositionResult);
         });
 

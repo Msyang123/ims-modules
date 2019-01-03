@@ -1,7 +1,7 @@
 package com.lhiot.ims.datacenter.service;
 
 import com.leon.microx.predefine.Use;
-import com.leon.microx.util.BeanUtils;
+import com.leon.microx.util.Beans;
 import com.leon.microx.util.StringUtils;
 import com.leon.microx.web.result.Pages;
 import com.leon.microx.web.result.Tips;
@@ -40,7 +40,7 @@ public class ProductService {
 
     public Tips create(ProductResult productResult) {
         Product product = new Product();
-        BeanUtils.of(product).populate(productResult);
+        Beans.wrap(product).copyOf(productResult);
         // 设置附件
         List<ProductAttachment> productAttachments = setAttachmentImages(productResult.getMainImg(), productResult.getSubImg(), productResult.getDetailImg(), productResult.getIcon());
 
@@ -74,7 +74,7 @@ public class ProductService {
 
     public Tips update(Long id, ProductResult productResult) {
         Product product = new Product();
-        BeanUtils.of(product).populate(productResult);
+        Beans.wrap(product).copyOf(productResult);
         // 设置附件
         List<ProductAttachment> productAttachments = setAttachmentImages(productResult.getMainImg(), productResult.getSubImg(), productResult.getDetailImg(), productResult.getIcon());
         product.setAttachments(productAttachments);
@@ -103,7 +103,7 @@ public class ProductService {
         Product product = (Product) productEntity.getBody();
         if (Objects.nonNull(product)) {
             // 设置附件信息
-            BeanUtils.of(productResult).populate(product);
+            Beans.wrap(productResult).copyOf(product);
             List<String> subImgs = new ArrayList<>();
             List<String> detailImgs = new ArrayList<>();
             List<String> mainImags = new ArrayList<>();

@@ -1,7 +1,6 @@
 package com.lhiot.ims.healthygood.feign.customplan;
 
 import com.leon.microx.web.result.Pages;
-import com.lhiot.ims.healthygood.feign.customplan.entity.CustomPlanProduct;
 import com.lhiot.ims.healthygood.feign.customplan.model.CustomPlanDetailResult;
 import com.lhiot.ims.healthygood.feign.customplan.model.CustomPlanParam;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -39,27 +38,6 @@ public interface CustomPlanFeign {
     ResponseEntity update(@PathVariable("id") Long id, @Valid @RequestBody CustomPlanDetailResult customPlanDetailResult);
 
     /**
-     * 修改定制计划商品
-     *
-     * @param id                     定制计划商品id
-     * @param customPlanProduct 要修改的定制计划商品
-     * @return 修改操作的结果
-     */
-    @PutMapping("/custom-plan-product/{id}")
-    ResponseEntity updateProduct(@PathVariable("id") Long id, @RequestBody CustomPlanProduct customPlanProduct);
-
-    /**
-     * 修改定制计划规格
-     *
-     * @param id                     定制计划商品id
-     * @param customPlanDetailResult 要修改的定制计划商品
-     * @return 修改操作的结果
-     */
-    @PutMapping("/custom-plan-specification/{id}")
-    ResponseEntity updateSpecification(@PathVariable("id") Long id, @RequestBody CustomPlanDetailResult customPlanDetailResult);
-
-
-    /**
      * 根据ids删除定制计划
      *
      * @param ids 定制计划ids,用英文逗号分隔
@@ -85,4 +63,13 @@ public interface CustomPlanFeign {
      */
     @GetMapping("/custom-plans/{id}")
     ResponseEntity<CustomPlanDetailResult> findById(@PathVariable("id") Long id);
+
+    /**
+     * 修改定制计划周期类型信息
+     * @param id 定制计划id
+     * @param customPlanDetailResult 定制计划
+     * @return 修改定制计划周期类型结果
+     */
+    @PutMapping("/custom-plan-periods/{id}")
+    ResponseEntity updatePeriod(@PathVariable("id") Long id, @RequestBody CustomPlanDetailResult customPlanDetailResult);
 }
