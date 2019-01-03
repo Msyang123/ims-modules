@@ -64,32 +64,6 @@ public class CustomPlanApi {
         return FeginResponseTools.convertCreateResponse(entity);
     }
 
-    /**
-     * 如果某一周期套餐价格不为空或其中有配置至少一个套餐，那么必须填该周期套餐所有价格和套餐商品配置都必须填写完整
-     * 返回未填写完整的信息
-     * @param customPlanDetailResult
-     * @return String
-     */
-    private Tips<List<CustomPlanPeriodResult>> validatePeriod(CustomPlanDetailResult customPlanDetailResult) {
-        List<CustomPlanPeriodResult> periodList = customPlanDetailResult.getPeriodList();
-        List<CustomPlanPeriodResult> addPeriodList = new ArrayList<>();
-        for (CustomPlanPeriodResult periodResult : periodList ){
-            List<CustomPlanSpecification> specificationList = periodResult.getSpecificationList();
-            List<CustomPlanProductResult> productList = periodResult.getProducts();
-            List<CustomPlanSpecification> priceIsNullList = specificationList.stream().filter(specification -> (Objects.isNull(specification.getPrice()) || specification.getPrice() == 0)).collect(Collectors.toList());
-            List<CustomPlanProductResult> productIsNullList = productList.stream().filter(product -> (Objects.isNull(product.getShelfId()) || product.getShelfId() == 0)).collect(Collectors.toList());
-            if (CollectionUtils.isEmpty(priceIsNullList) && CollectionUtils.isEmpty(productIsNullList)) {
-                // 所有价格和商品信息都不为空
-                addPeriodList.add(periodResult);
-            } else if (priceIsNullList.size() == 3 && productIsNullList.size() == periodResult.getPlanPeriod()) {
-                // 所有价格和商品信息都为空
-            } else {
-                return Tips.warn("套餐信息不完整");
-            }
-        }
-        return  Tips.<List<CustomPlanPeriodResult>>empty().data(addPeriodList);
-    }
-
     @GetMapping("/custom-plans/{id}")
     @ApiOperation(value = "定制计划详细信息", response = CustomPlanDetailResult.class)
     @ApiImplicitParam(paramType = ApiParamType.PATH, name = "id", value = "定制计划id", dataType = "Long", required = true)
@@ -164,45 +138,6 @@ public class CustomPlanApi {
     }
 
     @LogCollection
-    @ApiOperation("修改定制计划商品")
-    @ApiImplicitParams({
-            @ApiImplicitParam(paramType = ApiParamType.PATH, name = "id", value = "定制计划商品id", dataType = "Long", required = true),
-            @ApiImplicitParam(paramType = ApiParamType.BODY, name = "customPlanProduct", value = "定制计划商品(传shelfId)", dataType = "CustomPlanProduct", required = true)
-    })
-    @PutMapping("/custom-plan-products/{id}")
-    public ResponseEntity updateProduct(@PathVariable("id") Long id, @RequestBody CustomPlanProduct customPlanProduct) {
-        log.debug("修改定制计划\t param:{}", customPlanProduct);
-
-        ResponseEntity entity = customPlanFeign.updateProduct(id, customPlanProduct);
-        return FeginResponseTools.convertUpdateResponse(entity);
-    }
-
-    @LogCollection
-    @ApiOperation("修改定制计划规格")
-    @ApiImplicitParams({
-            @ApiImplicitParam(paramType = ApiParamType.PATH, name = "id", value = "定制计划id", dataType = "Long", required = true),
-            @ApiImplicitParam(paramType = ApiParamType.BODY, name = "customPlanDetailResult", value = "定制计划规格(传定制计划规格id和price)", dataType = "CustomPlanDetailResult", required = true)
-    })
-    @PutMapping("/custom-plan-specification/{id}")
-    public ResponseEntity updateSpecification(@PathVariable("id") Long id, @RequestBody CustomPlanDetailResult customPlanDetailResult) {
-        log.debug("修改定制计划\t param:{}", customPlanDetailResult);
-
-        Tips tips = this.validatePeriod(customPlanDetailResult);
-        if (tips.err()) {
-            return ResponseEntity.badRequest().body(tips.getMessage());
-        }
-        List<CustomPlanPeriodResult> addPeriodList = (List<CustomPlanPeriodResult>) tips.getData();
-        if (CollectionUtils.isEmpty(addPeriodList)) {
-            return ResponseEntity.badRequest().body("请至少填写一个完整的套餐信息");
-        }
-        customPlanDetailResult.setPeriodList(new ArrayList<>());
-        customPlanDetailResult.setPeriodList(addPeriodList);
-
-        ResponseEntity entity = customPlanFeign.updateSpecification(id, customPlanDetailResult);
-        return FeginResponseTools.convertUpdateResponse(entity);
-    }
-
-    @LogCollection
     @ApiOperation("根据ids删除定制计划")
     @ApiImplicitParam(paramType = ApiParamType.PATH, name = "ids", value = "多个定制计划id以英文逗号分隔", dataType = "String", required = true)
     @DeleteMapping("/custom-plans/{ids}")
@@ -221,5 +156,56 @@ public class CustomPlanApi {
 
         ResponseEntity entity = customPlanFeign.search(param);
         return FeginResponseTools.convertNoramlResponse(entity);
+    }
+
+    @LogCollection
+    @ApiOperation("修改定制计划周期类型信息")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = ApiParamType.PATH, name = "id", value = "定制计划id", dataType = "Long", required = true),
+            @ApiImplicitParam(paramType = ApiParamType.BODY, name = "customPlanDetailResult", value = "定制计划信息", dataType = "CustomPlanDetailResult", required = true)
+    })
+    @PutMapping("/custom-plan-periods/{id}")
+    public ResponseEntity updatePeriod(@PathVariable("id") Long id, @RequestBody CustomPlanDetailResult customPlanDetailResult) {
+        log.debug("修改定制计划周期类型信息\t param:{}", customPlanDetailResult);
+
+        Tips tips = this.validatePeriod(customPlanDetailResult);
+        if (tips.err()) {
+            return ResponseEntity.badRequest().body(tips.getMessage());
+        }
+        List<CustomPlanPeriodResult> addPeriodList = (List<CustomPlanPeriodResult>) tips.getData();
+        if (CollectionUtils.isEmpty(addPeriodList)) {
+            return ResponseEntity.badRequest().body("请至少填写一个完整的套餐信息");
+        }
+        customPlanDetailResult.setPeriodList(new ArrayList<>());
+        customPlanDetailResult.setPeriodList(addPeriodList);
+
+        ResponseEntity entity = customPlanFeign.updatePeriod(id, customPlanDetailResult);
+        return FeginResponseTools.convertUpdateResponse(entity);
+    }
+
+    /**
+     * 如果某一周期套餐价格不为空或其中有配置至少一个套餐，那么必须填该周期套餐所有价格和套餐商品配置都必须填写完整
+     * 返回未填写完整的信息
+     * @param customPlanDetailResult
+     * @return String
+     */
+    private Tips<List<CustomPlanPeriodResult>> validatePeriod(CustomPlanDetailResult customPlanDetailResult) {
+        List<CustomPlanPeriodResult> periodList = customPlanDetailResult.getPeriodList();
+        List<CustomPlanPeriodResult> addPeriodList = new ArrayList<>();
+        for (CustomPlanPeriodResult periodResult : periodList ){
+            List<CustomPlanSpecification> specificationList = periodResult.getSpecificationList();
+            List<CustomPlanProductResult> productList = periodResult.getProducts();
+            List<CustomPlanSpecification> priceIsNullList = specificationList.stream().filter(specification -> (Objects.isNull(specification.getPrice()) || specification.getPrice() == 0)).collect(Collectors.toList());
+            List<CustomPlanProductResult> productIsNullList = productList.stream().filter(product -> (Objects.isNull(product.getShelfId()) || product.getShelfId() == 0)).collect(Collectors.toList());
+            if (CollectionUtils.isEmpty(priceIsNullList) && CollectionUtils.isEmpty(productIsNullList)) {
+                // 所有价格和商品信息都不为空
+                addPeriodList.add(periodResult);
+            } else if (priceIsNullList.size() == 3 && productIsNullList.size() == periodResult.getPlanPeriod()) {
+                // 所有价格和商品信息都为空
+            } else {
+                return Tips.warn("套餐信息不完整");
+            }
+        }
+        return  Tips.<List<CustomPlanPeriodResult>>empty().data(addPeriodList);
     }
 }
