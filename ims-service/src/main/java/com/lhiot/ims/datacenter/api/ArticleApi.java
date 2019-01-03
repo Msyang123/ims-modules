@@ -5,6 +5,7 @@ import com.leon.microx.web.swagger.ApiParamType;
 import com.lhiot.ims.datacenter.feign.ArticleFeign;
 import com.lhiot.ims.datacenter.feign.entity.Article;
 import com.lhiot.ims.datacenter.feign.model.ArticleParam;
+import com.lhiot.ims.datacenter.feign.type.ArticleStatus;
 import com.lhiot.ims.rbac.aspect.LogCollection;
 import com.lhiot.util.FeginResponseTools;
 import io.swagger.annotations.Api;
@@ -14,6 +15,10 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.sql.Date;
+import java.time.Instant;
+import java.util.Objects;
 
 /**
  * @author hufan created in 2018/12/7 18:45
@@ -34,6 +39,9 @@ public class ArticleApi {
     public ResponseEntity create(@RequestBody Article article) {
         log.debug("添加文章\t param:{}", article);
 
+        if (Objects.equals(ArticleStatus.PUBLISH,article.getArticleStatus())) {
+            article.setPublishAt(Date.from(Instant.now()));
+        }
         ResponseEntity entity = articleFeign.create(article);
         return FeginResponseTools.convertCreateResponse(entity);
     }
@@ -47,10 +55,18 @@ public class ArticleApi {
     public ResponseEntity update(@PathVariable("id") Long id, @RequestBody Article article) {
         log.debug("修改文章\t id:{} param:{}", id, article);
 
+
+        ResponseEntity findEntity = articleFeign.single(id, false);
+        if (findEntity.getStatusCode().isError() || Objects.isNull(findEntity.getBody())) {
+            return ResponseEntity.badRequest().body("调用基础数据服务失败");
+        }
+        Article findArticle = (Article) findEntity.getBody();
+        if (Objects.equals(ArticleStatus.UN_PUBLISH, findArticle.getArticleStatus()) && Objects.equals(ArticleStatus.PUBLISH, article.getArticleStatus())) {
+            article.setPublishAt(Date.from(Instant.now()));
+        }
         ResponseEntity entity = articleFeign.update(id, article);
         return FeginResponseTools.convertUpdateResponse(entity);
     }
-
 
     @ApiOperation(value = "根据Id查找文章", response = Article.class)
     @ApiImplicitParams({
