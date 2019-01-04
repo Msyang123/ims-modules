@@ -8,7 +8,6 @@ import com.lhiot.ims.datacenter.feign.entity.ProductAttachment;
 import com.lhiot.ims.datacenter.feign.entity.ProductShelf;
 import com.lhiot.ims.datacenter.feign.entity.ProductSpecification;
 import com.lhiot.ims.datacenter.feign.model.ProductShelfParam;
-import com.lhiot.ims.datacenter.feign.type.ApplicationType;
 import com.lhiot.ims.datacenter.feign.type.AttachmentType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -34,7 +33,6 @@ public class ProductShelfService {
     }
 
     public Tips create(ProductShelf productShelf) {
-        productShelf.setApplicationType(ApplicationType.HEALTH_GOOD);
         ResponseEntity productShelfEntity = productShelfFeign.create(productShelf);
         if (productShelfEntity.getStatusCode().isError()) {
             return Tips.warn((String) productShelfEntity.getBody());
@@ -92,7 +90,6 @@ public class ProductShelfService {
     public Tips pages(ProductShelfParam param) {
         Tips tips = new Tips();
         param.setIncludeProduct(true);
-        param.setApplicationType(ApplicationType.HEALTH_GOOD);
         ResponseEntity entity = productShelfFeign.pages(param);
         if (entity.getStatusCode().isError()) {
             return Tips.warn((String) entity.getBody());

@@ -41,7 +41,7 @@ public class ProductShelfApi {
     @LogCollection
     @ApiOperation("添加商品上架")
     @PostMapping("/")
-    @ApiHideBodyProperty({"id","productSpecification","applicationType","createAt","productName","shelfSpecification","barcode","specificationInfo"})
+    @ApiHideBodyProperty({"id","productSpecification","createAt","productName","shelfSpecification","barcode","specificationInfo"})
     public ResponseEntity create(@Valid @RequestBody ProductShelf productShelf) {
         log.debug("添加商品上架\t param:{}", productShelf);
 
