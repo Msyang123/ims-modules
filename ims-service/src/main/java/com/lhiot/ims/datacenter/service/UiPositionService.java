@@ -107,7 +107,6 @@ public class UiPositionService {
     public Tips<Pages<UiPositionResult>> search(UiPositionParam uiPositionParam) {
         List<UiPositionResult> result = new ArrayList<>();
         // 查询鲜果师的所有位置板块
-//         uiPositionParam.setApplicationType(ApplicationType.HEALTH_GOOD.toString());
         ResponseEntity entity = uiPositionFeign.pages(uiPositionParam);
         if (entity.getStatusCode().isError()) {
             return Tips.warn((String) entity.getBody());
