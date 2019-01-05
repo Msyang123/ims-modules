@@ -16,8 +16,8 @@ public class SearchParameter {
 
     private String entryCode;
 
-    private Long page = 1L;
+    private Long page;
 
-    private Long rows = 10L;
+    private Long rows;
 
 }
