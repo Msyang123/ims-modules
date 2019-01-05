@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -77,12 +78,15 @@ public class CustomPlanApi {
         CustomPlanDetailResult customPlanDetailResult = (CustomPlanDetailResult) entity.getBody();
         List<CustomPlanPeriodResult> periodList =  customPlanDetailResult.getPeriodList();
         if (!CollectionUtils.isEmpty(periodList)){
+            periodList.stream().sorted(Comparator.comparing(CustomPlanPeriodResult::getPlanPeriod));
             periodList.forEach(periodResult -> {
-                periodResult.setIndex(periodList.indexOf(periodResult));
+                periodResult.setIndex(periodResult.getPlanPeriod() == 7 ? 0 : 1);
                 if (!CollectionUtils.isEmpty(periodResult.getSpecificationList())) {
+                    periodResult.getSpecificationList().stream().sorted(Comparator.comparing(CustomPlanSpecification::getQuantity));
                     periodResult.getSpecificationList().forEach(customPlanSpecification -> customPlanSpecification.setIndex(periodResult.getSpecificationList().indexOf(customPlanSpecification)));
                 }
                 if (!CollectionUtils.isEmpty(periodResult.getProducts())) {
+                    periodResult.getProducts().stream().sorted(Comparator.comparing(CustomPlanProductResult::getDayOfPeriod));
                     periodResult.getProducts().forEach(planProductResult -> planProductResult.setIndex(periodResult.getProducts().indexOf(planProductResult)));
                 }
             });
