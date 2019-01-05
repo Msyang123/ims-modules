@@ -126,7 +126,7 @@ public class OrderApi {
                     productShelfList.forEach(productShelf -> {
                         if (Objects.equals(orderProduct.getShelfId(), productShelf.getId())) {
                             ProductSpecification productSpecification = productShelf.getProductSpecification();
-                            String shelfSpecification = productSpecification.getWeight() + "*" + productSpecification.getSpecificationQty() + productSpecification.getPackagingUnit();
+                            String shelfSpecification = productShelf.getShelfQty() + "*" + productSpecification.getSpecificationQty() + productSpecification.getPackagingUnit();
                             orderProduct.setShelfSpecification(shelfSpecification);
                         }
                     });

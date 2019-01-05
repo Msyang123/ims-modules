@@ -100,7 +100,7 @@ public class ProductShelfService {
             productShelfList.forEach(productShelf -> {
                 ProductSpecification productSpecification = productShelf.getProductSpecification();
                 productShelf.setProductName(productSpecification.getProduct().getName());
-                String shelfSpecification = productSpecification.getWeight() + productSpecification.getPackagingUnit() + "*" + productSpecification.getSpecificationQty() + "份";
+                String shelfSpecification = productSpecification.getSpecificationQty() + productSpecification.getPackagingUnit() + "*" + productShelf.getShelfQty() + "份";
                 productShelf.setShelfSpecification(shelfSpecification);
                 productShelf.setBarcode(productSpecification.getBarcode());
                 productShelf.setSpecificationInfo(productShelf.getName() + " " + shelfSpecification + " [" + productSpecification.getBarcode() + "]");

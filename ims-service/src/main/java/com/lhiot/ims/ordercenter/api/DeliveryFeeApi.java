@@ -22,6 +22,8 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.time.Instant;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -60,6 +62,8 @@ public class DeliveryFeeApi {
     public ResponseEntity updateRules(@PathVariable("id") Long ruleId, @RequestBody @Valid DeliverFeeRuleParam deliverFeeRuleParam) {
         log.debug("修改配送费计算规则\t id:{} param:{}", ruleId, deliverFeeRuleParam);
 
+        // FIXME 后期基础服务改了再修改
+        deliverFeeRuleParam.setUpdateAt(Date.from(Instant.now()));
         ResponseEntity entity = deliveryFeign.updateRules(ruleId, deliverFeeRuleParam);
         return FeginResponseTools.convertUpdateResponse(entity);
     }
