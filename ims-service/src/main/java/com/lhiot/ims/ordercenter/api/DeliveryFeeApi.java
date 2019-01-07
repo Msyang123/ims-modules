@@ -58,7 +58,7 @@ public class DeliveryFeeApi {
             @ApiImplicitParam(paramType = ApiParamType.BODY, name = "deliverFeeRuleParam", value = "需要修改的配送费规则模板以及详细规则", dataType = "DeliverFeeRuleParam", required = true)
     })
     @PutMapping("/delivery-fee-rule/{id}")
-    @ApiHideBodyProperty({"id", "createBy", "detailList"})
+    @ApiHideBodyProperty({"id", "createBy"})
     public ResponseEntity updateRules(@PathVariable("id") Long ruleId, @RequestBody @Valid DeliverFeeRuleParam deliverFeeRuleParam) {
         log.debug("修改配送费计算规则\t id:{} param:{}", ruleId, deliverFeeRuleParam);
 

@@ -15,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Comparator;
+
 /**
  * @author hufan created in 2018/12/17 18:37
  **/
@@ -99,7 +101,7 @@ public class DictionaryApi {
         log.debug("给字典添加一个子项\t code:{}, param:{}", dictCode, entry);
 
         ResponseEntity entity = dictionaryFeign.addEntry(dictCode, entry);
-        return FeginResponseTools.convertCreateResponse(entity);
+        return FeginResponseTools.convertNoramlResponse(entity);
     }
 
     @LogCollection
