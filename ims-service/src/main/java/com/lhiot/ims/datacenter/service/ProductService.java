@@ -40,7 +40,7 @@ public class ProductService {
 
     public Tips create(ProductResult productResult) {
         Product product = new Product();
-        Beans.from(product).populate(productResult);
+        Beans.from(productResult).populate(product);
         // 设置附件
         List<ProductAttachment> productAttachments = setAttachmentImages(productResult.getMainImg(), productResult.getSubImg(), productResult.getDetailImg(), productResult.getIcon());
 
@@ -74,7 +74,7 @@ public class ProductService {
 
     public Tips update(Long id, ProductResult productResult) {
         Product product = new Product();
-        Beans.from(product).populate(productResult);
+        Beans.from(productResult).populate(product);
         // 设置附件
         List<ProductAttachment> productAttachments = setAttachmentImages(productResult.getMainImg(), productResult.getSubImg(), productResult.getDetailImg(), productResult.getIcon());
         product.setAttachments(productAttachments);
@@ -103,7 +103,7 @@ public class ProductService {
         Product product = (Product) productEntity.getBody();
         if (Objects.nonNull(product)) {
             // 设置附件信息
-            Beans.from(productResult).populate(product);
+            Beans.from(product).populate(productResult);
             List<String> subImgs = new ArrayList<>();
             List<String> detailImgs = new ArrayList<>();
             List<String> mainImags = new ArrayList<>();
