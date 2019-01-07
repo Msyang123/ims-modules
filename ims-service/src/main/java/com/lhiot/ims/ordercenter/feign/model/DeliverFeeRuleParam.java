@@ -1,13 +1,16 @@
 package com.lhiot.ims.ordercenter.feign.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.lhiot.ims.ordercenter.feign.entity.DeliverFeeRuleDetail;
 import com.lhiot.ims.ordercenter.feign.type.DeliverAtType;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -33,6 +36,10 @@ public class DeliverFeeRuleParam {
 
     @ApiModelProperty(value = "创建人", dataType = "String")
     private String createBy;
+
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date updateAt;
 
     @ApiModelProperty(value = "删除的配送规格详情ids", dataType = "List")
     private List<String> deleteIds;
