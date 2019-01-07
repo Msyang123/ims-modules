@@ -52,7 +52,7 @@ public class UiPositionService {
         if (Objects.isNull(uiPosition)) {
             return Tips.empty();
         }
-        Beans.wrap(uiPositionDetail).copyOf(uiPosition);
+        Beans.from(uiPositionDetail).populate(uiPosition);
         PositionType positionType = uiPosition.getPositionType();
         Long uiPositionId = uiPosition.getId();
         switch (positionType) {
@@ -118,7 +118,7 @@ public class UiPositionService {
         List<UiPosition> uiPositionList = pages.getArray();
         uiPositionList.forEach(uiPosition -> {
             UiPositionResult uiPositionResult = new UiPositionResult();
-            Beans.wrap(uiPositionResult).copyOf(uiPosition);
+            Beans.from(uiPositionResult).populate(uiPosition);
             result.add(uiPositionResult);
         });
 
