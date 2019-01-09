@@ -42,7 +42,7 @@ public class ProductShelfService {
         Long productShelfId = Long.valueOf(location.substring(location.lastIndexOf('/') + 1));
 
         // 添加上架id和上架板块的关联
-        if (productShelfId > 0 && Objects.nonNull(productShelf.getSectionIds())) {
+        if (productShelfId > 0 && Objects.nonNull(productShelf.getSectionIds()) && !Objects.equals("", productShelf.getSectionIds())) {
             ResponseEntity entity = productSectionRelationFeign.createBatch(productShelfId, productShelf.getSectionIds());
             if (entity.getStatusCode().isError()) {
                 return Tips.warn((String) entity.getBody());
