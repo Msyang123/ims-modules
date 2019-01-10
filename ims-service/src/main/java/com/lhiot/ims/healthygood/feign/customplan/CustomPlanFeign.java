@@ -1,7 +1,6 @@
 package com.lhiot.ims.healthygood.feign.customplan;
 
 import com.leon.microx.web.result.Pages;
-import com.lhiot.ims.healthygood.feign.customplan.entity.CustomPlan;
 import com.lhiot.ims.healthygood.feign.customplan.model.CustomPlanDetailResult;
 import com.lhiot.ims.healthygood.feign.customplan.model.CustomPlanParam;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -10,7 +9,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 
 /**
  * @author hufan created in 2018/12/1 15:13
@@ -75,11 +73,4 @@ public interface CustomPlanFeign {
     @PutMapping("/custom-plan-periods/{id}")
     ResponseEntity updatePeriod(@PathVariable("id") Long id, @RequestBody CustomPlanDetailResult customPlanDetailResult);
 
-    /**
-     * 根据上架商品id查询关联的定制计划列表
-     * @param id    上架id
-     * @return  定制计划列表
-     */
-    @GetMapping("/product-shelves/{id}/custom-plans")
-    ResponseEntity<List<CustomPlan>> findByShelfId(@PathVariable("id") Long id);
 }
