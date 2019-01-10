@@ -87,7 +87,7 @@ public class CustomPlanApi {
                 }
                 if (!CollectionUtils.isEmpty(periodResult.getProducts())) {
                     periodResult.getProducts().stream().sorted(Comparator.comparing(CustomPlanProductResult::getDayOfPeriod));
-                    periodResult.getProducts().forEach(planProductResult -> planProductResult.setIndex(periodResult.getProducts().indexOf(planProductResult)));
+                    periodResult.getProducts().forEach(planProductResult -> planProductResult.setIndex(planProductResult.getDayOfPeriod() - 1));
                 }
             });
             for (int i = 0; i < periodList.size(); i++) {

@@ -67,27 +67,6 @@ public class ProductShelfApi {
     public ResponseEntity update(@PathVariable("id") Long id, @Valid @RequestBody ProductShelf productShelf) {
         log.debug("根据id修改商品上架\t id:{} param:{}", id, productShelf);
 
-        // 根据上架id查询商品信息
-        ResponseEntity entity = productShelfFeign.findById(id, false);
-        if (entity.getStatusCode().isError() || Objects.isNull(entity.getBody())) {
-            return ResponseEntity.badRequest().body("基础数据服务调用失败");
-        }
-        ProductShelf beforeProductShelf = (ProductShelf) entity.getBody();
-        // 应用类型是否为和色果膳或者为空
-        if (Objects.equals(ApplicationType.HEALTH_GOOD, productShelf.getApplicationType()) || Objects.isNull(productShelf.getApplicationType())) {
-            // 如果状态改完下架则先查询该上架id是否关联了定制计划商品
-            if (Objects.equals(OnOff.OFF, productShelf.getShelfStatus()) && Objects.equals(OnOff.ON, beforeProductShelf.getShelfStatus())){
-                ResponseEntity customPlanEntity = customPlanFeign.findByShelfId(id);
-                if (customPlanEntity.getStatusCode().isError()){
-                    return ResponseEntity.badRequest().body("和色果膳服务调用失败");
-                }
-                List<CustomPlan> customPlanList = (List<CustomPlan>) customPlanEntity.getBody();
-                if (!CollectionUtils.isEmpty(customPlanList)){
-                    List<String> customPlanIdList = customPlanList.stream().map(CustomPlan::getName).collect(Collectors.toList());
-                    return ResponseEntity.badRequest().body("下架修改失败,该商品已关联定制计划:" + customPlanIdList);
-                }
-            }
-        }
         Tips tips = productShelfService.update(id, productShelf);
         return tips.err() ? ResponseEntity.badRequest().body(tips.getMessage()) : ResponseEntity.ok(tips.getMessage());
     }
