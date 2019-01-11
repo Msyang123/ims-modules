@@ -60,10 +60,14 @@ public class CustomPlanApi {
         }
         customPlanDetailResult.setPeriodList(new ArrayList<>());
         customPlanDetailResult.setPeriodList(addPeriodList);
+        customPlanDetailResult.getPeriodList().forEach(periodResult -> {
+            periodResult.getProducts().stream().peek(product -> product.setPlanPeriod(periodResult.getPlanPeriod())).collect(Collectors.toList());
+        });
         customPlanDetailResult.setCreateUser((String) user.getUser().get("name"));
         ResponseEntity entity = customPlanFeign.create(customPlanDetailResult);
         return FeginResponseTools.convertCreateResponse(entity);
     }
+
 
     @GetMapping("/custom-plans/{id}")
     @ApiOperation(value = "定制计划详细信息", response = CustomPlanDetailResult.class)
@@ -73,7 +77,7 @@ public class CustomPlanApi {
 
         ResponseEntity entity = customPlanFeign.findById(id);
         if (entity.getStatusCode().isError() || Objects.isNull(entity.getBody())) {
-            return ResponseEntity.badRequest().body("基础服务调用失败");
+            return ResponseEntity.badRequest().body("和色果膳服务调用失败");
         }
         CustomPlanDetailResult customPlanDetailResult = (CustomPlanDetailResult) entity.getBody();
         List<CustomPlanPeriodResult> periodList =  customPlanDetailResult.getPeriodList();
@@ -120,7 +124,6 @@ public class CustomPlanApi {
         }
         customPlanDetailResult.setPeriodList(new ArrayList<>());
         customPlanDetailResult.setPeriodList(addPeriodList);
-
         ResponseEntity entity = customPlanFeign.update(id, customPlanDetailResult);
         return FeginResponseTools.convertUpdateResponse(entity);
     }
@@ -182,7 +185,9 @@ public class CustomPlanApi {
         }
         customPlanDetailResult.setPeriodList(new ArrayList<>());
         customPlanDetailResult.setPeriodList(addPeriodList);
-
+        customPlanDetailResult.getPeriodList().forEach(periodResult -> {
+            periodResult.setProducts(periodResult.getProducts().stream().peek(product -> product.setPlanPeriod(periodResult.getPlanPeriod())).collect(Collectors.toList()));
+        });
         ResponseEntity entity = customPlanFeign.updatePeriod(id, customPlanDetailResult);
         return FeginResponseTools.convertUpdateResponse(entity);
     }

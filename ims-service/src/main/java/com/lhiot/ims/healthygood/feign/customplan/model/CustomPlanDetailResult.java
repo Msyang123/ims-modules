@@ -46,12 +46,13 @@ public class CustomPlanDetailResult {
     private Long price;
 
     @ApiModelProperty(value = "周期类型", dataType = "List")
-    @NotNull(message = "定制周期类型不能为空")
+    @NotNull(message = "定制计划规格和定制计划商品不能为空")
     private List<CustomPlanPeriodResult> periodList;
 
     /**
      * 关联的定制板块
      */
     @ApiModelProperty(value = "定制板块ids，英文逗号分隔", dataType = "List")
+    @NotNull(message = "关联板块不能为空")
     private List<Long> customPlanSectionIds;
 }
