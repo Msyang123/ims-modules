@@ -1,7 +1,10 @@
 package com.lhiot.ims.datacenter.api;
 
+import com.leon.microx.web.result.Pages;
 import com.leon.microx.web.swagger.ApiHideBodyProperty;
 import com.leon.microx.web.swagger.ApiParamType;
+import com.lhiot.dc.dictionary.DictionaryClient;
+import com.lhiot.dc.dictionary.module.Dictionary;
 import com.lhiot.ims.datacenter.feign.StoreFeign;
 import com.lhiot.ims.datacenter.feign.entity.Store;
 import com.lhiot.ims.datacenter.feign.model.StoreSearchParam;
@@ -15,6 +18,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.*;
+
 /**
  * @author hufan created in 2018/12/17 16:49
  **/
@@ -23,10 +28,12 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 public class StoreApi {
     private final StoreFeign storeFeign;
+    private DictionaryClient dictionaryClient;
 
     @Autowired
-    public StoreApi(StoreFeign storeFeign) {
+    public StoreApi(StoreFeign storeFeign, DictionaryClient dictionaryClient) {
         this.storeFeign = storeFeign;
+        this.dictionaryClient = dictionaryClient;
     }
 
     @ApiOperation(value = "根据id查询门店", notes = "根据id查询门店", response = Store.class)
@@ -48,7 +55,7 @@ public class StoreApi {
             @ApiImplicitParam(paramType = ApiParamType.QUERY, name = "applicationType", value = "应用类型", dataType = "String")
     })
     @GetMapping("/stores/code/{code}")
-    public ResponseEntity findStoreByCode(@PathVariable("code") String code, @RequestParam("applicationType") String applicationType) {
+    public ResponseEntity findStoreByCode(@PathVariable("code") String code, @RequestParam(value = "applicationType", required = false) String applicationType) {
         log.debug("根据门店编码查询门店信息\t code:{}, param{}", code, applicationType);
 
         ResponseEntity entity = storeFeign.findStoreByCode(code, applicationType);
@@ -96,4 +103,23 @@ public class StoreApi {
         ResponseEntity entity = storeFeign.search(param);
         return FeginResponseTools.convertNoramlResponse(entity);
     }
+
+    @ApiOperation(value = "查询所有门店区域", response = String.class, responseContainer = "List")
+    @GetMapping("/store-areas")
+    public ResponseEntity findList() {
+        log.debug("查询所有门店区域");
+        List<Map<String,String>> storeAreas = new ArrayList<>();
+        Optional<Dictionary> optional = dictionaryClient.dictionary("storeAreas");
+        if (optional.isPresent()) {
+            Dictionary dictionary = optional.get();
+            dictionary.getEntries().forEach(item -> {
+                Map<String,String> area=new HashMap<>();
+                area.put("area", item.getCode());
+                area.put("areaName", item.getName());
+                storeAreas.add(area);
+            });
+        }
+        return ResponseEntity.ok(Pages.of(storeAreas));
+    }
+
 }
