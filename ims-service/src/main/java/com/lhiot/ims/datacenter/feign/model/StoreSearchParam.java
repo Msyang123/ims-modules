@@ -1,5 +1,6 @@
 package com.lhiot.ims.datacenter.feign.model;
 
+import com.lhiot.ims.datacenter.feign.type.StoreType;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -16,6 +17,11 @@ public class StoreSearchParam {
     private String name;
     @ApiModelProperty(notes = "门店编码", dataType = "String")
     private String code;
+
+    @ApiModelProperty(notes = "所属区域", dataType = "String")
+    private String area;
+    @ApiModelProperty(notes = "门店类型：ORDINARY_STORE(\"普通门店\"),FLAGSHIP_STORE (\"旗舰店\");", dataType = "StoreTypeEnum")
+    private StoreType storeType;
 
     @ApiModelProperty(notes = "应用类型", dataType = "String")
     private String applicationType;
