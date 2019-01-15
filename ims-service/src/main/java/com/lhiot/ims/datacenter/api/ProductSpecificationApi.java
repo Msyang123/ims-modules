@@ -88,8 +88,6 @@ public class ProductSpecificationApi {
         return tips.err() ? ResponseEntity.badRequest().body(tips.getMessage()) : ResponseEntity.ok(tips.getData());
     }
 
-
-
     @ApiOperation(value = "查询所有基础规格单位列表", response = String.class, responseContainer = "List")
     @GetMapping("/units")
     public ResponseEntity findList() {

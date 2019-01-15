@@ -1,6 +1,6 @@
 package com.lhiot.ims.datacenter.api;
 
-import com.leon.microx.web.result.Pages;
+import com.leon.microx.web.result.Tuple;
 import com.leon.microx.web.swagger.ApiHideBodyProperty;
 import com.leon.microx.web.swagger.ApiParamType;
 import com.lhiot.dc.dictionary.DictionaryClient;
@@ -119,7 +119,7 @@ public class StoreApi {
                 storeAreas.add(area);
             });
         }
-        return ResponseEntity.ok(Pages.of(storeAreas));
+        return ResponseEntity.ok(Tuple.of(storeAreas));
     }
 
 }

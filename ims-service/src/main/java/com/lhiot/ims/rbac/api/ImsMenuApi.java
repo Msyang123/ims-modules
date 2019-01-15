@@ -142,26 +142,7 @@ public class ImsMenuApi {
         List<ImsMenu> imsMenus = imsMenuService.listImsSystems(id);
         imsMenus.forEach(imsMenu -> {
             if (Objects.isNull(imsMenu.getPId())) {
-                switch (imsMenu.getCode()) {
-                    case "health_good":
-                        imsMenu.setApplicationType(ApplicationType.HEALTH_GOOD);
-                        break;
-                    case "app":
-                        imsMenu.setApplicationType(ApplicationType.APP);
-                        break;
-                    case "wechat_mall":
-                        imsMenu.setApplicationType(ApplicationType.WECHAT_MALL);
-                        break;
-                    case "wechat_small_shop":
-                        imsMenu.setApplicationType(ApplicationType.WECHAT_SMALL_SHOP);
-                        break;
-                    case "wxsmall_shop":
-                        imsMenu.setApplicationType(ApplicationType.WXSMALL_SHOP);
-                        break;
-                    default:
-                        imsMenu.setApplicationType(null);
-                        break;
-                }
+                imsMenu.setApplicationType(imsMenu.getCode() == "manager_system" ? null : imsMenu.getCode().toUpperCase());
             }
         });
         return ResponseEntity.ok(Tuple.of(imsMenus));
