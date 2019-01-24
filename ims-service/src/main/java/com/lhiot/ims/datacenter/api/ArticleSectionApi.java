@@ -54,7 +54,6 @@ public class ArticleSectionApi {
     public ResponseEntity update(@PathVariable("id") Long id, @Valid @RequestBody ArticleSection articleSection) {
         log.debug("修改文章版块\t id:{} param:{}", id, articleSection);
 
-
         ResponseEntity entity = articleSectionFeign.update(id, articleSection);
         return FeginResponseTools.convertUpdateResponse(entity);
     }

@@ -1,6 +1,5 @@
 package com.lhiot.ims.rbac.domain;
 
-import com.leon.microx.util.auditing.MD5;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;

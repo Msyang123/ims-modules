@@ -74,8 +74,8 @@ public class ImsMenu {
      * 应用类型
      */
     @JsonProperty("applicationType")
-    @ApiModelProperty(value = "应用类型", dataType = "ApplicationType")
-    private ApplicationType applicationType;
+    @ApiModelProperty(value = "应用类型", dataType = "String")
+    private String applicationType;
 
     @JsonIgnore
     @JsonProperty("page")
