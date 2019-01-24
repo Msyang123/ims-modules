@@ -142,7 +142,7 @@ public class ImsMenuApi {
         List<ImsMenu> imsMenus = imsMenuService.listImsSystems(id);
         imsMenus.forEach(imsMenu -> {
             if (Objects.isNull(imsMenu.getPId())) {
-                imsMenu.setApplicationType(imsMenu.getCode() == "manager_system" ? null : imsMenu.getCode().toUpperCase());
+                imsMenu.setApplicationType(Objects.equals("manager_system", imsMenu.getCode()) ? null : imsMenu.getCode().toUpperCase());
             }
         });
         return ResponseEntity.ok(Tuple.of(imsMenus));
