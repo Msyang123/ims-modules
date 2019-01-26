@@ -33,6 +33,8 @@ public class ArticleSection {
     private Date createAt;
     @ApiModelProperty(notes = "序号", dataType = "Integer")
     private Integer sorting;
+    @ApiModelProperty(notes = "关联文章Id,多个以英文逗号分隔", dataType = "String")
+    private String articleIds;
     @ApiModelProperty(notes = "应用类型", dataType = "String")
     @HasEntries(from = DictionaryCodes.APPLICATION_TYPE, message = "没有找到此应用类型")
     private String applicationType;

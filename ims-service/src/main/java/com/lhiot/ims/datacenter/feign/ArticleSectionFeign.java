@@ -1,8 +1,12 @@
 package com.lhiot.ims.datacenter.feign;
 
 import com.leon.microx.web.result.Pages;
+import com.leon.microx.web.swagger.ApiParamType;
 import com.lhiot.ims.datacenter.feign.entity.ArticleSection;
+import com.lhiot.ims.datacenter.feign.entity.ArticleSectionRelation;
 import com.lhiot.ims.datacenter.feign.model.ArticleSectionParam;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -28,7 +32,7 @@ public interface ArticleSectionFeign {
     /**
      * 修改文章版块
      *
-     * @param id 文章板块id
+     * @param id             文章板块id
      * @param articleSection 要修改的文章板块
      * @return 修改操作结果
      */
@@ -39,8 +43,8 @@ public interface ArticleSectionFeign {
     /**
      * 根据Id查找文章版块
      *
-     * @param id 文章板块id
-     * @param includeArticles 是否包含文章信息
+     * @param id                 文章板块id
+     * @param includeArticles    是否包含文章信息
      * @param includeArticlesQty 包含的文章最大条数
      * @return ArticleSection 文章板块信息
      */
@@ -68,4 +72,24 @@ public interface ArticleSectionFeign {
      */
     @PostMapping("/article-sections/pages")
     ResponseEntity<Pages<ArticleSection>> search(@RequestBody ArticleSectionParam param);
+
+    /**
+     * 添加文章版块与文章关系
+     * @param articleSectionRelation
+     * @return
+     */
+    @ApiOperation("添加文章版块与文章关系")
+    @ApiImplicitParam(paramType = ApiParamType.BODY, name = "articleSectionRelation", value = "文章版块与文章关系信息", dataType = "ArticleSectionRelation", required = true)
+    @PostMapping("/article-section-relations")
+    ResponseEntity createRelation(@RequestBody ArticleSectionRelation articleSectionRelation) ;
+
+    /**
+     * 批量删除版块与文章关系
+     *
+     * @param sectionId  文章版块Id
+     * @param articleIds 多个文章Id以英文逗号分隔,为空则删除此版块所有文章关系
+     * @return 删除操作结果
+     */
+    @DeleteMapping("/article-section-relations/batches")
+    ResponseEntity deleteBatch(@RequestParam("sectionId") Long sectionId, @RequestParam(value = "articleIds", required = false) String articleIds);
 }
