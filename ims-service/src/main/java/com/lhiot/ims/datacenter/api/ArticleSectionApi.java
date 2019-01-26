@@ -3,7 +3,9 @@ package com.lhiot.ims.datacenter.api;
 import com.leon.microx.web.swagger.ApiHideBodyProperty;
 import com.leon.microx.web.swagger.ApiParamType;
 import com.lhiot.ims.datacenter.feign.ArticleSectionFeign;
+import com.lhiot.ims.datacenter.feign.entity.Article;
 import com.lhiot.ims.datacenter.feign.entity.ArticleSection;
+import com.lhiot.ims.datacenter.feign.entity.ArticleSectionRelation;
 import com.lhiot.ims.datacenter.feign.model.ArticleSectionParam;
 import com.lhiot.ims.rbac.aspect.LogCollection;
 import com.lhiot.util.FeginResponseTools;
@@ -14,9 +16,13 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author hufan created in 2018/12/17 18:26
@@ -39,6 +45,10 @@ public class ArticleSectionApi {
     public ResponseEntity create(@Valid @RequestBody ArticleSection articleSection) {
         log.debug("添加文章版块\t param:{}", articleSection);
 
+        if (!CollectionUtils.isEmpty(articleSection.getArticleList())) {
+            List<Long> articleIdList = articleSection.getArticleList().stream().map(Article::getId).collect(Collectors.toList());
+            articleSection.setArticleIds(!CollectionUtils.isEmpty(articleIdList) ? StringUtils.collectionToDelimitedString(articleIdList, ",") : null);
+        }
         ResponseEntity entity = articleSectionFeign.create(articleSection);
         return FeginResponseTools.convertCreateResponse(entity);
     }
@@ -87,6 +97,29 @@ public class ArticleSectionApi {
         return FeginResponseTools.convertDeleteResponse(entity);
     }
 
+    @LogCollection
+    @ApiOperation("批量删除版块与文章关系")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = ApiParamType.QUERY, name = "sectionId", value = "文章版块Id", dataType = "Long", required = true),
+            @ApiImplicitParam(paramType = ApiParamType.QUERY, name = "articleIds", value = "多个文章Id以英文逗号分隔,为空则删除此版块所有文章关系", dataType = "String")
+    })
+    @DeleteMapping("/article-section-relations/batches")
+    public ResponseEntity deleteBatch(@RequestParam("sectionId") Long sectionId, @RequestParam(value = "articleIds", required = false) String articleIds) {
+        log.debug("批量删除版块与文章关系\t sectionId:{}, articleIds: {}", sectionId, articleIds);
+
+        ResponseEntity entity = articleSectionFeign.deleteBatch(sectionId, articleIds);
+        return FeginResponseTools.convertDeleteResponse(entity);
+    }
+
+    @LogCollection
+    @ApiOperation("添加文章版块与文章关系")
+    @ApiImplicitParam(paramType = ApiParamType.BODY, name = "articleSectionRelation", value = "文章版块与文章关系信息", dataType = "ArticleSectionRelation", required = true)
+    @PostMapping("/article-section-relations")
+    public ResponseEntity createRelation(@RequestBody ArticleSectionRelation articleSectionRelation) {
+
+        ResponseEntity entity = articleSectionFeign.createRelation(articleSectionRelation);
+        return FeginResponseTools.convertNoramlResponse(entity);
+    }
 
     @ApiOperation(value = "根据条件分页查询文章版块信息列表", response = ArticleSection.class, responseContainer = "Set")
     @ApiImplicitParam(paramType = ApiParamType.BODY, name = "param", value = "查询条件", dataType = "ArticleSectionParam")
