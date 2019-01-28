@@ -1,7 +1,9 @@
 package com.lhiot.ims.usercenter.feign;
 
 import com.leon.microx.web.result.Pages;
+import com.leon.microx.web.result.Tuple;
 import com.lhiot.ims.usercenter.feign.model.QuerySearch;
+import com.lhiot.ims.usercenter.feign.model.SearchParam;
 import com.lhiot.ims.usercenter.feign.model.UserDetailResult;
 import com.lhiot.ims.usercenter.feign.type.LockStatus;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -43,4 +45,13 @@ public interface UserFeign {
      */
     @GetMapping("/users/{id}")
     ResponseEntity<UserDetailResult> findById(@PathVariable("id") Long userId);
+
+    /**
+     * 根据查询条件查询用户信息
+     *
+     * @param param 查询条件
+     * @return 查询结果
+     */
+    @PostMapping("/users/search")
+    ResponseEntity<Tuple<UserDetailResult>> findUserList(@RequestBody SearchParam param);
 }
