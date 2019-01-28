@@ -48,8 +48,11 @@ public class Feedback implements Serializable {
     private Date feedbackAt;
 
     @JsonSerialize(using = ToStringSerializer.class)
-    @ApiModelProperty(notes = "反馈用户", dataType = "Long")
+    @ApiModelProperty(notes = "反馈用户Id", dataType = "Long")
     private Long userId;
+
+    @ApiModelProperty(notes = "昵称", dataType = "String")
+    private String nickname;
 
     @JsonSerialize(using = ToStringSerializer.class)
     @ApiModelProperty(notes = "应用类型", dataType = "String")
